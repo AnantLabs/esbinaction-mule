@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project name="MessageFlowExample" default="jar" basedir=".">
+	
+	<property environment="env"/>
+	<property name="MULE_HOME" value="${env.MULE_HOME}"/>
+	<property name="src" value="../../../src"/>
+	<property name="lib" value="../../../lib"/>
+	<property name="target" value="target"/>
+	<property name="target.classes" value="${target}/classes"/>
+	
+	<target name="clean">
+		<delete dir="${target.classes}"/>
+		<delete file="${MULE_HOME}/lib/user/simplecomponent.jar"/>
+	</target>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${target.classes}"/>
+	    <javac srcdir="${src}" destdir="${target.classes}"
+	        includes="**/chapter4/**/*.java, esb/framework/**/*.java"
+	        debug="on"
+	        deprecation="on"
+	        optimize="off">
+	        <classpath>
+	          <fileset dir="${lib}">
+	            <include name="**/*.jar"/>
+	          </fileset>
+	        </classpath>
+	   </javac>
+  	</target>
+	
+	<target name="jar" depends="compile">
+		<jar jarfile="${MULE_HOME}/lib/user/simplecomponent.jar">
+			<fileset dir="${target.classes}">
+				<include name="**/chapter4/component/**/*.class"/>
+				<include name="esb/framework/**/*.class"/>
+			</fileset>
+			<fileset dir="mule">
+				<include name="**"/>
+			</fileset>
+			<fileset dir="spring">
+				<include name="**"/>
+			</fileset>
+		</jar>
+	</target>
+	
+</project>

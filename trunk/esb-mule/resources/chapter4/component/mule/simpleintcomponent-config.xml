@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="SimpleIntComponentExample" version="1.0">
+	
+	<transformers>
+		<transformer name="StringToInteger" 
+					 className="esb.chapter4.component.transformer.StringToInteger"/>
+	</transformers>
+	
+    <model name="SimpleIntExample">
+        <mule-descriptor name="SimpleIntComponent" implementation="esb.chapter4.component.SimpleIntComponent">
+            <inbound-router>
+                <endpoint address="stream://System.in?promptMessage=Enter a number:"
+                		  transformers="StringToInteger"/>
+            </inbound-router>
+        </mule-descriptor>
+    </model>
+    
+</mule-configuration>

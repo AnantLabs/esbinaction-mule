@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="OrderExample" version="1.0">
+	
+	<transformers>
+   		<transformer name="JMSToObject" 
+					 className="org.mule.providers.jms.transformers.JMSMessageToObject"/>
+		<transformer name="ObjectToJMS" 
+					 className="org.mule.providers.jms.transformers.ObjectToJMSMessage"/>
+		<transformer name="ObjectToXML" 
+					 className="esb.framework.util.ObjectToXMLTransformer"/>
+		<transformer name="XMLToObject" 
+					 className="esb.framework.util.XMLToObjectTransformer">
+			<properties>
+				<property name="targetClassName" value="esb.chapter3.messageflow.service.InvoiceOrder"/>
+			</properties>		             
+        </transformer>
+					 
+	</transformers>
+	
+    <model name="orderExample">
+        <mule-descriptor name="OrderMessageEnhancer" implementation="esb.chapter3.messageflow.service.OrderMessageEnhancer">
+            <inbound-router>
+                <endpoint address="jms://callcenter.output?transformers=JMSToObject"/>
+            </inbound-router>
+            <outbound-router>
+            	<router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+            		<endpoint address="jms://invoice.input?transformers=ObjectToXML,ObjectToJMS"/>
+            	</router>
+            </outbound-router>
+        </mule-descriptor>
+        
+        <mule-descriptor name="InvoiceProcessor" implementation="org.mule.components.simple.PassThroughComponent">
+        	<inbound-router>
+                <endpoint address="jms://invoice.output?transformers=JMSToObject"/>
+            </inbound-router>
+            <outbound-router>
+            	<router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+            		<endpoint address="jms://callcenter.input?transformers=XMLToObject,ObjectToJMS"/>
+            	</router>
+            </outbound-router>
+        </mule-descriptor>
+        
+    </model>
+    
+</mule-configuration>

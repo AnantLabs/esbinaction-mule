@@ -1,0 +1,53 @@
+a<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+       xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
+	
+	<jms:activemq-connector name="jmsConnector"/>
+	
+  	<mule:custom-transformer name="JMSToObject" 
+				class="org.mule.providers.jms.transformers.JMSMessageToObject"/>
+	<mule:custom-transformer name="ObjectToJMS" 
+				class="org.mule.providers.jms.transformers.ObjectToJMSMessage"/>
+	<mule:custom-transformer name="ObjectToXML" 
+				class="esb.framework.util.ObjectToXMLTransformer"/>
+	<mule:custom-transformer name="XMLToObject" 
+				class="esb.framework.util.XMLToObjectTransformer">
+		<mule:property name="targetClassName" value="esb.chapter3.messageflow.service.InvoiceOrder"/>         
+	</mule:custom-transformer>
+		
+	<mule:model-seda name="orderExample">
+		<mule:service name="OrderMessageEnhancer">
+            <mule:inbound-router>
+                <mule:endpoint address="jms://callcenter.output"
+                		transformers="JMSToObject"/>
+            </mule:inbound-router>
+            <mule:component class="esb.chapter4.messageflow.service.OrderMessageEnhancer"/>
+            <mule:outbound-router>
+            	<mule:pass-through-router>
+            		<mule:endpoint address="jms://invoice.input"
+            			transformers="ObjectToXML ObjectToJMS"/>
+            	</mule:pass-through-router>
+			</mule:outbound-router>
+        </mule:service>
+        
+        <mule:service name="InvoiceProcessor">
+        	<mule:inbound-router>
+                <mule:endpoint address="jms://invoice.output"
+                	transformers="JMSToObject"/>
+            </mule:inbound-router>
+            <mule:component class="org.mule.components.simple.PassThroughComponent"/>
+            <mule:outbound-router>
+            	<mule:pass-through-router>
+            		<mule:endpoint address="jms://callcenter.input"
+            			transformers="XMLToObject ObjectToJMS"/>
+            	</mule:pass-through-router>
+            </mule:outbound-router>
+        </mule:service>
+	</mule:model-seda>
+</beans>

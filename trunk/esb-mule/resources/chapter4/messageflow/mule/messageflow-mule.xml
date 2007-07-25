@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+                                
+<mule-configuration version="1.0" id="main">
+
+	<container-context className="org.mule.extras.spring.SpringContainerContext" name="spring">
+		<properties>
+	        <property name="configFile" value="messageflow-spring.xml"/>
+	    </properties>
+	</container-context>
+
+	<connector name="jmsConnector" className="org.mule.providers.jms.JmsConnector">
+	    <properties>
+	        <property name="specification" value="1.1"/>
+	        <container-property name="connectionFactory"
+	                            reference="activeMqConnectionFactory"
+	                            container="spring"/>
+	    </properties>
+	</connector>
+
+</mule-configuration>
+
