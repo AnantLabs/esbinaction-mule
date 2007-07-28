@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
-                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+		http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
 
-<mule-configuration id="SimpleIntComponentExample" version="1.0">
+	<mule:custom-transformer name="StringToInteger" 
+				 class="esb.chapter4.component.transformer.StringToInteger"/>
 	
-	<transformers>
-		<transformer name="StringToInteger" 
-					 className="esb.chapter4.component.transformer.StringToInteger"/>
-	</transformers>
-	
-    <model name="SimpleIntExample">
-        <mule-descriptor name="SimpleIntComponent" implementation="esb.chapter4.component.SimpleIntComponent">
-            <inbound-router>
-                <endpoint address="stream://System.in?promptMessage=Enter a number:"
+	<mule:model-seda name="SimpleIntExample">
+        <mule:service name="SimpleIntComponent" implementation="esb.chapter4.component.SimpleIntComponent">
+            <mule:inbound-router>
+                <mule:endpoint address="stdio://System.in?promptMessage=Enter a number:"
                 		  transformers="StringToInteger"/>
-            </inbound-router>
-        </mule-descriptor>
-    </model>
-    
-</mule-configuration>
+            </mule:inbound-router>
+            <mule:component class="esb.chapter4.component.SimpleIntComponent"/>
+        </mule:service>
+    </mule:model-seda>
+</beans>

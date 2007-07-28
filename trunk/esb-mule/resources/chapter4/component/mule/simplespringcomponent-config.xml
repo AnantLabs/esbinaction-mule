@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
-                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
-                                
-<mule-configuration id="SimpleSpringComponentExample" version="1.0">
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+		http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
 
-	<container-context className="org.mule.extras.spring.SpringContainerContext" name="spring">
-		<properties>
-	        <property name="configFile" value="simplecomponent-spring.xml"/>
-	    </properties>
-	</container-context>
+	<bean id="ResponseOptions" class="esb.chapter4.component.ResponseOptions">
+		<property name="options">
+			<map>
+				<entry key="EAI" value="Where have you been lately?"/>
+				<entry key="XML" value="The lingua franca!"/>
+				<entry key="Open Source" value="Yes it's free!"/>
+				<entry key="ESB" value="Yes, yes!"/>
+				<entry key="other" value="Try again."/>
+			</map>
+		</property>
+	</bean>
 	
-	<model name="SimpleSpringExample">
-        <mule-descriptor name="SimpleSpringComponent" implementation="simple">
-            <inbound-router>
-                <endpoint address="stream://System.in">
-                	<properties>
-                		<property name="promptMessage" value="Enter a statement:"/>
-                		<property name="method" value="accept"/>
-                	</properties>
-                </endpoint>
-            </inbound-router>
-            <outbound-router>
-            	<router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-            		<endpoint address="stream://System.out"/>
-            	</router>
-            </outbound-router>
-        </mule-descriptor>
-    </model>
-
-</mule-configuration>
+	<mule:model-seda name="SimpleSpringExample">
+        <mule:service name="SimpleSpringComponent">
+            <mule:inbound-router>
+                <mule:endpoint address="stdio://System.in?promptMessage=Enter a word:"/>
+            </mule:inbound-router>
+            <mule:component class="esb.chapter4.component.SimpleSpringComponent">
+            	<mule:properties>
+            		<entry key="responseOptions" value-ref="ResponseOptions"/>
+            	</mule:properties>
+            </mule:component>
+            <mule:outbound-router>
+            	<mule:pass-through-router>
+            		<mule:endpoint address="stdio://System.out"/>
+            	</mule:pass-through-router>
+			</mule:outbound-router>
+		</mule:service>
+	</mule:model-seda>
+</beans>
 

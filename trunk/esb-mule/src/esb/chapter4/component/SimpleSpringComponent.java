@@ -1,22 +1,18 @@
 package esb.chapter4.component;
 
-import org.mule.umo.UMOEventContext;
-import org.mule.umo.lifecycle.Callable;
-
-public class SimpleSpringComponent implements Callable {
+public class SimpleSpringComponent {
 	
-	private String message;
+	private ResponseOptionsIF responseOptions;
 	
-	public String accept(String payload) {
-		return message + payload;
+	public String generateResponse(String word) {
+		return responseOptions.getResponseOption(word);
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public ResponseOptionsIF getResponseOptions() {
+		return responseOptions;
 	}
 
-	public Object onCall(UMOEventContext context) throws Exception {
-		String payload = context.getMessage().getPayloadAsString();
-		return message + payload;
+	public void setResponseOptions(ResponseOptionsIF responseOptions) {
+		this.responseOptions = responseOptions;
 	}
 }
