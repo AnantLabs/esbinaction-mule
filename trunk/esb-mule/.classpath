@@ -17,5 +17,10 @@
 	<classpathentry kind="lib" path="lib/mule-core-1.4.0.jar"/>
 	<classpathentry kind="lib" path="lib/jibx/jibx-bind-1.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/jibx/jibx-run-1.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/spring/spring-beans.jar"/>
+	<classpathentry kind="lib" path="lib/spring/spring-context.jar"/>
+	<classpathentry kind="lib" path="lib/spring/spring-core.jar"/>
+	<classpathentry kind="lib" path="lib/spring/spring-dao.jar"/>
+	<classpathentry kind="lib" path="lib/spring/spring-jms.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

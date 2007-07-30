@@ -37,9 +37,6 @@
 			<fileset dir="mule">
 				<include name="**"/>
 			</fileset>
-			<fileset dir="spring">
-				<include name="**"/>
-			</fileset>
 		</jar>
 	</target>
 	

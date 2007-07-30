@@ -1,4 +1,4 @@
-package esb.chapter4.service;
+package esb.chapter4.messageflow.mule;
 
 import javax.jms.Destination;
 import javax.jms.Message;
@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 public class InvoiceService implements MessageListener {
 	
-	private static final Logger logger = Logger.getLogger(InvoiceService.class);
+	private static final Logger logger = Logger.getLogger(BookQuoteAggregator.class);
 	
 	public void onMessage(Message orderMessage) {
 		logger.info("received order " + orderMessage);

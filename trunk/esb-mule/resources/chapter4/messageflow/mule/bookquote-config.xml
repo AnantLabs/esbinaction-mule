@@ -1,4 +1,4 @@
-a<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
@@ -21,31 +21,36 @@ a<?xml version="1.0" encoding="UTF-8"?>
 		<mule:property name="targetClassName" value="esb.chapter3.messageflow.service.InvoiceOrder"/>         
 	</mule:custom-transformer>
 		
-	<mule:model-seda name="orderExample">
-		<mule:service name="OrderMessageEnhancer">
+	<mule:model-seda name="BookQuoteExample">
+		<mule:service name="BookQuoteLogger">
             <mule:inbound-router>
-                <mule:endpoint address="jms://callcenter.output"
+                <mule:endpoint address="jms://booksearch.input"
                 		transformers="JMSToObject"/>
-            </mule:inbound-router>
-            <mule:component class="esb.chapter4.messageflow.service.OrderMessageEnhancer"/>
-            <mule:outbound-router>
-            	<mule:pass-through-router>
-            		<mule:endpoint address="jms://invoice.input"
-            			transformers="ObjectToXML ObjectToJMS"/>
-            	</mule:pass-through-router>
-			</mule:outbound-router>
-        </mule:service>
-        
-        <mule:service name="InvoiceProcessor">
-        	<mule:inbound-router>
-                <mule:endpoint address="jms://invoice.output"
-                	transformers="JMSToObject"/>
             </mule:inbound-router>
             <mule:component class="org.mule.components.simple.PassThroughComponent"/>
             <mule:outbound-router>
+            	<mule:static-recipient-list-router>
+            		<mule:reply-to address="jms://mule.bookquotes"/>
+            		<mule:endpoint address="jms://amazon.input"
+            			transformers="ObjectToJMS"/>
+            		<mule:endpoint address="jms://barnes.input"
+            			transformers="ObjectToXML ObjectToJMS"/>
+            	</mule:static-recipient-list-router>
+			</mule:outbound-router>
+        </mule:service>
+        
+        <mule:service name="BookQuoteAggregator">
+        	<mule:inbound-router>
+                <mule:correlation-aggregator-router>
+                	<mule:endpoint address="jms://mule.bookquotes"
+                		transformers="JMSToObject"/>
+                </mule:correlation-aggregator-router>
+            </mule:inbound-router>
+            <mule:component class="esb.chapter4.messageflow.BookQuoteAggregator"/>
+            <mule:outbound-router>
             	<mule:pass-through-router>
-            		<mule:endpoint address="jms://callcenter.input"
-            			transformers="XMLToObject ObjectToJMS"/>
+            		<mule:endpoint address="jms://booksearch.output"
+            			transformers="ObjectToJMS"/>
             	</mule:pass-through-router>
             </mule:outbound-router>
         </mule:service>
