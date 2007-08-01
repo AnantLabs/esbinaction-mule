@@ -4,6 +4,7 @@
 	<property environment="env"/>
 	<property name="MULE_HOME" value="${env.MULE_HOME}"/>
 	<property name="src" value="../../../src"/>
+	<property name="bin" value="../../../bin"/>
 	<property name="lib" value="../../../lib"/>
 	<property name="target" value="target"/>
 	<property name="target.classes" value="${target}/classes"/>
@@ -26,7 +27,7 @@
 	<target name="compile" depends="clean">
 		<mkdir dir="${target.classes}"/>
 	    <javac srcdir="${src}" destdir="${target.classes}"
-	        includes="**/chapter4/**/*.java, esb/framework/**/*.java"
+	        includes="**/chapter4/messageflow/**/*.java, esb/framework/**/*.java"
 	        debug="on"
 	        deprecation="on"
 	        optimize="off">
@@ -43,9 +44,14 @@
 		<bind verbose="true" load="true">
 			<classpathset dir="${target.classes}"/>
 			<bindingfileset dir="jibx">
-	  			<include name="InvoiceOrderMapping.xml"/>
+	  			<include name="BookQuoteMapping.xml"/>
 			</bindingfileset>
 		</bind>
+		<copy todir="${bin}">
+			<fileset dir="${target.classes}">
+				<include name="**/chapter4/messageflow/**/*.class"/>
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="jar" depends="compile, bind">
@@ -55,9 +61,6 @@
 				<include name="esb/framework/**/*.class"/>
 			</fileset>
 			<fileset dir="mule">
-				<include name="**"/>
-			</fileset>
-			<fileset dir="spring">
 				<include name="**"/>
 			</fileset>
 		</jar>

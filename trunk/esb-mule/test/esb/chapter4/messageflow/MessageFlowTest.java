@@ -1,17 +1,23 @@
 package esb.chapter4.messageflow;
 
 import javax.jms.Destination;
+import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import junit.framework.TestCase;
 
 import org.apache.activemq.ActiveMQConnection;
+import org.apache.log4j.Logger;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import esb.chapter4.messageflow.domain.BookQuote;
 
 public class MessageFlowTest extends TestCase {
 	
+	private static final Logger logger = Logger.getLogger(MessageFlowTest.class);
 	FileSystemXmlApplicationContext appContext;
 	
 	protected void setUp() throws Exception {
@@ -26,12 +32,17 @@ public class MessageFlowTest extends TestCase {
 		ActiveMQConnection connection = ActiveMQConnection.makeConnection("tcp://localhost:61616");
 	    connection.start();
 	    Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-	    Destination destination = session.createQueue("amazon.input");
+	    Destination destination = session.createQueue("booksearch.input");
 		TextMessage isbnMessage = session.createTextMessage();
-		isbnMessage.setText("1010101010");
+		isbnMessage.setText("9999999999");
 		MessageProducer producer = session.createProducer(destination);
 		producer.send(isbnMessage);
-		Thread.sleep(5000);
+		Destination responseDestination = session.createQueue("booksearch.output");
+		MessageConsumer consumer = session.createConsumer(responseDestination);
+		ObjectMessage quoteObject = (ObjectMessage) consumer.receive();
+		BookQuote bookQuote = (BookQuote) quoteObject.getObject();
+		logger.info("received cheapest quote from " + bookQuote.getCompanyName() + ", " + bookQuote.getPrice());
+		
 	}
 
 }

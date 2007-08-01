@@ -14,28 +14,37 @@
   		<property name="connectionURL" value="tcp://localhost:61616"/>
   	</bean>
   	
-  	<bean id="BarnesBookStore" class="esb.chapter4.messageflow.service.BarnesBookStore" scope="singleton">
-  		<constructor-arg><value>tcp://localhost:61616</value></constructor-arg>
-  		<constructor-arg><value>barnes.input</value></constructor-arg>
-  		<constructor-arg>
+  	<bean id="BarnesListener" class="esb.chapter4.messageflow.service.BarnesBookStore" scope="singleton">
+  		<property name="bookMap">
   			<map>
   				<entry key="1010101010" value="25.3"/>
-  				<entry key="9999999999" value="27.5"/>
+  				<entry key="9999999999" value="31.2"/>
   			</map>
-  		</constructor-arg>
+  		</property>
+  		<property name="connectionURL" value="tcp://localhost:61616"/>
   	</bean>
   	
-  	<bean id="amazonDestination" class="org.apache.activemq.command.ActiveMQQueue">
+  	<bean id="AmazonDestination" class="org.apache.activemq.command.ActiveMQQueue">
     	<constructor-arg value="amazon.input" />
     </bean>
+    
+    <bean id="BarnesDestination" class="org.apache.activemq.command.ActiveMQQueue">
+    	<constructor-arg value="barnes.input" />
+    </bean>
   	
-  	<bean id="listenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-    	<property name="connectionFactory" ref="connectionFactory" />
-      	<property name="destination" ref="amazonDestination" />
+  	<bean id="AmazonListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+    	<property name="connectionFactory" ref="ConnectionFactory" />
+      	<property name="destination" ref="AmazonDestination" />
       	<property name="messageListener" ref="AmazonListener" />
     </bean>
+    
+    <bean id="BarnesListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+    	<property name="connectionFactory" ref="ConnectionFactory" />
+      	<property name="destination" ref="BarnesDestination" />
+      	<property name="messageListener" ref="BarnesListener" />
+    </bean>
 
-    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <bean id="ConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
     	<property name="brokerURL" value="tcp://localhost:61616" />
     </bean>
   

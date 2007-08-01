@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.jms.Destination;
 import javax.jms.Message;
-import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -18,26 +17,14 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import esb.chapter4.messageflow.domain.BookQuote;
+import esb.framework.util.JibxUtil;
+
 public class BarnesBookStore implements MessageListener {
 	
 	private static final Logger logger = Logger.getLogger(BarnesBookStore.class);
 	private Map<String, Float> bookMap;
 	private String connectionURL;
-	
-	public BarnesBookStore(String connectionURL, String queueName, Map<String, Float> bookMap) {
-		try {
-			ActiveMQConnection connection = ActiveMQConnection.makeConnection(connectionURL);
-		    connection.start();
-		    Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		    Destination inputQueue = session.createQueue(queueName);
-			MessageConsumer consumer = session.createConsumer(inputQueue);
-			consumer.setMessageListener(this);
-			this.connectionURL = connectionURL;
-			this.bookMap = bookMap;
-		} catch(Exception e) {
-			logger.error("error while creating JMS connection", e);
-		}
-	}
 	
 	public void onMessage(Message isbnMessage) {
 		if(!(isbnMessage instanceof TextMessage)) {
@@ -57,12 +44,33 @@ public class BarnesBookStore implements MessageListener {
 			ActiveMQConnection connection = ActiveMQConnection.makeConnection(connectionURL);
 		    connection.start();
 		    Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		    MessageProducer producer = session.createProducer(isbnMessage.getJMSReplyTo());
+		    Destination output = session.createQueue("barnes.output");
+		    MessageProducer producer = session.createProducer(output);
 		    TextMessage quoteMessage = session.createTextMessage();
-		    quoteMessage.setText(priceQuote.toString());
+		    BookQuote bookQuote = new BookQuote();
+		    bookQuote.setIsbn(isbn);
+		    bookQuote.setPrice(priceQuote);
+		    bookQuote.setCompanyName("BarnesAndNoble");
+		    quoteMessage.setText(JibxUtil.marshall(bookQuote));
 			producer.send(quoteMessage);
 		} catch(Exception e) {
 			logger.error("exception while processing message", e);
 		}
+	}
+	
+	public Map<String, Float> getBookMap() {
+		return bookMap;
+	}
+
+	public void setBookMap(Map<String, Float> bookMap) {
+		this.bookMap = bookMap;
+	}
+
+	public String getConnectionURL() {
+		return connectionURL;
+	}
+
+	public void setConnectionURL(String connectionURL) {
+		this.connectionURL = connectionURL;
 	}
 }

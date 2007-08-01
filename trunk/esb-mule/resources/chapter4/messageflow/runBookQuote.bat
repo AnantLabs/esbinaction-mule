@@ -1,1 +1,1 @@
-%MULE_HOME%\bin\mule -config file:mule/bookquote-config.xml
+%MULE_HOME%\bin\mule -config bookquote-config.xml

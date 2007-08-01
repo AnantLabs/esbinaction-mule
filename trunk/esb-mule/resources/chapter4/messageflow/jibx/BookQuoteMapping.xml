@@ -1,0 +1,8 @@
+<binding>
+  <mapping name="book-quote" class="esb.chapter4.messageflow.domain.BookQuote" ns="http://esbinaction.com/bookquote">
+  	<namespace uri="http://esbinaction.com/bookquote" default="elements"/>
+    <value name="isbn" field="isbn"/>
+    <value name="price" field="price"/>
+    <value name="companyname" field="companyName"/>
+  </mapping>
+</binding>
