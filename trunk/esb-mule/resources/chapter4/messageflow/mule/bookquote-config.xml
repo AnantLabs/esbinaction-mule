@@ -8,11 +8,6 @@
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
 	
-	<bean id="activeMqConnectionFactory" 
-	     	class="org.apache.activemq.ActiveMQConnectionFactory">
-		<property name="brokerURL" value="tcp://localhost:61616"/>
-	</bean>
-	
 	<jms:connector name="jmsConnector">
 		<jms:connection-factory class="org.apache.activemq.ActiveMQConnectionFactory">
 			<mule:properties>
