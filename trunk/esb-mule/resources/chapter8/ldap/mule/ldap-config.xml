@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:acegi="http://www.mulesource.org/schema/mule/acegi/2.0"
+       xmlns:http="http://www.mulesource.org/schema/mule/http/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/acegi/2.0 http://www.mulesource.org/schema/mule/acegi/2.0/mule-acegi.xsd
+       http://www.mulesource.org/schema/mule/http/2.0 http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd">
+	
+	<http:connector name="exceptionHTTP">
+		<default-connector-exception-strategy>
+			<outbound-endpoint address="vm://ldap.error"/>
+		</default-connector-exception-strategy>
+	</http:connector>
+	
+    <acegi:security-manager>
+    	<acegi:delegate-security-provider name="AcegiProvider" delegate-ref="authenticationProvider"/>
+    </acegi:security-manager>
+    
+    <spring:bean id="initialDirContextFactory" class="org.acegisecurity.ldap.DefaultInitialDirContextFactory">
+		<spring:constructor-arg value="ldap://localhost:10389/dc=example,dc=com" />
+		<spring:property name="managerDn">
+			<spring:value>uid=admin,ou=system</spring:value>
+		</spring:property>
+		<spring:property name="managerPassword">
+			<spring:value>secret</spring:value>
+		</spring:property>
+	</spring:bean>
+    
+    <spring:bean id="authenticationProvider" class="org.acegisecurity.providers.ldap.LdapAuthenticationProvider">
+		<spring:constructor-arg>
+			<spring:bean class="org.acegisecurity.providers.ldap.authenticator.BindAuthenticator">
+				<spring:constructor-arg>
+					<spring:ref local="initialDirContextFactory" />
+				</spring:constructor-arg>
+				<spring:property name="userDnPatterns">
+					<spring:list>
+						<spring:value>uid={0},ou=Users</spring:value>
+					</spring:list>
+				</spring:property>
+			</spring:bean>
+		</spring:constructor-arg>
+		<spring:constructor-arg>
+			<spring:bean class="org.acegisecurity.providers.ldap.populator.DefaultLdapAuthoritiesPopulator">
+				<spring:constructor-arg>
+					<spring:ref local="initialDirContextFactory" />
+				</spring:constructor-arg>
+				<spring:constructor-arg>
+					<spring:value>ou=Groups</spring:value>
+				</spring:constructor-arg>
+				<spring:property name="groupRoleAttribute">
+					<spring:value>cn</spring:value>
+				</spring:property>
+			</spring:bean>
+		</spring:constructor-arg>
+	</spring:bean>
+
+	<model name="LDAPExample">
+	
+		<service name="UserHTTPService">
+			<inbound-router>
+                <inbound-endpoint address="http://localhost:8888" synchronous="true">
+					<acegi:http-security-filter realm="mule-realm"/>
+                </inbound-endpoint>
+            </inbound-router>
+            <component>
+            	<pooled-object class="esb.chapter8.security.service.AuthenticationService">
+            		<properties>
+            			<spring:entry key="authenticated" value="true"/>
+            		</properties>
+            	</pooled-object>
+            </component>
+		</service>
+		
+		<service name="LDAPFailedService">
+			<inbound-router>
+                <inbound-endpoint address="vm://ldap.error"/>
+            </inbound-router>
+            <component>
+            	<pooled-object class="esb.chapter8.security.service.AuthenticationService">
+            		<properties>
+            			<spring:entry key="authenticated" value="false"/>
+            		</properties>
+            	</pooled-object>
+            </component>
+		</service>
+	</model>
+</mule>
+

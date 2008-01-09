@@ -6,7 +6,9 @@ public class SimpleIntComponent {
 	
 	private final static Logger logger = Logger.getLogger(SimpleIntComponent.class);
 	
-	public void accept(Integer payload) {
-		logger.info("received payload " + payload);
+	public String accept(Integer payload) {
+		String message = "received payload " + payload;
+		logger.info(message);
+		return message;
 	}
 }

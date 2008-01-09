@@ -64,6 +64,10 @@
 				<include name="**"/>
 			</fileset>
 		</jar>
+		<copy todir="${MULE_HOME}/lib/user">
+			<fileset dir="${lib}/jibx"/>
+			<fileset dir="${lib}/activemq"/>
+		</copy>
 	</target>
 	
 </project>

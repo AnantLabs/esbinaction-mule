@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+       xmlns:jbossts="http://www.mulesource.org/schema/mule/jbossts/2.0"
+       xmlns:jdbc="http://www.mulesource.org/schema/mule/jdbc/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
+       http://www.mulesource.org/schema/mule/jbossts/2.0 http://www.mulesource.org/schema/mule/jbossts/2.0/mule-jbossts.xsd
+       http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
+    
+    <jbossts:jboss-transaction-manager/>
+    
+    <spring:bean id="congestionDatabase"
+      		class="org.enhydra.jdbc.standard.StandardXADataSource"
+      		destroy-method="shutdown">
+    	<spring:property name="driverName" value="org.hsqldb.jdbcDriver"/>
+    	<spring:property name="url" value="jdbc:hsqldb:hsql://localhost/congestion"/>
+	</spring:bean>
+	
+	<jdbc:connector name="jdbcConnector">
+        <jdbc:dataSource instance-ref="congestionDatabase" scope="singleton" />
+        <jdbc:queries>
+            <spring:entry key="test.in"
+                   value="INSERT INTO PUBLIC.EVENTS (id, test) values (NULL, 'test')" />
+        </jdbc:queries>
+    </jdbc:connector>
+    
+    <spring:bean name="txFactory" class="org.mule.transaction.XaTransactionFactory" />
+    
+    <jms:activemq-xa-connector name="jmsConnector" maxRedelivery="1" createMultipleTransactedReceivers="false">
+		<jms:connection-factory class="org.apache.activemq.ActiveMQXAConnectionFactory"/>
+	</jms:activemq-xa-connector>
+    
+    <model name="XATransactionExample">
+		<service name="XATransactionalJMSService">
+			<inbound-router>
+                <inbound-endpoint address="jms://xatransaction.in"> 
+					<transaction action="ALWAYS_BEGIN">
+						<transaction-factory ref="txFactory"/>
+					</transaction>
+                </inbound-endpoint>
+            </inbound-router>
+       		<outbound-router>
+       			<outbound-pass-through-router>
+       				<outbound-endpoint address="jdbc://test.in">
+       					<transaction action="ALWAYS_JOIN">
+							<transaction-factory ref="txFactory"/>
+						</transaction>
+       				</outbound-endpoint>
+       			</outbound-pass-through-router>
+       		</outbound-router>
+		</service>
+	</model>
+</mule>
+

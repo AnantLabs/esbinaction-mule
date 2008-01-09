@@ -6,7 +6,9 @@ public class SimpleComponent {
 	
 	private final static Logger logger = Logger.getLogger(SimpleComponent.class);
 	
-	public void accept(String payload) {
-		logger.info("received payload " + payload);
+	public String accept(String payload) {
+		String message = "received payload " + payload;
+		logger.info(message);
+		return message;
 	}
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project name="TransactionExample" default="jar" basedir=".">
+	
+	<property environment="env"/>
+	<property name="MULE_HOME" value="${env.MULE_HOME}"/>
+	<property name="src" value="../../../src"/>
+	<property name="bin" value="../../../bin"/>
+	<property name="lib" value="../../../lib"/>
+	<property name="target" value="target"/>
+	<property name="target.classes" value="${target}/classes"/>
+	
+	<target name="clean">
+		<delete dir="${target.classes}"/>
+		<delete file="${MULE_HOME}/lib/user/transactionexample.jar"/>
+	</target>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${target.classes}"/>
+	    <javac srcdir="${src}" destdir="${target.classes}"
+	        includes="**/chapter8/transaction/**/*.java"
+	        debug="on"
+	        deprecation="on"
+	        optimize="off">
+	        <classpath>
+	        	<fileset dir="${lib}">
+	            	<include name="**/*.jar"/>
+	          	</fileset>
+	       		<fileset dir="${MULE_HOME}/lib">
+	        		<include name="**/*.jar"/>
+	        	</fileset>
+	        </classpath>
+	   </javac>
+  	</target>
+		
+	<target name="jar" depends="compile">
+		<jar jarfile="${MULE_HOME}/lib/user/transactionexample.jar">
+			<fileset dir="${target.classes}"/>
+			<fileset dir="mule"/>
+		</jar>
+	</target>
+	
+</project>

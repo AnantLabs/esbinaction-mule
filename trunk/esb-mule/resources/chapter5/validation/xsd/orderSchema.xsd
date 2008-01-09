@@ -1,0 +1,19 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://esbinaction.com/order" 
+		xmlns:ord="http://esbinaction.com/order"
+		attributeFormDefault="unqualified"
+		elementFormDefault="qualified">
+		
+	<!--  The root element of our message -->
+	<element name="order" type="ord:orderType"/>
+		
+	<!--  the type describing the order root element -->
+	<complexType name="orderType">
+		<sequence>
+			<element name="clientname" type="string"/>
+			<element name="productname" type="string"/>
+			<element name="quantity" type="integer"/>
+			<element name="orderdate" type="date"/>
+		</sequence>
+	</complexType>
+</schema>

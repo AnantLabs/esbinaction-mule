@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:spring="http://www.springframework.org/schema/beans"
        xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 		http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
 		http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
 
-	<bean id="ResponseOptions" class="esb.chapter4.component.ResponseOptions">
-		<property name="options">
-			<map>
-				<entry key="EAI" value="Where have you been lately?"/>
-				<entry key="XML" value="The lingua franca!"/>
-				<entry key="Open Source" value="Yes it's free!"/>
-				<entry key="ESB" value="Yes, yes!"/>
-				<entry key="other" value="Try again."/>
-			</map>
-		</property>
-	</bean>
+	<spring:bean id="ResponseOptions" class="esb.chapter4.component.ResponseOptions">
+		<spring:property name="options">
+			<spring:map>
+				<spring:entry key="EAI" value="Where have you been lately?"/>
+				<spring:entry key="XML" value="The lingua franca!"/>
+				<spring:entry key="Open Source" value="Yes it's free!"/>
+				<spring:entry key="ESB" value="Yes, yes!"/>
+				<spring:entry key="other" value="Try again."/>
+			</spring:map>
+		</spring:property>
+	</spring:bean>
 	
-	<mule:model-seda name="SimpleSpringExample">
-        <mule:service name="SimpleSpringComponent">
-            <mule:inbound-router>
-                <mule:endpoint address="stdio://System.in?promptMessage=Enter a word:"/>
-            </mule:inbound-router>
-            <mule:component class="esb.chapter4.component.SimpleSpringComponent">
-            	<mule:properties>
-            		<entry key="responseOptions" value-ref="ResponseOptions"/>
-            	</mule:properties>
-            </mule:component>
-            <mule:outbound-router>
-            	<mule:pass-through-router>
-            		<mule:endpoint address="stdio://System.out"/>
-            	</mule:pass-through-router>
-			</mule:outbound-router>
-		</mule:service>
-	</mule:model-seda>
-</beans>
+	<model name="SimpleSpringExample">
+        <service name="SimpleSpringComponent">
+        	<component class="esb.chapter4.component.SimpleSpringComponent">
+            	<properties>
+            		<spring:entry key="responseOptions" value-ref="ResponseOptions"/>
+            	</properties>
+            </component>
+            <inbound-router>
+                <inbound-endpoint address="stdio://System.in?promptMessage=Enter a word:"/>
+            </inbound-router>
+            <outbound-router>
+            	<outbound-pass-through-router>
+            		<outbound-endpoint address="stdio://System.out"/>
+            	</outbound-pass-through-router>
+			</outbound-router>
+		</service>
+	</model>
+</mule>
 

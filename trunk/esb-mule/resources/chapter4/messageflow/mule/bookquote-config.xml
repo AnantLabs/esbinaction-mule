@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
        xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
-       xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
@@ -10,74 +10,75 @@
 	
 	<jms:connector name="jmsConnector">
 		<jms:connection-factory class="org.apache.activemq.ActiveMQConnectionFactory">
-			<mule:properties>
-				<entry key="brokerURL" value="tcp://localhost:61616"/>
-			</mule:properties>
+			<properties>
+				<spring:entry key="brokerURL" value="tcp://localhost:61616"/>
+			</properties>
 		</jms:connection-factory>
 	</jms:connector>
 	
-  	<mule:custom-transformer name="JMSToObject" 
+  	<custom-transformer name="JMSToObject" 
 				class="org.mule.providers.jms.transformers.JMSMessageToObject"/>
-	<mule:custom-transformer name="ObjectToJMS" 
+	<custom-transformer name="ObjectToJMS" 
 				class="org.mule.providers.jms.transformers.ObjectToJMSMessage"/>
-	<mule:custom-transformer name="ISBNToXML" 
+	<custom-transformer name="ISBNToXML" 
 				class="esb.chapter4.messageflow.transformer.ISBNTransformer"/>
-	<mule:custom-transformer name="XMLToObject" 
+	<custom-transformer name="XMLToObject" 
 				class="esb.framework.util.XMLToObjectTransformer">
-		<mule:property name="targetClassName" value="esb.chapter4.messageflow.domain.BookQuote"/>         
-	</mule:custom-transformer>
+		<spring:property name="targetClassName" value="esb.chapter4.messageflow.domain.BookQuote"/>         
+	</custom-transformer>
 		
-	<mule:model-seda name="BookQuoteExample">
-		<mule:service name="BookQuoteLogger">
-            <mule:inbound-router>
-                <mule:endpoint address="jms://booksearch.input"/>
-            </mule:inbound-router>
-            <mule:component class="esb.chapter4.messageflow.mule.MessageLogger" />
-            <mule:outbound-router>
-            	<mule:multicasting-router>
-            		<mule:endpoint address="jms://amazon.input"/>
-            		<mule:endpoint address="jms://barnes.input"
-            			transformers="JMSToObject ISBNToXML ObjectToJMS"/>
-            	</mule:multicasting-router>
-			</mule:outbound-router>
-        </mule:service>
+	<model name="BookQuoteExample">
+		<service name="BookQuoteLogger">
+			<component class="esb.chapter4.messageflow.mule.MessageLogger" />
+            <inbound-router>
+                <inbound-endpoint address="jms://booksearch.input"/>
+            </inbound-router>
+            <outbound-router>
+            	<multicasting-router>
+            		<outbound-endpoint address="jms://amazon.input"/>
+            		<outbound-endpoint address="jms://barnes.input"
+            			transformer-ref="JMSToObject ISBNToXML ObjectToJMS"/>
+            	</multicasting-router>
+			</outbound-router>
+        </service>
         
-        <mule:service name="AmazonResponseHandler">
-        	<mule:inbound-router>
-                <mule:endpoint address="jms://amazon.output"/>
-            </mule:inbound-router>
-            <mule:component class="esb.chapter4.messageflow.mule.MessageLogger" />
-            <mule:outbound-router>
-				<mule:pass-through-router>
-					<mule:endpoint address="vm://aggregateQuotes.input" transformers="JMSToObject"/>
-				</mule:pass-through-router>
-			</mule:outbound-router>
-        </mule:service>
+        <service name="AmazonResponseHandler">
+        	<component class="esb.chapter4.messageflow.mule.MessageLogger" />
+        	<inbound-router>
+                <inbound-endpoint address="jms://amazon.output"/>
+            </inbound-router>
+            <outbound-router>
+				<outbound-pass-through-router>
+					<outbound-endpoint address="vm://aggregateQuotes.input"
+						transformer-ref="JMSToObject"/>
+				</outbound-pass-through-router>
+			</outbound-router>
+        </service>
         
-        <mule:service name="BarnesResponseHandler">
-        	<mule:inbound-router>
-                <mule:endpoint address="jms://barnes.output"/>
-            </mule:inbound-router>
-            <mule:component class="esb.chapter4.messageflow.mule.MessageLogger" />
-            <mule:outbound-router>
-				<mule:pass-through-router>
-					<mule:endpoint address="vm://aggregateQuotes.input" transformers="JMSToObject XMLToObject"/>
-				</mule:pass-through-router>
-			</mule:outbound-router>
-        </mule:service>
+        <service name="BarnesResponseHandler">
+        	<component class="esb.chapter4.messageflow.mule.MessageLogger" />
+        	<inbound-router>
+                <inbound-endpoint address="jms://barnes.output"/>
+            </inbound-router>
+            <outbound-router>
+				<outbound-pass-through-router>
+					<outbound-endpoint address="vm://aggregateQuotes.input" 
+						transformer-ref="JMSToObject XMLToObject"/>
+				</outbound-pass-through-router>
+			</outbound-router>
+        </service>
         
-        <mule:service name="CheapestPriceCalculator">
-        	<mule:inbound-router>
-        		<mule:custom-router class="esb.chapter4.messageflow.mule.BookQuoteAggregator"/>
-                <mule:endpoint address="vm://aggregateQuotes.input"/>
-            </mule:inbound-router>
-            <mule:component class="esb.chapter4.messageflow.mule.CheapestPriceCalculator"/>
-            <mule:outbound-router>
-            	<mule:pass-through-router>
-            		<mule:endpoint address="jms://booksearch.output"
-            			transformers="ObjectToJMS"/>
-            	</mule:pass-through-router>
-            </mule:outbound-router>
-        </mule:service>
-	</mule:model-seda>
-</beans>
+        <service name="CheapestPriceCalculator">
+        	<component class="esb.chapter4.messageflow.mule.CheapestPriceCalculator"/>
+        	<inbound-router>
+        		<inbound-endpoint address="vm://aggregateQuotes.input"/>
+        		<custom-inbound-router class="esb.chapter4.messageflow.mule.BookQuoteAggregator"/>
+            </inbound-router>
+            <outbound-router>
+            	<outbound-pass-through-router>
+            		<outbound-endpoint address="jms://booksearch.output"/>
+            	</outbound-pass-through-router>
+            </outbound-router>
+        </service>
+	</model>
+</mule>
