@@ -1,4 +1,0 @@
-urlid esbinaction
-url jdbc:hsqldb:hsql://localhost/reservation
-username sa
-password 
