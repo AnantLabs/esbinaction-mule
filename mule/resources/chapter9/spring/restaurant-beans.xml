@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  	<bean id="lakeviewRestaurant" 
+  			class="esb.chapter9.restaurant.bean.RestaurantServiceBean">
+		<property name="restaurantName" value="Lakeview"/>
+		<property name="acceptedResponse" value="We have a table available with lake view"/>
+		<property name="deniedResponse" value="The Lakeview is fully booked, but please try again tomorrow"/>
+		<property name="maximumPersons" value="100"/>
+		<property name="numberPersonsReservation" value="50"/>
+  	</bean>
+  	
+  	<bean id="duckRestaurant" 
+  			class="esb.chapter9.restaurant.bean.RestaurantServiceBean">
+		<property name="restaurantName" value="The royal duck"/>
+		<property name="acceptedResponse" value="We have a table with duck available for you"/>
+		<property name="deniedResponse" value="There are no tables available"/>
+		<property name="maximumPersons" value="150"/>
+		<property name="numberPersonsReservation" value="10"/>
+  	</bean>
+  	
+  	<bean id="yokohamaRestaurant" 
+  			class="esb.chapter9.restaurant.bean.RestaurantServiceBean">
+		<property name="restaurantName" value="Yokohama"/>
+		<property name="acceptedResponse" value="The Yokohama restaurant has a table available for you"/>
+		<property name="deniedResponse" value="Available tables in Yokohama are rare, so please try again tomorrow"/>
+		<property name="maximumPersons" value="80"/>
+		<property name="numberPersonsReservation" value="76"/>
+  	</bean>
+  	
+  	<bean id="restaurantDAO"
+  			class="esb.chapter9.restaurant.dao.hibernate.ReservationHibernateDAO">
+  		<property name="sessionFactory" ref="hibernateSessionFactory"/>
+  	</bean>
+        
+  	<!-- DataSource Property -->
+	<bean id="reservationDataSource" 
+			class="org.enhydra.jdbc.standard.StandardDataSource" destroy-method="shutdown">
+	 	<property name="driverName" value="org.hsqldb.jdbcDriver"/>
+	 	<property name="url" value="jdbc:hsqldb:hsql://localhost/reservation"/>
+	</bean> 
+
+	<!-- Hibernate SessionFactory -->
+	<bean id="hibernateSessionFactory" 
+   			class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+ 		<property name="dataSource" ref="reservationDataSource"/>
+ 		<property name="hibernateProperties">
+ 			<value>
+ 				hibernate.dialect=org.hibernate.dialect.HSQLDialect
+ 				hibernate.show_sql=true
+				hibernate.hbm2ddl.auto=update
+ 			</value>
+ 		</property>
+ 		<property name="mappingResources">
+    		<list>
+       			<value>esb/chapter9/restaurant/model/Reservation.hbm.xml</value>
+       			<value>esb/chapter9/restaurant/model/Restaurant.hbm.xml</value>
+    		</list>
+ 		</property>
+ 	</bean>
+  	
+</beans>

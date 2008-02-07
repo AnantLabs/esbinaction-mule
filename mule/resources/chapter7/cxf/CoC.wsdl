@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:osesb="http://opensource.esb.org/CoC/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CoC"
+  targetNamespace="http://opensource.esb.org/CoC/">
+
+  <!-- The types are defined in the external XML schema file -->
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      targetNamespace="http://opensource.esb.org/CoC/">
+
+      <!-- define the elements which go into our methods -->
+
+      <xsd:element name="changeCompany">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="companyName" type="xsd:string" />
+            <xsd:element name="companyInfo" type="osesb:company" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="findCompanies">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="city" type="xsd:string" />
+            <xsd:element name="streetName" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="findCompaniesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="companies" type="osesb:listOfCompanies"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCompany">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="companyName" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCompanyResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="company" type="osesb:company" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <!-- define the types -->
+      
+      <xsd:complexType name="listOfCompanies">
+        <xsd:sequence>
+          <xsd:element name="company" type="osesb:company" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="company">
+        <xsd:sequence>
+          <xsd:element name="name" type="xsd:string" />
+          <xsd:element name="boardOfDirectors" type="osesb:boardOfDirectors" />
+          <xsd:element name="address" type="osesb:address" />
+        </xsd:sequence>
+        <xsd:attribute name="cocID" type="xsd:string" />
+      </xsd:complexType>
+
+      <!-- Defines the board that manages this corporation -->
+      <xsd:complexType name="boardOfDirectors">
+        <xsd:sequence>
+          <xsd:element name="director" type="osesb:director" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- Defines a single director -->
+      <xsd:complexType name="director">
+        <xsd:sequence>
+          <xsd:element name="firstName" type="xsd:string" />
+          <xsd:element name="lastName" type="xsd:string" />
+          <xsd:element name="dateOfBirth" type="xsd:date" />
+          <xsd:element name="address" type="osesb:address" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- defines a simple address -->
+      <xsd:complexType name="address">
+        <xsd:sequence>
+          <xsd:element name="street" type="xsd:string" />
+          <xsd:element name="number" type="xsd:integer" />
+          <xsd:element name="city" type="xsd:string" />
+          <xsd:element name="state" type="xsd:string" />
+          <xsd:element name="zipcode" type="osesb:zip" />
+          <xsd:element name="country" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- defines the zip type -->
+      <xsd:simpleType name="zip">
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[0-9]{5}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+
+    </xsd:schema>
+  </wsdl:types>
+
+  <!--  The request for the changeCompany operation -->
+  <wsdl:message name="changeCompanyRequest">
+    <wsdl:part element="osesb:changeCompany" name="parameters" />
+  </wsdl:message>
+  <!--  The request for the findCompanies operation -->
+  <wsdl:message name="findCompaniesRequest">
+    <wsdl:part element="osesb:findCompanies" name="parameters" />
+  </wsdl:message>
+  <!--  The response for the findCompanies operation -->
+  <wsdl:message name="findCompaniesResponse">
+    <wsdl:part element="osesb:findCompaniesResponse" name="parameters" />
+  </wsdl:message>
+  <wsdl:message name="getCompanyRequest">
+    <wsdl:part element="osesb:getCompany" name="parameters" />
+  </wsdl:message>
+  <!-- The response from the getCompanyOperation -->
+  <wsdl:message name="getCompanyResponse">
+    <wsdl:part element="osesb:getCompanyResponse" name="parameters" />
+  </wsdl:message>
+
+
+  <!--  now we define the CoC interface/porttype -->
+  <wsdl:portType name="CoCPortType">
+    <wsdl:operation name="changeCompany">
+      <wsdl:input message="osesb:changeCompanyRequest" />
+    </wsdl:operation>
+    <wsdl:operation name="findCompanies">
+      <wsdl:input message="osesb:findCompaniesRequest" />
+      <wsdl:output message="osesb:findCompaniesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCompany">
+      <wsdl:input message="osesb:getCompanyRequest" />
+      <wsdl:output message="osesb:getCompanyResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <!-- now bind the portType to an implementation -->
+  <wsdl:binding name="CoCSoapBinding" type="osesb:CoCPortType">
+    <soap:binding style="document"
+      transport="http://schemas.xmlsoap.org/soap/http" />
+
+    <wsdl:operation name="changeCompany">
+      <soap:operation soapAction="http://opensource.esb.org/CoC/changeCompany" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="findCompanies">
+      <soap:operation soapAction="http://opensource.esb.org/CoC/findCompanies" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCompany">
+      <soap:operation soapAction="http://opensource.esb.org/CoC/getCompany" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+
+
+
+  <!--  And finally define the service -->
+  <wsdl:service name="CoCService">
+    <wsdl:port binding="osesb:CoCSoapBinding" name="CoCSoap">
+      <soap:address location="http://localhost:8080" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

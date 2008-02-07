@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<project name="Mule - generic" basedir=".." xmlns:c="urn:contrib-ant">
+	
+	<!-- to avoid unbound variables messages in eclipse -->
+    <property name="${env.OS_ESB}" value=""/>
+    <property name="${env.MULE_HOME}" value=""/>
+  
+	<!-- General locations -->
+	<property name="OS_ESB" value="${env.OS_ESB}"/>
+    <property name="LIB" value="${OS_ESB}/lib"/>
+	<property name="MULE_HOME" value="${env.MULE_HOME}"/>
+	<property name="workspace.home" location="${env.OS_ESB}/workspace2/mule"/>
+	
+	<taskdef resource="net/sf/antcontrib/antlib.xml" uri="urn:contrib-ant">
+	  <classpath>
+	    <pathelement location="${OS_ESB}/lib/ant-contrib-1.0b3.jar"/>
+	  </classpath>
+	</taskdef>
+	
+	<property name="work" location="${workspace.home}/work"/>
+	
+	<target name="gn:init">
+		<mkdir dir="${workspace.home}/work"/>
+	</target>
+	
+  
+  
+</project>

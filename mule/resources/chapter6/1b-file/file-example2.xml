@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule:mule xmlns="http://www.springframework.org/schema/beans"
+  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
+
+  <mule:model name="file-model">
+    <mule:service name="file-reader-writer">
+      <mule:pass-through-component />
+      <mule:inbound-router>
+        <mule:inbound-endpoint address="file://work/chapter6/1b/in">
+          <mule:properties>
+            <entry key="pollingFrequencey" value="3000" />
+            <entry key="fileAge" value="10000" />
+            <entry key="moveToDirectory" value="file://work/chapter6/ib/bak"/>
+            <entry key="moveToPattern" value="${UUID}.bak"/>
+          </mule:properties>
+        </mule:inbound-endpoint>
+      </mule:inbound-router>
+      <mule:outbound-router>
+        <mule:outbound-pass-through-router>
+          <mule:outbound-endpoint address="file://work/chapter6/1b/out">
+            <mule:properties>
+              <entry key="outputPattern" value="${COUNT}.dat" />
+              <entry key="outputAppend" value="true"/>
+            </mule:properties>
+          </mule:outbound-endpoint>
+        </mule:outbound-pass-through-router>
+      </mule:outbound-router>
+    </mule:service>
+  </mule:model>
+
+</mule:mule>

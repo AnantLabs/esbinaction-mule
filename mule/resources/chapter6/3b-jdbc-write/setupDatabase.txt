@@ -1,0 +1,38 @@
+drop table PUBLIC.TICKETS if exists;
+drop table PUBLIC.EVENTS if exists;
+drop table PUBLIC.BLACKLIST if exists;
+
+//CREATE USER jp PASSWORD jp ADMIN;
+
+create table TICKETS (
+    id              IDENTITY,
+    name            varchar(256)      not null,
+    email           varchar(256)      not null,
+    date            varchar(256)      not null,
+    licenseplate    varchar(256)      not null    
+  );
+  
+insert into PUBLIC.TICKETS(id, name, email,date,licenseplate) values (NULL, 'jos' ,'jos.dirksen@atosorigin.com', '10-10-10','AB10ABC');
+insert into PUBLIC.TICKETS(id, name, email,date,licenseplate) values (NULL, 'tijs' ,'tijs@atosorigin.com', '10-10-10','RE45ARE');
+insert into PUBLIC.TICKETS(id, name, email,date,licenseplate) values (NULL, 'piet' ,'piet@atosorigin.com', '10-10-10','AS11ERT');
+
+create table EVENTS (
+	id		IDENTITY,
+	licenseplate    varchar(256)      not null,
+	time			BIGINT			  not null,
+	gate			varchar(256)	  not null,
+	eventType	    INTEGER			  not null				  
+);
+
+insert into PUBLIC.EVENTS(id, licenseplate, time, gate, eventType) values (NULL, 'AS11ERT' ,12345678, 'A' ,0);
+insert into PUBLIC.EVENTS(id, licenseplate, time, gate, eventType) values (NULL, 'AS11ERT' ,12345688, 'D' ,1);
+
+create table BLACKLIST (
+	id            IDENTITY            not null,
+	licenseplate  varchar(256)        not null
+);
+
+insert into PUBLIC.BLACKLIST(id, licenseplate) values (NULL, 'AS11QWE');
+insert into PUBLIC.BLACKLIST(id, licenseplate) values (NULL, 'PO44POI');
+
+commit;
