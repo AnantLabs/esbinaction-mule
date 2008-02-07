@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+This build file provides all the targets needed to run the examples from
+the second chapter. This file makes heavily use of the ant tasks provided
+by servicemix.
+
+This build file assumes that the SM_HOME and the OS_ESB properties are set
+to respectively the servicemix installation and the 'opensource ESB' provided
+files. 
+-->
+<project name="chapter 9 - Mule" basedir=".." default="init" xmlns:sm="urn:servicemix">
+
+	<!-- read in the system's environment -->
+	<property environment="env" />
+
+	<!-- We can't continue without these properties -->
+	<!--	<fail unless="env.MULE_HOME" message="MULE_HOME property not set, can't continue." /> -->
+	<fail unless="env.OS_ESB" message="OS_ESB property not set, can't continue." />
+
+	<!-- import the servicemix tasks into the sm namespace -->
+	<import file="${env.OS_ESB}/workspace2/mule/bin/mule-general.xml" />
+	<import file="${env.OS_ESB}/workspace2/mule/bin/osesb-general.xml" />
+	<property name="chapter.home" location="${workspace.home}/resources/chapter9" />
+
+	<target name="init">
+		<antcall target="gn:init" />
+		<echo message="Mule home is set to ${MULE_HOME}." />
+		<echo message="Opensource ESB is set to ${OS_ESB}." />
+		<echo message="Chapter home is set to ${chapter.home}." />
+		<echo message="Workspace home is set to ${workspace.home}." />
+	</target>
+
+
+	<target name="jdbc-setup-database" depends="init" description="setup the database">
+		<antcall target="ext:jdbc-setup-database">
+			<param name="sql-file" value="${chapter.home}/database/setupDatabase.txt"/>
+			<param name="rc-file" value="${chapter.home}/database/auth.rc"/>
+			<param name="urlID" value="esbinaction"/>
+		</antcall>
+	</target>
+
+</project>

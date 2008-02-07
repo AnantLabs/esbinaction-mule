@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!--
+This build file provides all the targets needed to run the examples from
+the second chapter. This file makes heavily use of the ant tasks provided
+by servicemix.
+
+This build file assumes that the SM_HOME and the OS_ESB properties are set
+to respectively the servicemix installation and the 'opensource ESB' provided
+files. 
+-->
+<project name="chapter 4 - Mule" basedir="../..">
+
+	<!-- read in the system's environment -->
+	<property environment="env" />
+
+	<!-- We can't continue without these properties -->
+	<fail unless="env.OS_ESB" message="OS_ESB property not set, can't continue." />
+
+	<!-- import the servicemix tasks into the sm namespace -->
+	<import file="mule-general.xml" />
+	<import file="osesb-general.xml" />
+	<property name="chapter.home" location="${workspace.home}/mule/resources/chapter4" />
+	
+	<target name="chapter4-component" depends="gn:init" description="Run the simple component example">	
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter4/**/*"/>
+		</antcall>
+		
+		<jar destfile="/home/nl24167/java/book/esb/mule-2.1.0-M1-SNAPSHOT/lib/user/chapter4-component.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter4/**/*"/>
+			</fileset>
+			<fileset dir="${chapter.home}/component">
+				<include name="simplecomponent-config.xml"/>
+			</fileset>
+		</jar>
+		
+		<echo message="This example uses the stdio, and can't be started from Ant. Mule has now been"/>			
+		<echo message="setup to work with the sources from this example. To run this example go to the"/>
+		<echo message="${workspace.home}/mule/bin/batch directory and "/>
+		<echo message="run the chapter4-component.bat or the chapter4-component-spring.sh file."/>
+		
+	</target>
+
+	<target name="chapter4-component-transformer" depends="gn:init" description="Run the simple component example with a transformer">	
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter4/**/*"/>
+		</antcall>
+		
+		<jar destfile="/home/nl24167/java/book/esb/mule-2.1.0-M1-SNAPSHOT/lib/user/chapter4-component.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter4/**/*"/>
+			</fileset>
+			<fileset dir="${chapter.home}/component">
+				<include name="simpleintcomponent-config.xml"/>
+			</fileset>
+		</jar>
+		
+		<echo message="This example uses the stdio, and can't be started from Ant. Mule has now been"/>			
+		<echo message="setup to work with the sources from this example. To run this example go to the"/>
+		<echo message="${workspace.home}/mule/bin/batch directory and "/>
+		<echo message="run the chapter4-component-int.bat or the chapter4-component-spring.sh file."/>
+		
+	</target>
+	
+	<target name="chapter4-component-spring" depends="gn:init" description="Run the simple component example with spring">	
+
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter4/**/*"/>
+		</antcall>
+		
+		<jar destfile="/home/nl24167/java/book/esb/mule-2.1.0-M1-SNAPSHOT/lib/user/chapter4-component.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter4/**/*"/>
+			</fileset>
+			<fileset dir="${chapter.home}/component">
+				<include name="simplespringcomponent-config.xml"/>
+			</fileset>
+		</jar>
+		
+		<echo message="This example uses the stdio, and can't be started from Ant. Mule has now been"/>			
+		<echo message="setup to work with the sources from this example. To run this example go to the"/>
+		<echo message="${workspace.home}/mule/bin/batch directory and "/>
+		<echo message="run the chapter4-component-spring.bat or the chapter4-component-spring.sh file."/>
+		
+	</target>	
+	
+	<target name="chapter4-messageflow-mule" depends="gn:init" description="messageflow-mule">
+		<echo message="Starting mule part of example chapter 4"/>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/messageflow/mule/bookquote-config.xml"/>
+			<param name="classes-filter" value="esb/chapter4/**/*"/>
+			<param name="jibx-mapping" value="${chapter.home}/messageflow/jibx/BookQuoteMapping.xml"/>
+		</antcall>
+	</target>
+	
+	<target name="chapter4-messageflow-spring" depends="gn:init" description="messageflow-spring">
+		<echo message="Starting spring part of example chapter 4"/>
+		<antcall target="gn:run-java-in-classpath">
+			<param name="class" value="esb.chapter4.messageflow.SpringStarter"/>
+		</antcall>
+	</target>	
+
+	
+</project>

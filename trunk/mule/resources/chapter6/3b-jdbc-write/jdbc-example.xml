@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule:mule xmlns="http://www.springframework.org/schema/beans"
+  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+  xmlns:jdbc="http://www.mulesource.org/schema/mule/jdbc/2.0"
+  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
+  xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
+
+  <jdbc:connector name="hsqldb-connector" pollingFrequency="5000">
+    <jdbc:dataSource class="org.enhydra.jdbc.standard.StandardDataSource">
+      <mule:properties>
+        <entry key="driverName" value="org.hsqldb.jdbcDriver" />
+        <entry key="url" value="jdbc:hsqldb:hsql://localhost/xdb" />
+        <entry key="user" value="sa" />
+      </mule:properties>
+    </jdbc:dataSource>
+    <jdbc:queries>
+      <entry key="write" value="INSERT into testtable (id, name, processed) VALUES(NULL, ${payload}, false" />
+    </jdbc:queries>
+  </jdbc:connector>
+
+  <mule:model name="jdbc-model">
+    <mule:service name="jdbc-reader">
+      <mule:pass-through-component />
+      <mule:inbound-router>
+        <mule:inbound-endpoint address="file://work/chapter6/3b/in">
+          <mule:transformer-byte-array-to-string/>
+          <mule:properties>
+            <entry key="pollingFrequency" value="3000"/>
+          </mule:properties>
+        </mule:inbound-endpoint>
+      </mule:inbound-router>
+      <mule:outbound-router>
+        <mule:outbound-pass-through-router>
+          <mule:outbound-endpoint address="jdbc://write"/>
+        </mule:outbound-pass-through-router>
+      </mule:outbound-router>
+    </mule:service>
+  </mule:model>
+
+</mule:mule>

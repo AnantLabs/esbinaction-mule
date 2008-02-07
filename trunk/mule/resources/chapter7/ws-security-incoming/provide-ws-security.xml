@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+  xmlns:xfire="http://www.mulesource.org/schema/mule/xfire/2.0"
+  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
+  xmlns:wss="http://www.mulesource.org/schema/mule/wssecurity/2.0"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                      http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+                      http://www.mulesource.org/schema/mule/xfire/2.0 http://www.mulesource.org/schema/mule/xfire/2.0/mule-xfire.xsd
+                      http://www.mulesource.org/schema/mule/wssecurity/2.0 http://www.mulesource.org/schema/mule/wssecurity/2.0/mule-wssecurity.xsd">
+  <mule:mule>
+
+    <xfire:connector name="connector" enableJSR181Annotations="true" />
+    
+    <beans>
+      <bean name="CocServiceImpl" class="org.esb.chapter7.wsdl.CocServiceImpl"
+        init-method="init" />
+        
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
+      <property name="beans">
+          <map>
+              <entry key="filter:name=detourFilter" value-ref="detourFilter"/>
+          </map>
+        </property>
+      </bean>
+
+      <bean id="detourFilter" class="org.esb.chapter9.filter.DetourFilter"/>
+    </beans>
+
+    <mule:model name="wsdl-bottom-up">
+      <!-- Calls directly to the service -->
+      <mule:service name="cocService">
+        <mule:inbound-router>
+          <mule:inbound-endpoint address="xfire:http://localhost:8081/services">
+            <mule:properties>
+              <entry key="action" value="Signature Encrypt"/>
+              <entry key="user" value="serverkey"/>
+              <entry key="passwordCallbackClass" value="org.esb.chapter7.wsdl.TestPwdCallback"/>
+              <entry key="signaturePropFile" value="org/esb/chapter7/wsdl/server.crypto.properties"/>
+            </mule:properties>
+            <wss:security-filter/>
+          </mule:inbound-endpoint>
+        </mule:inbound-router>
+        <mule:component>
+          <mule:singleton-object instance-ref="CocServiceImpl" />
+        </mule:component>
+      </mule:service>
+      
+      <mule:service name="detour-service">
+        <mule:pass-through-component/>
+        <mule:outbound-router>
+          <mule:forwarding-catch-all-strategy>
+            <mule:outbound-endpoint address="file://normal"/>
+          </mule:forwarding-catch-all-strategy>
+          <mule:filtering-router>
+            <mule:outbound-endpoint address="file://detour"/>
+            <mule:filter ref="detourFilter"/>
+          </mule:filtering-router>
+        </mule:outbound-router>
+      </mule:service>
+    </mule:model>
+
+  </mule:mule>
+</beans>
