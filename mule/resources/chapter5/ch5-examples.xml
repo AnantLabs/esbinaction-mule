@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+This build file provides all the targets needed to run the examples from
+the second chapter.  
+-->
+<project name="chapter 5 - Mule" basedir=".">
+
+	<property name="script" value="../../scripts/ant"/>
+
+	<!-- import the servicemix tasks into the sm namespace -->
+	<import file="${script}/mule-general.xml" />
+	<import file="${script}/osesb-general.xml" />
+	
+	<target name="validation-mule" depends="gn:init" description="validation-mule">
+		<echo message="Starting mule with validation example of chapter 5"/>
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter5/validation/**/*"/>
+		</antcall>
+		<jar destfile="${mule.deploy}/chapter5-validation.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter5/validation/**/*"/>
+				<include name="esb/util/**/*"/>
+			</fileset>
+			<fileset dir="validation/mule">
+				<include name="validation-config.xml"/>
+			</fileset>
+			<fileset dir="validation/xsd">
+				<include name="*.xsd"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="transformation-mule" depends="gn:init" description="transformation-mule">
+		<echo message="Starting mule with transformation example of chapter 5"/>
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter5/transformation/**/*"/>
+		</antcall>
+		<jar destfile="${mule.deploy}/chapter5-transformation.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter5/transformation/**/*"/>
+				<include name="esb/util/**/*"/>
+			</fileset>
+			<fileset dir="transformation/mule">
+				<include name="transformation-config.xml"/>
+			</fileset>
+			<fileset dir="transformation/groovy">
+				<include name="*.groovy"/>
+			</fileset>
+			<fileset dir="transformation/xslt">
+				<include name="*.xslt"/>
+			</fileset>
+		</jar>
+	</target>	
+
+	
+</project>

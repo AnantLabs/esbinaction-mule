@@ -18,7 +18,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import esb.chapter4.messageflow.domain.BookQuote;
-import esb.framework.util.JiBXUtil;
+import esb.util.framework.JiBXUtil;
 
 public class BarnesBookStore implements MessageListener {
 	
