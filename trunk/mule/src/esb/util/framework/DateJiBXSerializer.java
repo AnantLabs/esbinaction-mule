@@ -1,4 +1,4 @@
-package esb.framework.util;
+package esb.util.framework;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

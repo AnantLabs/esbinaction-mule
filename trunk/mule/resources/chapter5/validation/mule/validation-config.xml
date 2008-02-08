@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
+
+	<jms:activemq-connector name="jmsConnector"  brokerURL="tcp://localhost:61616"/>
+	
+	<model name="ValidationExample">
+        <service name="ValidationService">
+            <inbound>
+            	<forwarding-catch-all-strategy>
+            		<outbound-endpoint address="jms://validation.error"/>
+            	</forwarding-catch-all-strategy>
+                <inbound-endpoint address="jms://validation.in" />
+                <custom-inbound-router class="esb.chapter5.validation.mule.ValidationRouter">
+                	<spring:property name="externalSchemaLocation" value="orderSchema.xsd"/>
+                </custom-inbound-router>
+            </inbound>
+            <outbound>
+            	<outbound-pass-through-router>
+            		<outbound-endpoint address="jms://validation.out"/>
+            	</outbound-pass-through-router>
+			</outbound>
+		</service>
+	</model>
+</mule>
+

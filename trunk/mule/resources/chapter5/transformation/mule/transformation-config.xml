@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
+	
+	<custom-transformer name="StringToList" returnClass="java.util.List"
+        	class="org.mule.transformers.script.ScriptTransformer">
+        <spring:property name="scriptEngineName" value="groovy"/>
+        <spring:property name="scriptFile" value="tokenizer.groovy"/>
+	</custom-transformer>
+	
+	<custom-transformer name="ObjectToArray" class="esb.chapter5.transformation.mule.CollectionToArray"/>
+	
+	<custom-transformer name="XSLT" class="org.mule.transformers.xml.XsltTransformer">
+        <spring:property name="xslFile" value="weather.xslt"/>
+    </custom-transformer>
+	
+	<model name="TransformationExample">
+        <service name="WeatherInvokeService">
+            <inbound>
+                <inbound-endpoint address="stdio://System.in?promptMessage=Enter city,country:" transformer-refs="StringToList ObjectToArray"/>
+            </inbound>
+            <outbound>
+            	<chaining-router>
+                    <outbound-endpoint address="wsdl-xfire:http://www.webservicex.net/globalweather.asmx?WSDL&amp;method=GetWeather"/>
+                    <outbound-endpoint address="vm://weather.output"/>
+                </chaining-router>
+			</outbound>
+		</service>
+		<service name="WeatherResponseOutput">
+			<inbound>
+				<inbound-endpoint address="vm://weather.output" transformer-refs="XSLT"/>
+			</inbound>
+			<outbound>
+				<outbound-pass-through-router>
+					<outbound-endpoint address="stdio://System.out"/>
+				</outbound-pass-through-router>
+			</outbound>
+		</service>
+	</model>
+</mule>
+

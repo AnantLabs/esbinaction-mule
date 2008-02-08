@@ -1,4 +1,4 @@
-package esb.framework.util;
+package esb.util.framework;
 
 import java.io.StringReader;
 import java.io.StringWriter;

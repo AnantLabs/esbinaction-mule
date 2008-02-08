@@ -1,4 +1,4 @@
-package esb.framework.util;
+package esb.util.framework;
 
 import org.jibx.runtime.JiBXException;
 import org.mule.api.transformer.TransformerException;

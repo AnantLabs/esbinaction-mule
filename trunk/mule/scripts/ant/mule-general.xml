@@ -5,27 +5,28 @@
 <project name="Mule - generic" basedir="." xmlns:c="urn:contrib-ant">
 
 	<!-- General locations -->
-	<property name="TOOLS" value="../../../tools" />
-	<property name="LIB" value="../../../../../libraries" />
-	<property name="PATCHES" value="../../../esb/patches" />
-	<property name="mule.home" location="../../../../../esb/mule-2.0.0-RC2" />
+    <property name="book.home" location="../../../../.." />
+	<property name="tools.home" value="${book.home}/tools" />
+	<property name="lib.home" value="${book.home}/libraries" />
+	<property name="patches.home" value="${book.home}/esb/patches" />
+	<property name="mule.home" location="${book.home}/esb/mule-2.0.0-RC2" />
     <property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
 
-	<echo message="${LIB}/ant-contrib/ant-contrib-1.0b3.jar"/>
+	<echo message="${lib.home}/ant-contrib/ant-contrib-1.0b3.jar"/>
 	
 	<!-- define the tasks for the ant-contrib libraries -->
 	<taskdef resource="net/sf/antcontrib/antlib.xml" uri="urn:contrib-ant">
 		<classpath>
-			<pathelement location="${LIB}/ant-contrib/ant-contrib-1.0b3.jar" />
+			<pathelement location="${lib.home}/ant-contrib/ant-contrib-1.0b3.jar" />
 		</classpath>
 	</taskdef>
 	
     <!-- JiBX binding compiler task definition -->
     <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask">
       <classpath>
-        <fileset dir="c:/osesb/libraries/jibx/lib">
+        <fileset dir="${lib.home}/jibx/lib">
           <include name="*.jar"/>
         </fileset>
       </classpath>
@@ -33,23 +34,23 @@
 
 	<!-- define the classpath to use for mule -->
 	<path id="mule.path">
-		<pathelement path="${MULE_HOME}/conf"/>
-		<fileset dir="${MULE_HOME}/lib/boot">
+		<pathelement path="${mule.home}/conf"/>
+		<fileset dir="${mule.home}/lib/boot">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${MULE_HOME}/lib/endorsed">
+		<fileset dir="${mule.home}/lib/endorsed">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${MULE_HOME}/lib/mule">
+		<fileset dir="${mule.home}/lib/mule">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${MULE_HOME}/lib/opt">
+		<fileset dir="${mule.home}/lib/opt">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${TOOLS}/apache-activemq-4.1.1">
+		<fileset dir="${tools.home}/apache-activemq-4.1.1">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${LIB}/jibx/lib/">
+		<fileset dir="${lib.home}/jibx/lib/">
 			<include name="*.jar" />
 		</fileset>		
 		<pathelement path="${workspace.home}/mule/classes"/>
@@ -63,35 +64,6 @@
 		<mkdir dir="${workspace.home}/work" />
 		<echo message="Mule home is set to ${mule.home}." />
 		<echo message="Workspace home is set to ${workspace.home}." />
-	</target>
-
-	<target name="gn:run-mule-with-xmlconfig" depends="gn:init">
-		<!-- first compile the classes --> 
-		<c:if>
-		 <isset property="classes-filter" />
-		 <c:then>
-		 	<echo message="Compiling classes" />
-			<antcall target="gn:compile-classes">
-				<param name="classes-filter" value="${classes-filter}"/>
-			</antcall>
-		 </c:then>
-		</c:if>
-		
-		<c:if>
-		 <isset property="jibx-mapping" />
-		 <c:then>
-		 	<echo message="Running jibx" />
-			<antcall target="gn:jibx-classes">
-				<param name="jibx-mapping" value="${jibx-mapping}"/>
-			</antcall>
-		 </c:then>
-		</c:if>		
-		
-		<java fork="true" classpathref="mule.path" classname="org.mule.MuleServer" >
-			<arg line="-config file:${file}"/>
-			<jvmarg value="-Xdebug"/>
-			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>
-		</java>
 	</target>
   
     <target name="gn:run-java-in-classpath" depends="gn:init">
@@ -113,8 +85,8 @@
 		  <!-- Run JiBX binding compiler -->
 		  <bind verbose="false" load="true" binding="${jibx-mapping}">
 		    <classpath>
-		      <pathelement path="classes"/>
-		      <pathelement location="${LIB}/jibx/libs/jibx-run.jar"/>
+		      <pathelement path="${workspace.home}/mule/classes"/>
+		      <pathelement location="${lib.home}/jibx/libs/jibx-run.jar"/>
 		    </classpath>
 		  </bind> 
 	</target>

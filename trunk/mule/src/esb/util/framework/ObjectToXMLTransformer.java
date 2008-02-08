@@ -1,8 +1,8 @@
-package esb.framework.util;
+package esb.util.framework;
 
 import org.jibx.runtime.JiBXException;
 
-import esb.framework.util.JiBXUtil;
+import esb.util.framework.JiBXUtil;
 
 public class ObjectToXMLTransformer extends AbstractJibxTransformer {
 
