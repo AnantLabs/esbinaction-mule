@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+       xmlns:bpm="http://www.mulesource.org/schema/mule/bpm/2.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
+       http://www.mulesource.org/schema/mule/bpm/2.0 http://www.mulesource.org/schema/mule/bpm/2.0/mule-bpm.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
+	
+	<spring:beans>
+		<spring:import resource="jbpm-beans.xml"/>
+		<spring:import resource="scubadiving-beans.xml"/>
+	</spring:beans>
+	
+	<!-- BPMS object for Mule's BPM Connector -->
+    <spring:bean id="jbpm" class="org.mule.transport.bpm.jbpm.Jbpm" destroy-method="destroy">
+        <spring:property name="jbpmConfiguration">
+            <spring:ref bean="jbpmConfig" />
+        </spring:property>
+    </spring:bean>
+	
+	<bpm:connector name="jBpmConnector" bpms-ref="jbpm" />
+	
+	<jms:activemq-connector name="activeMQConnector" brokerURL="tcp://localhost:61616"/>
+	
+	<custom-transformer name="XMLToDivingRequest" 
+		class="esb.framework.util.XMLToObjectTransformer">
+		<spring:property name="targetClassName" value="esb.chapter11.scubadiving.model.DivingRequest"/>
+	</custom-transformer>
+	
+	<custom-transformer name="XMLToLunchBooking" 
+		class="esb.framework.util.XMLToObjectTransformer">
+		<spring:property name="targetClassName" value="esb.chapter11.scubadiving.model.LunchBooking"/>
+	</custom-transformer>
+	
+	<custom-transformer name="XMLToTaxiRequest" 
+		class="esb.framework.util.XMLToObjectTransformer">
+		<spring:property name="targetClassName" value="esb.chapter11.scubadiving.model.TaxiRequest"/>
+	</custom-transformer>
+		
+	<custom-transformer name="ObjectToXML" 
+		class="esb.framework.util.ObjectToXMLTransformer"/>
+	
+	<endpoint name="ProcessEngine" address="bpm://ScubaDivingBookingProcess" />
+	<endpoint name="ScubaDivingRequest" address="jms://process.start"/>
+	<endpoint name="SharkDivingIn" address="vm://sharkdiving.in"/>
+	<endpoint name="WreckAndCaveDivingIn" address="vm://wreckandcavediving.in"/>
+	<endpoint name="DolphinDivingIn" address="vm://dolphindiving.in"/>
+	<endpoint name="LunchIn" address="vm://lunch.in"/>
+	<endpoint name="TaxiIn" address="vm://taxi.in"/>
+	<endpoint name="DivingResponse" address="vm://diving.response" />
+	<endpoint name="TaxiResponse" address="vm://taxi.response" />
+	<endpoint name="ScubaDivingBooking" address="jms://process.end"/>
+	
+    <model name="ScubaDivingModel">
+    	
+    	<service name="ToBPMS">
+            <inbound>
+                <inbound-endpoint ref="ScubaDivingRequest"/>
+                <inbound-endpoint ref="DivingResponse"/>
+                <inbound-endpoint ref="TaxiResponse"/>
+            </inbound>
+            <echo-component/>
+            <outbound>
+                <filtering-router>
+                    <outbound-endpoint ref="ProcessEngine" synchronous="false" />
+                </filtering-router>
+            </outbound>
+        </service>
+        
+        <service name="FromBPMS">
+            <inbound>
+                <inbound-endpoint ref="ProcessEngine"/>
+            </inbound>
+            <echo-component/>
+            <outbound>
+                <endpoint-selector-router selectorProperty="endpoint">
+                    <outbound-endpoint ref="SharkDivingIn"/>
+                    <outbound-endpoint ref="WreckAndCaveDivingIn"/>
+                    <outbound-endpoint ref="DolphinDivingIn"/>
+                    <outbound-endpoint ref="LunchIn"/>
+                    <outbound-endpoint ref="TaxiIn"/>
+                    <outbound-endpoint ref="ScubaDivingBooking"/>
+                </endpoint-selector-router>
+            </outbound>
+        </service>
+	
+		<service name="SharkDivingAgency">
+            <inbound>
+            	<inbound-endpoint ref="SharkDivingIn" 
+            		transformer-refs="XMLToDivingRequest"/>
+            </inbound>
+            <component>
+            	<spring-object bean="sharkDivingService"/>
+            </component>
+	   		<outbound>
+	   			<outbound-pass-through-router>
+	   				<outbound-endpoint ref="DivingResponse" transformer-refs="ObjectToXML"/>
+	   			</outbound-pass-through-router>
+	     	</outbound>                    	 
+		</service>
+		
+		<service name="WreckAndCaveDivingAgency">
+            <inbound>
+            	<inbound-endpoint ref="WreckAndCaveDivingIn" 
+            		transformer-refs="XMLToDivingRequest"/>
+            </inbound>
+            <component>
+            	<spring-object bean="wreckAndCaveDivingService"/>
+            </component>
+	   		<outbound>
+	        	<outbound-pass-through-router>
+	   				<outbound-endpoint ref="DivingResponse" transformer-refs="ObjectToXML"/>
+	   			</outbound-pass-through-router>
+	     	</outbound>                    	 
+		</service>
+		
+		<service name="DolphinDivingAgency">
+            <inbound>
+            	<inbound-endpoint ref="DolphinDivingIn" 
+            		transformer-refs="XMLToDivingRequest"/>
+            </inbound>
+            <component>
+            	<spring-object bean="dolphinDivingService"/>
+            </component>
+	   		<outbound>
+	        	<outbound-pass-through-router>
+	   				<outbound-endpoint ref="DivingResponse" transformer-refs="ObjectToXML"/>
+	   			</outbound-pass-through-router>
+	     	</outbound>                    	 
+		</service>
+		
+		<service name="LunchService">
+            <inbound>
+            	<inbound-endpoint ref="LunchIn"
+            		transformer-refs="XMLToLunchBooking"/>
+            </inbound>
+            <component>
+            	<spring-object bean="lunchService"/>
+            </component>                    	 
+		</service>
+		
+		<service name="TaxiService">
+            <inbound>
+            	<inbound-endpoint ref="TaxiIn"
+            		transformer-refs="XMLToTaxiRequest"/>
+            </inbound>
+            <component>
+            	<spring-object bean="taxiService"/>
+            </component>
+            <outbound>
+            	<outbound-pass-through-router>
+            		<outbound-endpoint ref="TaxiResponse" transformer-refs="ObjectToXML"/>
+            	</outbound-pass-through-router>
+            </outbound>
+		</service>
+	</model>
+</mule>

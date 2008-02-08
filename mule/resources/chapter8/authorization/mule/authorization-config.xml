@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:acegi="http://www.mulesource.org/schema/mule/acegi/2.0"
+       xmlns:http="http://www.mulesource.org/schema/mule/http/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/acegi/2.0 http://www.mulesource.org/schema/mule/acegi/2.0/mule-acegi.xsd
+       http://www.mulesource.org/schema/mule/http/2.0 http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd">
+	
+	<acegi:security-manager>
+    	<acegi:delegate-security-provider name="AcegiProvider" delegate-ref="authenticationProvider">
+    		<acegi:security-property name="securityMode" value="MODE_GLOBAL"/>
+    	</acegi:delegate-security-provider>
+    </acegi:security-manager>
+    
+    <spring:bean id="initialDirContextFactory" class="org.acegisecurity.ldap.DefaultInitialDirContextFactory">
+		<spring:constructor-arg value="ldap://localhost:10389/dc=example,dc=com" />
+		<spring:property name="managerDn">
+			<spring:value>uid=admin,ou=system</spring:value>
+		</spring:property>
+		<spring:property name="managerPassword">
+			<spring:value>secret</spring:value>
+		</spring:property>
+	</spring:bean>
+    
+    <spring:bean id="authenticationProvider" class="org.acegisecurity.providers.ldap.LdapAuthenticationProvider">
+		<spring:constructor-arg>
+			<spring:bean class="org.acegisecurity.providers.ldap.authenticator.BindAuthenticator">
+				<spring:constructor-arg>
+					<spring:ref local="initialDirContextFactory" />
+				</spring:constructor-arg>
+				<spring:property name="userDnPatterns">
+					<spring:list>
+						<spring:value>uid={0},ou=Users</spring:value>
+					</spring:list>
+				</spring:property>
+			</spring:bean>
+		</spring:constructor-arg>
+		<spring:constructor-arg>
+			<spring:bean class="org.acegisecurity.providers.ldap.populator.DefaultLdapAuthoritiesPopulator">
+				<spring:constructor-arg>
+					<spring:ref local="initialDirContextFactory" />
+				</spring:constructor-arg>
+				<spring:constructor-arg>
+					<spring:value>ou=Groups</spring:value>
+				</spring:constructor-arg>
+				<spring:property name="groupRoleAttribute">
+					<spring:value>cn</spring:value>
+				</spring:property>
+			</spring:bean>
+		</spring:constructor-arg>
+	</spring:bean>
+	
+	<spring:bean id="authorizationSecureComponent" class="org.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor">
+      	<spring:property name="authenticationManager">
+            <spring:ref bean="authenticationManager"/>
+      	</spring:property>
+      	<spring:property name="accessDecisionManager">
+            <spring:ref bean="accessDecisionManager"/>
+      	</spring:property>
+      	<spring:property name="objectDefinitionSource">
+            <spring:value>
+                  esb.chapter8.security.service.AuthorizationService.onCall=ROLE_USERS
+            </spring:value>
+      	</spring:property>
+	</spring:bean>
+	
+	<spring:bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+    	<spring:property name="providers">
+            <spring:list>
+                 <spring:ref bean="AcegiProvider"/>
+            </spring:list>
+      	</spring:property>
+	</spring:bean>
+	
+	<spring:bean id="accessDecisionManager" class='org.acegisecurity.vote.AffirmativeBased'>
+      	<spring:property name="decisionVoters">
+            <spring:list>
+                  <spring:ref bean="roleVoter"/>
+            </spring:list>
+      	</spring:property>
+	</spring:bean>
+	
+	<spring:bean id="autoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+      	<spring:property name="interceptorNames">
+            <spring:list>
+                  <spring:value>authorizationSecureComponent</spring:value>
+            </spring:list>
+      	</spring:property>
+      	<spring:property name="beanNames">
+            <spring:list>
+                  <spring:value>authorizationComponent</spring:value>
+            </spring:list>
+      	</spring:property>
+      	<spring:property name="proxyTargetClass" value="true"/>
+	</spring:bean>
+	
+	<spring:bean id="authorizationComponent" class="esb.chapter8.security.service.AuthorizationService"/>
+	
+	<spring:bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter"/>
+
+	<model name="AuthorizationExample">
+	
+		<service name="AuthorizationHTTPService">
+			<inbound>
+                <inbound-endpoint address="http://localhost:8888" synchronous="true">
+					<acegi:http-security-filter realm="mule-realm"/>
+                </inbound-endpoint>
+            </inbound>
+           	<component>
+            	<spring-object bean="authorizationComponent"/>
+           	</component>
+       		<custom-exception-strategy class="esb.chapter8.security.mule.AuthorizationExceptionStrategy"/>
+		</service>
+	</model>
+</mule>
+

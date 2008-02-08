@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  	<bean id="sharkDivingService" 
+  			class="esb.chapter11.scubadiving.bean.DivingAgencyBean">
+	  	<property name="divingAgencyName" value="Shark Diving Agency"/>
+	  	<property name="instructorName" value="Mr. Daredevil"/>
+	 	<property name="pricePerPerson" value="123.56"/>
+	 	<property name="startingTime" value="11:00"/>
+	 	<property name="endTime" value="14:00"/>
+	 	<property name="address" value="Sharkstreet 566"/>
+  	</bean>
+  
+  	<bean id="wreckAndCaveDivingService" 
+	  		class="esb.chapter11.scubadiving.bean.DivingAgencyBean">
+	  	<property name="divingAgencyName" value="Wreck and Cave Diving Agency"/>
+	  	<property name="instructorName" value="Mr Ancient"/>
+	  	<property name="pricePerPerson" value="110.90"/>
+	  	<property name="startingTime" value="09:00"/>
+	 	<property name="endTime" value="16:00"/>
+	 	<property name="address" value="Cavestreet 4"/>
+  	</bean>
+  
+  	<bean id="dolphinDivingService" 
+	  		class="esb.chapter11.scubadiving.bean.DivingAgencyBean">
+	  	<property name="divingAgencyName" value="Dolphin Diving Agency"/>
+	  	<property name="instructorName" value="Mrs Romantic"/>
+	  	<property name="pricePerPerson" value="70.40"/>
+	  	<property name="startingTime" value="14:00"/>
+	 	<property name="endTime" value="15:00"/>
+	 	<property name="address" value="Dolphinstreet 100"/>
+  	</bean>
+  
+  	<bean id="lunchService" class="esb.chapter11.scubadiving.bean.LunchBean"/>
+  
+  	<bean id="taxiService" 
+	  		class="esb.chapter11.scubadiving.bean.TaxiBean">
+  		<property name="pricePerPerson" value="15.90"/>
+  	</bean>
+  	
+</beans>

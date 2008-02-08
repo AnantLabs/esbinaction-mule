@@ -1,0 +1,11 @@
+<binding>
+  <mapping name="LunchBooking" class="esb.chapter11.scubadiving.model.LunchBooking" ns="http://sleepingbeauty.com/lunchservice/xsd">
+  	<namespace uri="http://sleepingbeauty.com/lunchservice/xsd" default="elements"/>
+    <value name="guestName" field="guestName"/>
+    <value name="roomNumber" field="roomNumber"/>
+    <value name="numberOfLunches" field="numberOfLunches"/>
+    <value name="lunchDate" field="lunchDate"
+    	serializer="esb.framework.util.DateJiBXSerializer.serialize" 
+        deserializer="esb.framework.util.DateJiBXSerializer.deserialize"/>
+  </mapping>
+</binding>

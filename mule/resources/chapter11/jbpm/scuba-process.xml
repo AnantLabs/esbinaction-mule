@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process-definition
+  xmlns="urn:jbpm.org:jpdl-3.2"  name="ScubaDivingBookingProcess">
+
+	<start-state name="start">
+		<transition to="ReceiveRequest" name="divingschool"></transition>
+	</start-state>
+
+	<decision name="decisionForDivingSchool">
+		<transition to="InvokeSharkDivingAgency" name="sharks">
+			<condition>
+				#{booking.interest == 'Sharks'}
+			</condition>
+		</transition>
+		<transition to="InvokeWreckAndCaveDivingAgency" name="wreckandcave">
+			<condition>
+				#{booking.interest == 'Wrecks' or booking.interest == 'Caves'}
+			</condition>
+		</transition>
+		<transition to="InvokeDolphinDivingAgency" name="dolphin">
+			<condition>
+				#{booking.interest == 'Dolphins'}
+			</condition>
+		</transition>
+	</decision>
+	
+	<decision name="decisionForLunch">
+		<transition to="InvokeLunchService" name="lunch">
+			<condition>
+				#{booking.lunchIncluded == true}
+			</condition>
+		</transition>
+		<transition to="InvokeTaxiService" name="taxi">
+			<condition>
+				#{booking.lunchIncluded == false}
+			</condition>
+		</transition>
+	</decision>
+
+	<state name="ReceiveRequest">
+		<event type="node-enter">
+			<action class="org.mule.transport.bpm.jbpm.actions.ValidateMessageSource">
+                <expectedSource>ScubaDivingRequest</expectedSource>
+            </action>
+            <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
+                <variable>booking</variable>
+            </action>
+            <action class="org.mule.transport.bpm.jbpm.actions.Continue" />
+		</event>
+		<transition to="decisionForDivingSchool"></transition>
+	</state>
+
+	<state name="InvokeSharkDivingAgency">
+		<event type="node-enter">
+			<action name="SharkDivingAgency" class="esb.chapter11.scubadiving.handler.DivingAgencyHandler"></action>
+			<action class="org.mule.transport.bpm.jbpm.actions.SendMuleEvent">
+                <payloadSource>divingRequest</payloadSource>
+                <endpoint>SharkDivingIn</endpoint>
+                <synchronous>false</synchronous>
+            </action>
+		</event>
+		<transition to="ReceiveDivingResponse"></transition>
+	</state>
+
+	<state name="InvokeWreckAndCaveDivingAgency">
+		<event type="node-enter">
+			<action class="esb.chapter11.scubadiving.handler.DivingAgencyHandler"></action>
+			<action class="org.mule.transport.bpm.jbpm.actions.SendMuleEvent">
+                <payloadSource>divingRequest</payloadSource>
+                <endpoint>WreckAndCaveDivingIn</endpoint>
+                <synchronous>false</synchronous>
+            </action>
+		</event>
+		<transition to="ReceiveDivingResponse"></transition>
+	</state>
+
+	<state name="InvokeDolphinDivingAgency">
+		<event type="node-enter">
+			<action class="esb.chapter11.scubadiving.handler.DivingAgencyHandler"></action>
+			<action class="org.mule.transport.bpm.jbpm.actions.SendMuleEvent">
+                <payloadSource>divingRequest</payloadSource>
+                <endpoint>DolphinDivingIn</endpoint>
+                <synchronous>false</synchronous>
+            </action>
+		</event>
+		<transition to="ReceiveDivingResponse"></transition>
+	</state>
+
+	<state name="InvokeLunchService">
+		<event type="node-enter">
+			<action class="esb.chapter11.scubadiving.handler.LunchServiceHandler"></action>
+			<action class="org.mule.transport.bpm.jbpm.actions.SendMuleEventAndContinue">
+                <payloadSource>lunchBooking</payloadSource>
+                <endpoint>LunchIn</endpoint>
+                <synchronous>false</synchronous>
+            </action>
+		</event>
+		<transition to="InvokeTaxiService"></transition>
+	</state>
+
+	<state name="InvokeTaxiService">
+		<event type="node-enter">
+			<action class="esb.chapter11.scubadiving.handler.TaxiServiceHandler"></action>
+			<action class="org.mule.transport.bpm.jbpm.actions.SendMuleEvent">
+                <payloadSource>taxiRequest</payloadSource>
+                <endpoint>TaxiIn</endpoint>
+                <synchronous>false</synchronous>
+            </action>
+		</event>
+		<transition to="ReceiveTaxiResponse"></transition>
+	</state>
+
+	<state name="ReceiveDivingResponse">
+		<event type="node-enter">
+			<action class="org.mule.transport.bpm.jbpm.actions.ValidateMessageSource">
+                <expectedSource>DivingResponse</expectedSource>
+            </action>
+            <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
+                <variable>divingResponse</variable>
+            </action>
+            <action class="esb.chapter11.scubadiving.handler.DivingResponseHandler"></action>
+			<action class="org.mule.transport.bpm.jbpm.actions.Continue" />
+		</event>
+		<transition to="decisionForLunch"></transition>
+	</state>
+
+	<state name="ReceiveTaxiResponse">
+		<event type="node-enter">
+			<action class="org.mule.transport.bpm.jbpm.actions.ValidateMessageSource">
+                <expectedSource>TaxiResponse</expectedSource>
+            </action>
+            <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
+                <variable>taxiResponse</variable>
+            </action>
+            <action class="esb.chapter11.scubadiving.handler.TaxiResponseHandler"></action>
+			<action class="org.mule.transport.bpm.jbpm.actions.Continue" />
+		</event>
+		<transition to="SendScubaBooking"></transition>
+	</state>
+
+	<state name="SendScubaBooking">
+		<event type="node-enter">
+			<action class="org.mule.transport.bpm.jbpm.actions.SendMuleEvent">
+                <payloadSource>bookingResponse</payloadSource>
+                <endpoint>ScubaDivingBooking</endpoint>
+                <synchronous>false</synchronous>
+            </action>
+		</event>
+		<transition to="end"></transition>
+	</state>
+
+	<end-state name="end"></end-state>
+
+
+</process-definition>

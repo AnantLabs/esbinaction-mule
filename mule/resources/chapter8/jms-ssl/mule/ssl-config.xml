@@ -7,23 +7,18 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
-
-	<jms:activemq-connector name="jmsConnector" brokerURL="tcp://localhost:61616"/>
 	
-	<model name="ValidationExample">
-        <service name="ValidationService">
-            <inbound>
-            	<forwarding-catch-all-strategy>
-            		<jms:outbound-endpoint queue="validation.error"/>
-            	</forwarding-catch-all-strategy>
-                <jms:inbound-endpoint queue="validation.in" />
-                <custom-inbound-router class="esb.chapter5.validation.mule.ValidationRouter">
-                	<spring:property name="externalSchemaLocation" value="orderSchema.xsd"/>
-                </custom-inbound-router>
+	<jms:activemq-connector name="jmsConnector" brokerURL="ssl://localhost:61617"/>
+	
+	<model name="SSLExample">
+        <service name="SSLService">
+        	<inbound>
+                <jms:inbound-endpoint queue="ssl.in" />
             </inbound>
+        	<component class="esb.chapter8.security.service.SystemService"/>
             <outbound>
             	<outbound-pass-through-router>
-            		<jms:outbound-endpoint address="validation.out"/>
+            		<jms:outbound-endpoint queue="ssl.out"/>
             	</outbound-pass-through-router>
 			</outbound>
 		</service>
