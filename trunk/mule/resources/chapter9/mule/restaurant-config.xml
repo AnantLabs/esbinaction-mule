@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
+	
+	<spring:beans>
+		<spring:import resource="restaurant-beans.xml"/>
+	</spring:beans>
+	
+	<jms:activemq-connector name="jmsConnector" brokerURL="tcp://localhost:61616"/>
+	
+	<jms:endpoint name="inquiry-topic" topic="inquiries.in"/>
+	<jms:endpoint name="inquiry-out" queue="restaurant.response"/>
+	
+    <model name="RestaurantModel">
+	
+		<service name="LakeviewRestaurantService">
+            <inbound>
+            	<inbound-endpoint ref="inquiry-topic"/>
+            </inbound>
+            <component>
+            	<spring-object bean="lakeviewRestaurant"/>
+            </component>
+	   		<outbound>
+	   			<custom-outbound-router class="esb.chapter9.restaurant.router.ExpirationRouter">
+	          		<outbound-endpoint ref="inquiry-out"/>
+	          		<spring:property name="reservationDAO" ref="restaurantDAO"/>
+	        	</custom-outbound-router>
+	     	</outbound>                    	 
+		</service>
+		
+		<service name="DuckRestaurantService">
+            <inbound>
+            	<inbound-endpoint ref="inquiry-topic"/>
+            </inbound>
+            <component>
+            	<spring-object bean="duckRestaurant"/>
+            </component>
+	   		<outbound>
+	        	<custom-outbound-router class="esb.chapter9.restaurant.router.ExpirationRouter">
+	          		<outbound-endpoint ref="inquiry-out"/>
+	          		<spring:property name="reservationDAO" ref="restaurantDAO"/>
+	        	</custom-outbound-router>
+	     	</outbound>                    	 
+		</service>
+		
+		<service name="YokohamaRestaurantService">
+            <inbound>
+            	<inbound-endpoint ref="inquiry-topic"/>
+            </inbound>
+            <component>
+            	<spring-object bean="yokohamaRestaurant"/>
+            </component>
+	   		<outbound>
+	        	<custom-outbound-router class="esb.chapter9.restaurant.router.ExpirationRouter">
+	          		<outbound-endpoint ref="inquiry-out"/>
+	          		<spring:property name="reservationDAO" ref="restaurantDAO"/>
+	        	</custom-outbound-router>
+	     	</outbound>                    	 
+		</service>
+		
+		<service name="ReservationResponseService">
+			<inbound>
+				<forwarding-catch-all-strategy>
+					<jms:outbound-endpoint queue="confirmation.error"/>
+				</forwarding-catch-all-strategy>
+				<jms:inbound-endpoint queue="reservation.confirmation"/>
+				<selective-consumer-router>
+					<custom-filter class="esb.chapter9.restaurant.router.ExpirationCheckFilter">
+						<spring:property name="reservationDAO" ref="restaurantDAO"/>
+					</custom-filter>
+				</selective-consumer-router>
+			</inbound>
+			<echo-component/>
+			<outbound>
+				<filtering-router>
+					<jms:outbound-endpoint queue="lakeview.confirmation"/>
+					<wildcard-filter pattern="*Lakeview*"/>
+				</filtering-router>
+				<filtering-router>
+					<jms:outbound-endpoint queue="theroyalduck.confirmation"/>
+					<wildcard-filter pattern="*duck*"/>
+				</filtering-router>
+				<filtering-router>
+					<jms:outbound-endpoint queue="yokohama.confirmation"/>
+					<wildcard-filter pattern="*Yokohama*"/>
+				</filtering-router>
+			</outbound>
+		</service>
+	</model>
+</mule>

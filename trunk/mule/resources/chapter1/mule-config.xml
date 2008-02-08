@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:spring="http://www.springframework.org/schema/beans"
+  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
 			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-      	    http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
+      	    http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+            http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
+
+  <file:connector name="sendConnector" outputAppend="true" outputPattern="output.xml"/>
+  
+  <file:connector name="receiveConnector" fileAge="500" autoDelete="true" pollingFrequency="100"/>
 
   <model name="FileExample">
     <service name="FileService">
       <inbound>
-        <inbound-endpoint address="file://examples-work/chapter1/inbox" />
-        <forwarding-router />
+        <file:inbound-endpoint path="inbox" connector-ref="receiveConnector"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <outbound-endpoint address="file://examples-work/chapter1/outbox">
-            <properties>
-              <spring:entry key="outputPattern" value="output.xml" />
-            </properties>
-          </outbound-endpoint>
+          <file:outbound-endpoint path="outbox" connector-ref="sendConnector"/>
         </outbound-pass-through-router>
       </outbound>
     </service>

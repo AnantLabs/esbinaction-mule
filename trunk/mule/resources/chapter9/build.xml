@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<project name="RestaurantExample" default="jar" basedir=".">
+	
+	<property environment="env"/>
+	<property name="MULE_HOME" value="${env.MULE_HOME}"/>
+	<property name="HSQL_HOME" value="${env.HSQL_HOME}"/>
+	<property name="src" value="../../src"/>
+	<property name="bin" value="../../bin"/>
+	<property name="lib" value="../../lib"/>
+	<property name="target" value="target"/>
+	<property name="target.classes" value="${target}/classes"/>
+	
+	<target name="clean">
+		<delete dir="${target.classes}"/>
+		<delete file="${MULE_HOME}/lib/user/restaurantexample.jar"/>
+	</target>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${target.classes}"/>
+	    <javac srcdir="${src}" destdir="${target.classes}"
+	        includes="**/chapter9/**/*.java"
+	        debug="on"
+	        deprecation="on"
+	        optimize="off">
+	        <classpath>
+	        	<fileset dir="${lib}">
+	            	<include name="**/*.jar"/>
+	          	</fileset>
+	       		<fileset dir="${MULE_HOME}/lib">
+	        		<include name="**/*.jar"/>
+	        	</fileset>
+	        </classpath>
+	   	</javac>
+		<copy todir="${target.classes}">
+			<fileset dir="${src}">
+				<include name="**/chapter9/**/*.xml"/>
+			</fileset>
+		</copy>
+  	</target>
+		
+	<target name="jar" depends="compile">
+		<jar jarfile="${MULE_HOME}/lib/user/restaurantexample.jar">
+			<fileset dir="${target.classes}"/>
+			<fileset dir="mule"/>
+			<fileset dir="spring"/>
+		</jar>
+	</target>
+	
+	<target name="ext:start-hsqldb" description="start the database">
+		<property name="hsqldb.home" value="${HSQL_HOME}"/>
+		<java fork="true" classname="org.hsqldb.Server">
+			<arg line="-database.0 file:c:/mydb -dbname.0 reservation"/>
+			<classpath>
+				<fileset dir="${hsqldb.home}">
+					<include name="lib/*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+		
+	<target name="ext:jdbc-setup-database">
+		<property name="hsqldb.home" value="${HSQL_HOME}"/>
+		<java fork="true" classname="org.hsqldb.util.SqlTool">
+		 <arg line="--rcFile ${rc-file} ${urlID} ${sql-file}"/> 
+			<classpath>
+				<fileset dir="${hsqldb.home}">
+					<include name="lib/*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+		
+	<target name="jdbc-setup-database" description="setup the database">
+		<antcall target="ext:jdbc-setup-database">
+			<param name="sql-file"
+				value="database/setupDatabase.txt"/>
+			<param name="rc-file" value="database/auth.rc"/>
+			<param name="urlID" value="esbinaction"/>
+		</antcall>
+	</target>
+	
+</project>

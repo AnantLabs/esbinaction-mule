@@ -23,13 +23,13 @@
 	<model name="BookQuoteExample">
 		<service name="BookQuoteLogger">
             <inbound>
-                <inbound-endpoint address="jms://booksearch.input"/>
+                <jms:inbound-endpoint queue="booksearch.input"/>
             </inbound>
             <component class="esb.chapter4.messageflow.mule.MessageLogger" />
             <outbound>
             	<multicasting-router>
-            		<outbound-endpoint address="jms://amazon.input"/>
-            		<outbound-endpoint address="jms://barnes.input"
+            		<jms:outbound-endpoint queue="amazon.input"/>
+            		<jms:outbound-endpoint queue="barnes.input"
             			transformer-refs="JMSToObject ISBNToXML ObjectToJMS"/>
             	</multicasting-router>
 			</outbound>
@@ -37,7 +37,7 @@
         
         <service name="AmazonResponseHandler">
         	<inbound>
-                <inbound-endpoint address="jms://amazon.output"/>
+                <jms:inbound-endpoint queue="amazon.output"/>
             </inbound>
             <component class="esb.chapter4.messageflow.mule.MessageLogger" />
             <outbound>
@@ -50,7 +50,7 @@
         
         <service name="BarnesResponseHandler">
         	<inbound>
-                <inbound-endpoint address="jms://barnes.output"/>
+                <jms:inbound-endpoint queue="barnes.output"/>
             </inbound>
             <component class="esb.chapter4.messageflow.mule.MessageLogger" />
             <outbound>
@@ -70,7 +70,7 @@
             <component class="esb.chapter4.messageflow.mule.CheapestPriceCalculator"/>
             <outbound>
             	<outbound-pass-through-router>
-            		<outbound-endpoint address="jms://booksearch.output"/>
+            		<jms:outbound-endpoint queue="booksearch.output"/>
             	</outbound-pass-through-router>
             </outbound>
         </service>

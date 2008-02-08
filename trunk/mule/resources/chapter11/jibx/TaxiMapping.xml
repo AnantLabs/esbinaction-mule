@@ -1,0 +1,17 @@
+<binding>
+  <mapping name="TaxiRequest" class="esb.chapter11.scubadiving.model.TaxiRequest" ns="http://taxi.hawaii.com/xsd">
+  	<namespace uri="http://taxi.hawaii.com/xsd" default="elements"/>
+    <value name="departureTime" field="departureTime"/>
+    <value name="hotelName" field="hotelName"/>
+    <value name="numberOfTravelers" field="numberOfTravelers"/>
+    <value name="destinationAddress" field="destinationAddress"/>
+    <value name="returnTime" field="returnTime"/>
+  </mapping>
+  <mapping name="TaxiBooking" class="esb.chapter11.scubadiving.model.TaxiBooking" ns="http://taxi.hawaii.com/xsd">
+  	<namespace uri="http://taxi.hawaii.com/xsd" default="elements"/>
+    <value name="price" field="price"/>
+    <value name="taxiBookingID" field="taxiBookingID"/>
+    <value name="taxiDepartureTime" field="taxiDepartureTime"/>
+    <value name="taxiReturnTime" field="taxiReturnTime"/>
+  </mapping>
+</binding>
