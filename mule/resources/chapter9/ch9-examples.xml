@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+This build file provides all the targets needed to run the examples from
+the second chapter.  
+-->
+<project name="chapter 9 - Mule" basedir=".">
+
+	<property name="script" value="../../scripts/ant"/>
+
+	<!-- import the servicemix tasks into the sm namespace -->
+	<import file="${script}/mule-general.xml" />
+	<import file="${script}/osesb-general.xml" />
+	
+	<target name="restaurant-example" depends="gn:init" description="Deploy the restaurant example">	
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter9/**/*"/>
+		</antcall>
+		
+		<jar destfile="${mule.deploy}/chapter9-restaurant.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter9/**/*"/>
+			</fileset>
+			<fileset dir="mule">
+				<include name="restaurant-config.xml"/>
+			</fileset>
+			<fileset dir="spring">
+				<include name="restaurant-beans.xml"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="jdbc-setup-database" description="setup the database">
+		<antcall target="ext:jdbc-setup-database">
+			<param name="sql-file"
+				value="database/setupDatabase.txt"/>
+			<param name="rc-file" value="database/auth.rc"/>
+			<param name="urlID" value="esbinaction"/>
+		</antcall>
+	</target>
+	
+</project>

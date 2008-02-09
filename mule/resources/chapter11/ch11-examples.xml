@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+This build file provides all the targets needed to run the examples from
+the second chapter.  
+-->
+<project name="chapter 11 - Mule" basedir=".">
+
+	<property name="script" value="../../scripts/ant"/>
+
+	<!-- import the servicemix tasks into the sm namespace -->
+	<import file="${script}/mule-general.xml" />
+	<import file="${script}/osesb-general.xml" />
+	
+	<target name="scubadiving" depends="gn:init" description="scubadiving-mule">
+		<echo message="Deploying the scubadiving example of chapter 11 to Mule"/>
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter4/messageflow/**/*"/>
+		</antcall>
+		<antcall target="gn:jibx-classes">
+	    	<param name="jibx-mapping" value="jibx/DivingMapping.xml"/>
+	   	</antcall>
+		<jar destfile="${mule.deploy}/chapter11-scubadiving.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter11/messageflow/**/*"/>
+				<include name="esb/util/**/*"/>
+			</fileset>
+			<fileset dir="messageflow/mule">
+				<include name="bookquote-config.xml"/>
+			</fileset>
+		</jar>
+	</target>
+	
+</project>
