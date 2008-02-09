@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!--
+This build file provides all the targets needed to run the examples from
+the second chapter.  
+-->
+<project name="chapter 8 - Mule" basedir=".">
+
+	<property name="script" value="../../scripts/ant"/>
+
+	<!-- import the servicemix tasks into the sm namespace -->
+	<import file="${script}/mule-general.xml" />
+	<import file="${script}/osesb-general.xml" />
+	
+	<target name="simpleauth" depends="gn:init" description="Run the simple simple authentication example">	
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter8/security/authentication/**/*"/>
+		</antcall>
+		
+		<jar destfile="${mule.deploy}/chapter8-simpleauth.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter8/security/authentication/**/*"/>
+			</fileset>
+			<fileset dir="simpleauth/mule">
+				<include name="simpleauth-config.xml"/>
+			</fileset>
+		</jar>
+		
+		<echo message="This example uses the stdio, and can't be started from Ant. Mule has now been"/>			
+		<echo message="setup to work with the sources from this example. To run this example go to the"/>
+		<echo message="resources/chapter8/simpleauth directory and run the simpleauth.bat or the simpleauth.sh file."/>
+		
+	</target>
+
+	<target name="component-transformer" depends="gn:init" description="Run the simple component example with a transformer">	
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter4/**/SimpleIntComponent.*"/>
+		</antcall>
+		
+		<jar destfile="${mule.deploy}/chapter4-intcomponent.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter4/**/SimpleIntComponent.*"/>
+			</fileset>
+			<fileset dir="component/mule">
+				<include name="simpleintcomponent-config.xml"/>
+			</fileset>
+		</jar>
+		
+		<echo message="This example uses the stdio, and can't be started from Ant. Mule has now been"/>			
+		<echo message="setup to work with the sources from this example. To run this example go to the"/>
+		<echo message="resources/chapter4/component run the intcomponent.bat or the intcomponent.sh file."/>
+		
+	</target>
+	
+	<target name="component-spring" depends="gn:init" description="Run the simple component example with spring">	
+
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter4/**/SimpleSpringComponent.*"/>
+		</antcall>
+		
+		<jar destfile="${mule.deploy}/chapter4-springcomponent.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter4/**/SimpleSpringComponent.*"/>
+			</fileset>
+			<fileset dir="component/mule">
+				<include name="simplespringcomponent-config.xml"/>
+			</fileset>
+		</jar>
+		
+		<echo message="This example uses the stdio, and can't be started from Ant. Mule has now been"/>			
+		<echo message="setup to work with the sources from this example. To run this example go to the"/>
+		<echo message="resources/chapter4/component run the springcomponent.bat or the springcomponent.sh file."/>
+		
+	</target>	
+	
+	<target name="messageflow-mule" depends="gn:init" description="messageflow-mule">
+		<echo message="Deploying the messageflow example of chapter 4 to Mule"/>
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter4/messageflow/**/*"/>
+		</antcall>
+		<antcall target="gn:jibx-classes">
+	    	<param name="jibx-mapping" value="messageflow/jibx/BookQuoteMapping.xml"/>
+	   	</antcall>
+		<jar destfile="${mule.deploy}/chapter4-messageflow.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter4/messageflow/**/*"/>
+				<include name="esb/util/**/*"/>
+			</fileset>
+			<fileset dir="messageflow/mule">
+				<include name="bookquote-config.xml"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="messageflow-spring" depends="gn:init" description="messageflow-spring">
+		<echo message="Starting spring part of example chapter 4"/>
+		<antcall target="gn:run-java-in-classpath">
+			<param name="class" value="esb.chapter4.messageflow.SpringStarter"/>
+		</antcall>
+	</target>	
+
+	
+</project>
