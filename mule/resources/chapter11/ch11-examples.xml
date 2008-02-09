@@ -14,18 +14,30 @@ the second chapter.
 	<target name="scubadiving" depends="gn:init" description="scubadiving-mule">
 		<echo message="Deploying the scubadiving example of chapter 11 to Mule"/>
 		<antcall target="gn:compile-classes">
-			<param name="classes-filter" value="esb/chapter4/messageflow/**/*"/>
+			<param name="classes-filter" value="esb/chapter11/scubadiving/**/*"/>
 		</antcall>
 		<antcall target="gn:jibx-classes">
 	    	<param name="jibx-mapping" value="jibx/DivingMapping.xml"/>
 	   	</antcall>
+		<antcall target="gn:jibx-classes">
+	    	<param name="jibx-mapping" value="jibx/LunchMapping.xml"/>
+	   	</antcall>
+		<antcall target="gn:jibx-classes">
+	    	<param name="jibx-mapping" value="jibx/TaxiMapping.xml"/>
+	   	</antcall>	
 		<jar destfile="${mule.deploy}/chapter11-scubadiving.jar">
 			<fileset dir="${workspace.home}/mule/classes">
-				<include name="esb/chapter11/messageflow/**/*"/>
+				<include name="esb/chapter11/scubadiving/**/*"/>
 				<include name="esb/util/**/*"/>
 			</fileset>
-			<fileset dir="messageflow/mule">
-				<include name="bookquote-config.xml"/>
+			<fileset dir="mule">
+				<include name="scubadiving-config.xml"/>
+			</fileset>
+			<fileset dir="spring">
+				<include name="scubadiving-beans.xml"/>
+			</fileset>
+			<fileset dir="jbpm">
+				<include name="*.xml"/>
 			</fileset>
 		</jar>
 	</target>

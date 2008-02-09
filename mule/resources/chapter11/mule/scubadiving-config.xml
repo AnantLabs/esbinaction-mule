@@ -29,22 +29,22 @@
 	<jms:activemq-connector name="activeMQConnector" brokerURL="tcp://localhost:61616"/>
 	
 	<custom-transformer name="XMLToDivingRequest" 
-		class="esb.framework.util.XMLToObjectTransformer">
+		class="esb.util.framework.XMLToObjectTransformer">
 		<spring:property name="targetClassName" value="esb.chapter11.scubadiving.model.DivingRequest"/>
 	</custom-transformer>
 	
 	<custom-transformer name="XMLToLunchBooking" 
-		class="esb.framework.util.XMLToObjectTransformer">
+		class="esb.util.framework.XMLToObjectTransformer">
 		<spring:property name="targetClassName" value="esb.chapter11.scubadiving.model.LunchBooking"/>
 	</custom-transformer>
 	
 	<custom-transformer name="XMLToTaxiRequest" 
-		class="esb.framework.util.XMLToObjectTransformer">
+		class="esb.util.framework.XMLToObjectTransformer">
 		<spring:property name="targetClassName" value="esb.chapter11.scubadiving.model.TaxiRequest"/>
 	</custom-transformer>
 		
 	<custom-transformer name="ObjectToXML" 
-		class="esb.framework.util.ObjectToXMLTransformer"/>
+		class="esb.util.framework.ObjectToXMLTransformer"/>
 	
 	<endpoint name="ProcessEngine" address="bpm://ScubaDivingBookingProcess" />
 	<endpoint name="ScubaDivingRequest" address="jms://process.start"/>

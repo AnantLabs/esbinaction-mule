@@ -5,7 +5,7 @@
     <value name="roomNumber" field="roomNumber"/>
     <value name="numberOfLunches" field="numberOfLunches"/>
     <value name="lunchDate" field="lunchDate"
-    	serializer="esb.framework.util.DateJiBXSerializer.serialize" 
-        deserializer="esb.framework.util.DateJiBXSerializer.deserialize"/>
+    	serializer="esb.util.framework.DateJiBXSerializer.serialize" 
+        deserializer="esb.util.framework.DateJiBXSerializer.deserialize"/>
   </mapping>
 </binding>
