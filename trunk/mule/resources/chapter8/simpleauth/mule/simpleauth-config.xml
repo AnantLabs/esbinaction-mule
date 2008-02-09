@@ -37,7 +37,7 @@
 	
 	<spring:bean id="keyEncryption" class="org.mule.extras.pgp.KeyBasedEncryptionStrategy"/>
 	
-	<custom-transformer name="SimpleAuthTransformer" class="esb.chapter8.security.transformer.SimpleAuthenticationTransformer"/>
+	<custom-transformer name="SimpleAuthTransformer" class="esb.chapter8.security.authentication.transformer.SimpleAuthenticationTransformer"/>
 
 	<model name="SimpleAuthExample">
 		
@@ -59,7 +59,7 @@
                 </inbound-endpoint>
             </inbound>
             <component>
-            	<pooled-object class="esb.chapter8.security.service.AuthenticationService">
+            	<pooled-object class="esb.chapter8.security.authentication.service.AuthenticationService">
             		<properties>
             			<spring:entry key="authenticated" value="true"/>
             		</properties>
@@ -77,7 +77,7 @@
                 <inbound-endpoint address="vm://security.error"/>
             </inbound>
             <component>
-            	<pooled-object class="esb.chapter8.security.service.AuthenticationService">
+            	<pooled-object class="esb.chapter8.security.authentication.service.AuthenticationService">
             		<properties>
             			<spring:entry key="authenticated" value="false"/>
             		</properties>
