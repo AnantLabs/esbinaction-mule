@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule:mule xmlns="http://www.springframework.org/schema/beans"
+  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
+  xmlns:smtp="http://www.mulesource.org/schema/mule/smtp/2.0"
+  xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/smtp/2.0 http://www.mulesource.org/schema/mule/smtp/2.0/mule-smtp.xsd">
+
+  <mule:model name="mail-model">
+    <mule:service name="file-reader">
+      <mule:inbound>
+        <mule:inbound-endpoint address="file://work-mule/chapter6/4a/in">
+          <mule:byte-array-to-string-transformer/>
+        </mule:inbound-endpoint>
+      </mule:inbound>
+      <mule:pass-through-component />
+      <mule:outbound>
+        <mule:outbound-pass-through-router>
+          <mule:outbound-endpoint address="smtp://jos:jos@localhost:10025?address=tijs@localhost">
+            <mule:properties>
+              <entry key="ccAddresses" value="jos@localhost"/>
+              <entry key="fromAddress" value="mule@localhost"/>
+              <entry key="replyToAddresses" value="piet@localhost"/>
+              <entry key="subject" value="You've got mail from Mule!"/>
+            </mule:properties>
+          </mule:outbound-endpoint>
+        </mule:outbound-pass-through-router>
+      </mule:outbound>
+    </mule:service>
+  </mule:model>
+
+</mule:mule>

@@ -1,0 +1,10 @@
+<person>
+	<customer-number>1</customer-number>
+	<first-name>Gijs</first-name>
+	<last-name>van Dongen</last-name>
+	<street>Kerkstraat</street>
+	<city>Sprang-Capelle</city>
+	<state>NB</state>
+	<zip>5658</zip>
+	<phone>0416-1234456</phone>
+</person>

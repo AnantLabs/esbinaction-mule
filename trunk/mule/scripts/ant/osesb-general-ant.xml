@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!--
+This build file is a generic build file that can be used to stop and start
+the various services and tools that are used in the examples.
+
+This build file assumes that the SM_HOME and the OS_ESB properties are set
+to respectively the servicemix installation and the 'opensource ESB' provided
+files. 
+-->
+<project name="ESB - generic" basedir=".." xmlns:c="urn:contrib-ant">
+	
+	<!-- read in the system's environment -->
+	<property environment="env" />
+	
+	<!-- to avoid unbound variables messages in eclipse -->
+    <property name="${env.OS_ESB}" value=""/>
+    <property name="${env.SM_HOME}" value=""/>
+  
+	<!-- General locations -->
+	<property name="OS_ESB" value="${env.OS_ESB}"/>
+	<property name="SM_HOME" value="${env.SM_HOME}"/>
+
+	<!--
+	  Starts mailserver with the following settings:
+	  	- Pop server running on: 10110
+	  	- SMTP server running on: 10025
+	-->
+	<target name="ext:start-james" description="start the james mail server with default settings">
+		<property name="james.home" value="${OS_ESB}/tools/james-2.3.1"/>
+		<java jar="${james.home}/bin/phoenix-loader.jar" fork="true">
+			<jvmarg value="-Djava.io.tmpdir=${james.home}/temp"/>
+			<jvmarg value="-Djava.ext.dirs=${james.home}/lib:${james.home}/tools/lib"/>
+			<jvmarg value="-Dphoenix.home=${james.home}"/>
+			<jvmarg value="-Dnetworkaddress.cache.ttl=300"/>			
+		</java>
+	</target>
+	
+	<target name="ext:start-openejb" description="start the open-ejb ejb container">
+		<property name="openejb.home" value="${OS_ESB}/tools/openejb-3.0-beta-1/"/>
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-1.jar">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-1.jar"/>
+			<arg value="start"/>
+		</java>
+	</target>
+	
+	<!-- internal target that can be used to deploy an ejb to openejb -->
+	<target name="ext:openejb-deploy">
+		<jar destfile="${work}/${ejb-dest-file}">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="${include-classes}"/>
+			</fileset>
+		</jar>
+		
+		<property name="openejb.home" value="${OS_ESB}/tools/openejb-3.0-beta-1/"/>
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-1.jar">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-1.jar"/>
+			<arg value="deploy"/>
+			<arg value="${work}/${ejb-dest-file}"/>					
+		</java>		
+	</target>
+	
+	<!-- internal target that can be used to deploy an ejb to openejb -->
+	<target name="ext:openejb-undeploy">		
+		<property name="openejb.home" value="${OS_ESB}/tools/openejb-3.0-beta-1/"/>
+		<delete file="${openejb.home}/apps/${ejbID}"/>
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-1.jar">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-1.jar"/>
+			<arg value="undeploy"/>
+			<arg value="${work}/${ejbID}"/>					
+		</java>
+	</target>	
+  
+  <target name="ext:start-AnomicFTPD" description="start the ftp server">
+      <property name="ftp.home" value="${OS_ESB}/tools/AnomicFTPD_v0.92"/>
+      
+      <filter token="ftproot" value="${ftp.home}/ftproot"/>
+      <copy file="${ftp.home}/ftpd.groups.template" tofile="${ftp.home}/ftpd.groups" filtering="true"/>
+      
+    <java fork="true" classname="ftpd" dir="${ftp.home}">
+      <jvmarg value="-Duser.home=${ftp.home}"/>
+      <classpath>
+                <pathelement path="${ftp.home}/Classes"/>
+      </classpath>
+    </java>
+  </target>
+	
+	<target name="ext:start-activeMQ" description="start activeMQ JMS broker">
+		<property name="jms.home" value="${OS_ESB}/tools/apache-activemq-4.1.1"/>
+		
+		<java fork="true" jar="${jms.home}/bin/run.jar">
+			<jvmarg value="-Dactivemq.home=${jms.home}"/>
+		</java>
+	</target>
+	
+	<target name="ext:start-hsqldb" description="start the database">
+		<property name="hsqldb.home" value="${OS_ESB}/tools/hsqldb"/>
+        <mkdir dir="work"/>
+		<java fork="true" classname="org.hsqldb.Server">
+			<arg line="-database.0 file:work/mydb -dbname.0 xdb -database.1 file:work/mydb2 -dbname.1 reservation"/>
+			<classpath>
+				<fileset dir="${hsqldb.home}">
+					<include name="lib/*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="ext:jdbc-setup-database">
+		<property name="hsqldb.home" value="${OS_ESB}/tools/hsqldb"/>
+		<java fork="true" classname="org.hsqldb.util.SqlTool">
+		 <arg line="--rcFile ${rc-file} ${urlID} ${sql-file}"/> 
+			<classpath>
+				<fileset dir="${hsqldb.home}">
+					<include name="lib/*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="ext:start-wildfire" description="start wildfire, the XMPP server">
+		<property name="wildfire.home" value="${OS_ESB}/tools/openfire"/>
+		<!-- start from the lib dir, this allows us to start without having to 
+		     configure all the libraries -->
+		<java fork="true" jar="${wildfire.home}/lib/startup.jar" dir="${wildfire.home}/lib">
+		</java>
+	</target>
+	
+
+</project>
