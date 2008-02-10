@@ -1,3 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<root-container />
+<root-container name="ScubaDivingBookingProcess" width="816" height="660">
+  <node name="start" x="194" y="15" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="decisionForDivingSchool" x="174" y="157" width="168" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="decisionForLunch" x="192" y="414" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="ReceiveRequest" x="193" y="90" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="InvokeSharkDivingAgency" x="-29" y="257" width="184" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="InvokeWreckAndCaveDivingAgency" x="371" y="256" width="230" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="InvokeDolphinDivingAgency" x="165" y="257" width="185" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="InvokeLunchService" x="-14" y="548" width="156" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="InvokeTaxiService" x="193" y="547" width="132" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="ReceiveDivingResponse" x="172" y="348" width="172" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="ReceiveTaxiResponse" x="167" y="622" width="183" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="SendScubaBooking" x="447" y="503" width="182" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="end" x="456" y="623" width="163" height="36"/>
+</root-container>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root-container name="ScubaDivingBookingProcess" width="788" height="699">
+  <node name="start" x="219" y="26" width="-1" height="-1">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="decisionForDivingSchool" x="195" y="216" width="-1" height="-1">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+    <edge>
+      <label x="-33" y="-18"/>
+    </edge>
+  </node>
+  <node name="InvokeWreckAndCaveDivingAgency" x="159" y="325" width="230" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="InvokeDolphinDivingAgency" x="426" y="326" width="228" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="decisionForLunch" x="180" y="421" width="181" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="InvokeLunchService" x="49" y="497" width="145" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="InvokeTaxiService" x="202" y="579" width="141" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="ReceiveRequest" x="210" y="111" width="131" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+  <node name="end" x="204" y="662" width="132" height="36"/>
+  <node name="InvokeSharkDivingAgency" x="-58" y="321" width="195" height="36">
+    <edge>
+      <label x="5" y="-10"/>
+    </edge>
+  </node>
+</root-container>
