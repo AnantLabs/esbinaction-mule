@@ -8,18 +8,14 @@
       	    http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
             http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
-  <file:connector name="sendConnector" outputAppend="true" outputPattern="output.xml"/>
-  
-  <file:connector name="receiveConnector" fileAge="500" autoDelete="true" pollingFrequency="100"/>
-
   <model name="FileExample">
     <service name="FileService">
       <inbound>
-        <file:inbound-endpoint path="inbox" connector-ref="receiveConnector"/>
+        <file:inbound-endpoint path="inbox" fileAge="500" pollingFrequency="100"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <file:outbound-endpoint path="outbox" connector-ref="sendConnector"/>
+          <file:outbound-endpoint path="outbox" outputPattern="output.xml"/>
         </outbound-pass-through-router>
       </outbound>
     </service>

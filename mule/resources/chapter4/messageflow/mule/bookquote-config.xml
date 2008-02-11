@@ -3,10 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:spring="http://www.springframework.org/schema/beans"
        xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
+       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
 
     <jms:activemq-connector name="jmsConnector"  brokerURL="tcp://localhost:61616"/>
     
@@ -42,7 +44,7 @@
             <component class="esb.chapter4.messageflow.mule.MessageLogger" />
             <outbound>
 				<outbound-pass-through-router>
-					<outbound-endpoint address="vm://aggregateQuotes.input"
+					<vm:outbound-endpoint path="aggregateQuotes.input"
 						transformer-refs="JMSToObject"/>
 				</outbound-pass-through-router>
 			</outbound>
@@ -55,7 +57,7 @@
             <component class="esb.chapter4.messageflow.mule.MessageLogger" />
             <outbound>
 				<outbound-pass-through-router>
-					<outbound-endpoint address="vm://aggregateQuotes.input" 
+					<vm:outbound-endpoint path="aggregateQuotes.input" 
 						transformer-refs="JMSToObject XMLToObject"/>
 				</outbound-pass-through-router>
 			</outbound>
@@ -64,7 +66,7 @@
         
         <service name="CheapestPriceCalculator">
         	<inbound>
-        		<inbound-endpoint address="vm://aggregateQuotes.input"/>
+        		<vm:inbound-endpoint path="aggregateQuotes.input"/>
         		<custom-inbound-router class="esb.chapter4.messageflow.mule.BookQuoteAggregator"/>
             </inbound>
             <component class="esb.chapter4.messageflow.mule.CheapestPriceCalculator"/>

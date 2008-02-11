@@ -89,6 +89,9 @@ the second chapter.
 				<include name="bookquote-config.xml"/>
 			</fileset>
 		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="bookquote-config.xml"/>
+		</antcall>
 	</target>
 	
 	<target name="messageflow-spring" depends="gn:init" description="messageflow-spring">

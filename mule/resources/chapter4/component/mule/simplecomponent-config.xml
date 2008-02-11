@@ -8,10 +8,12 @@
 		http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
 		http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
 
+    <stdio:connector name="inConnector" promptMessage="Enter a statement"/>
+
 	<model name="SimpleExample">
 	    <service name="SimpleComponent">
 	    	<inbound>
-                <inbound-endpoint address="stdio://System.in?promptMessage=Enter a statement:"/>
+                <stdio:inbound-endpoint system="IN" connector-ref="inConnector"/>
             </inbound>
             <component class="esb.chapter4.component.SimpleComponent"/>
         </service>

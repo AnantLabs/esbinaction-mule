@@ -8,13 +8,15 @@
 		http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
 		http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
 
+    <stdio:connector name="inConnector" promptMessage="Enter a number"/>
+
 	<custom-transformer name="StringToInteger" 
 				 class="esb.chapter4.component.transformer.StringToInteger"/>
 	
 	<model name="SimpleIntExample">
         <service name="SimpleIntComponent">
             <inbound>
-                <inbound-endpoint address="stdio://System.in?promptMessage=Enter a number:"
+                <stdio:inbound-endpoint system="IN" connector-ref="inConnector"
                 		  transformer-refs="StringToInteger"/>
             </inbound>
             <component class="esb.chapter4.component.SimpleIntComponent"/>

@@ -18,6 +18,8 @@
 		</default-connector-exception-strategy>
 	</vm:connector>
 	
+    <stdio:connector name="inConnector" promptMessage="Credentials"/>
+  
 	<acegi:security-manager>
     	<acegi:delegate-security-provider name="AcegiProvider" delegate-ref="daoAuthenticationProvider"/>
     </acegi:security-manager>
@@ -43,20 +45,20 @@
 		
 		<service name="UserInputService">
 			<inbound>
-                <inbound-endpoint address="stdio://System.in?promptMessage=Credentials:"/>
+                <stdio:inbound-endpoint system="IN"/>
             </inbound>
             <outbound>
             	<outbound-pass-through-router>
-            		<outbound-endpoint address="vm://security.in" transformer-refs="SimpleAuthTransformer"/>
+            		<vm:outbound-endpoint path="security.in" transformer-refs="SimpleAuthTransformer"/>
             	</outbound-pass-through-router>
             </outbound>
 		</service>
 	
         <service name="SimpleAuthService">
             <inbound>
-                <inbound-endpoint address="vm://security.in" connector-ref="exceptionVM">
+                <vm:inbound-endpoint path="security.in" connector-ref="exceptionVM">
                 	<encryption-security-filter strategy-ref="keyEncryption"/>
-                </inbound-endpoint>
+                </vm:inbound-endpoint>
             </inbound>
             <component>
             	<pooled-object class="esb.chapter8.security.authentication.service.AuthenticationService">
@@ -67,14 +69,14 @@
             </component>
             <outbound>
             	<outbound-pass-through-router>
-            		<outbound-endpoint address="stdio://System.out"/>
+            		<stdio:outbound-endpoint system="OUT"/>
             	</outbound-pass-through-router>
 			</outbound>
 		</service>
 		
 		<service name="AuthFailedService">
 			<inbound>
-                <inbound-endpoint address="vm://security.error"/>
+                <vm:inbound-endpoint path="security.error"/>
             </inbound>
             <component>
             	<pooled-object class="esb.chapter8.security.authentication.service.AuthenticationService">
@@ -85,7 +87,7 @@
             </component>
             <outbound>
             	<outbound-pass-through-router>
-            		<outbound-endpoint address="stdio://System.out"/>
+            		<stdio:outbound-endpoint system="OUT"/>
             	</outbound-pass-through-router>
             </outbound>
 		</service>

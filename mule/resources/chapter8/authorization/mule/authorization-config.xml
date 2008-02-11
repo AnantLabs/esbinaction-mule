@@ -106,9 +106,9 @@
 	
 		<service name="AuthorizationHTTPService">
 			<inbound>
-                <inbound-endpoint address="http://localhost:8888" synchronous="true">
+                <http:inbound-endpoint address="http://localhost:8888" synchronous="true">
 					<acegi:http-security-filter realm="mule-realm"/>
-                </inbound-endpoint>
+                </http:inbound-endpoint>
             </inbound>
            	<component>
             	<spring-object bean="authorizationComponent"/>

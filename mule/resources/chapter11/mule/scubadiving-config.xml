@@ -46,16 +46,16 @@
 	<custom-transformer name="ObjectToXML" 
 		class="esb.util.framework.ObjectToXMLTransformer"/>
 	
-	<endpoint name="ProcessEngine" address="bpm://ScubaDivingBookingProcess" />
-	<endpoint name="ScubaDivingRequest" address="jms://process.start"/>
-	<endpoint name="SharkDivingIn" address="vm://sharkdiving.in"/>
-	<endpoint name="WreckAndCaveDivingIn" address="vm://wreckandcavediving.in"/>
-	<endpoint name="DolphinDivingIn" address="vm://dolphindiving.in"/>
-	<endpoint name="LunchIn" address="vm://lunch.in"/>
-	<endpoint name="TaxiIn" address="vm://taxi.in"/>
-	<endpoint name="DivingResponse" address="vm://diving.response" />
-	<endpoint name="TaxiResponse" address="vm://taxi.response" />
-	<endpoint name="ScubaDivingBooking" address="jms://process.end"/>
+	<bpm:endpoint name="ProcessEngine" process="ScubaDivingBookingProcess"/>
+	<jms:endpoint name="ScubaDivingRequest" queue="process.start"/>
+	<vm:endpoint name="SharkDivingIn" path="sharkdiving.in"/>
+	<vm:endpoint name="WreckAndCaveDivingIn" path="wreckandcavediving.in"/>
+	<vm:endpoint name="DolphinDivingIn" path="dolphindiving.in"/>
+	<vm:endpoint name="LunchIn" path="lunch.in"/>
+	<vm:endpoint name="TaxiIn" path="taxi.in"/>
+	<vm:endpoint name="DivingResponse" path="diving.response" />
+	<vm:endpoint name="TaxiResponse" path="taxi.response" />
+	<jms:endpoint name="ScubaDivingBooking" queue="process.end"/>
 	
     <model name="ScubaDivingModel">
     	
