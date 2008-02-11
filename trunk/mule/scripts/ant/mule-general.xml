@@ -47,13 +47,15 @@
 		<fileset dir="${mule.home}/lib/opt">
 			<include name="*.jar" />
 		</fileset>
+        <fileset dir="${mule.home}/lib/user">
+          <include name="*.jar" />
+        </fileset>
 		<fileset dir="${tools.home}/apache-activemq-4.1.1">
 			<include name="*.jar" />
 		</fileset>
 		<fileset dir="${lib.home}/jibx/lib/">
 			<include name="*.jar" />
-		</fileset>		
-		<pathelement path="${workspace.home}/mule/classes"/>
+		</fileset>
 	</path>
 
 	<!-- 
@@ -65,6 +67,14 @@
 		<echo message="Mule home is set to ${mule.home}." />
 		<echo message="Workspace home is set to ${workspace.home}." />
 	</target>
+  
+    <target name="gn:run-mule-with-xmlconfig" depends="gn:init">
+      <java fork="true" classpathref="mule.path" dir="${mule.home}" classname="org.mule.MuleServer" >
+        <arg line="-config ${file}"/>
+        <jvmarg value="-Xdebug"/>
+        <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>
+      </java>
+    </target>
   
     <target name="gn:run-java-in-classpath" depends="gn:init">
        <java fork="true" classpathref="mule.path" classname="${class}" />

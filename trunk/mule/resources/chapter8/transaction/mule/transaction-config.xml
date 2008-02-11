@@ -17,14 +17,14 @@
     <model name="TransactionExample">
 		<service name="TransactionalJMSService">
 			<inbound>
-                <inbound-endpoint address="jms://transaction.in">
+                <jms:inbound-endpoint queue="transaction.in">
 					<jms:transaction action="ALWAYS_BEGIN"/>
-                </inbound-endpoint>
+                </jms:inbound-endpoint>
             </inbound>
            	<component class="esb.chapter8.transaction.service.TransactionService"/>
        		<outbound>
        			<outbound-pass-through-router>
-       				<outbound-endpoint address="jms://transaction.out"/>
+       				<jms:outbound-endpoint queue="transaction.out"/>
        			</outbound-pass-through-router>
        		</outbound>
 		</service>

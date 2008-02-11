@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+This build file provides all the targets needed to run the examples from
+the first chapter.  
+-->
+<project name="chapter 1 - Mule" basedir="." default="file-example">
+
+	<property name="script" value="../../scripts/ant"/>
+
+	<!-- import the servicemix tasks into the sm namespace -->
+	<import file="${script}/mule-general.xml" />
+	
+	<target name="file-example" depends="gn:init" description="Run the file example">	
+		<jar destfile="${mule.deploy}/chapter1-file.jar">
+			<fileset dir=".">
+				<include name="file-config.xml"/>
+			</fileset>
+		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="file-config.xml"/>
+		</antcall>
+	</target>
+	
+</project>

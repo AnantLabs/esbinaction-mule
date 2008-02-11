@@ -3,11 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:spring="http://www.springframework.org/schema/beans"
        xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+       xmlns:wsdl-xfire="http://www.mulesource.org/schema/mule/wsdl-xfire/2.0"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-       http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
+       http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/wsdl-xfire/2.0 http://www.mulesource.org/schema/mule/wsdl-xfire/2.0/mule-wsdl-xfire.xsd">
 	
+    <stdio:connector name="inConnector" promptMessage="Enter city,country"/>
+  
 	<custom-transformer name="StringToList" returnClass="java.util.List"
         	class="org.mule.transformers.script.ScriptTransformer">
         <spring:property name="scriptEngineName" value="groovy"/>
@@ -23,22 +29,22 @@
 	<model name="TransformationExample">
         <service name="WeatherInvokeService">
             <inbound>
-                <inbound-endpoint address="stdio://System.in?promptMessage=Enter city,country:" transformer-refs="StringToList ObjectToArray"/>
+                <stdio:inbound-endpoint system="IN" transformer-refs="StringToList ObjectToArray"/>
             </inbound>
             <outbound>
             	<chaining-router>
-                    <outbound-endpoint address="wsdl-xfire:http://www.webservicex.net/globalweather.asmx?WSDL&amp;method=GetWeather"/>
-                    <outbound-endpoint address="vm://weather.output"/>
+                    <wsdl-xfire:outbound-endpoint address="http://www.webservicex.net/globalweather.asmx?WSDL&amp;method=GetWeather"/>
+                    <vm:outbound-endpoint path="weather.output"/>
                 </chaining-router>
 			</outbound>
 		</service>
 		<service name="WeatherResponseOutput">
 			<inbound>
-				<inbound-endpoint address="vm://weather.output" transformer-refs="XSLT"/>
+				<vm:inbound-endpoint path="weather.output" transformer-refs="XSLT"/>
 			</inbound>
 			<outbound>
 				<outbound-pass-through-router>
-					<outbound-endpoint address="stdio://System.out"/>
+					<stdio:outbound-endpoint system="OUT"/>
 				</outbound-pass-through-router>
 			</outbound>
 		</service>

@@ -8,9 +8,9 @@
 		http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
 		http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd">
 
+    <stdio:connector name="inConnector" promptMessage="Enter a word"/>
 
-
-	<spring:bean id="ResponseOptions" class="esb.chapter4.component.ResponseOptions">
+	<spring:bean id="responseBean" class="esb.chapter4.component.ResponseOptions">
 		<spring:property name="options">
 			<spring:map>
 				<spring:entry key="EAI" value="Where have you been lately?"/>
@@ -21,20 +21,22 @@
 			</spring:map>
 		</spring:property>
 	</spring:bean>
+  
+    <spring:bean id="simpleBean" class="esb.chapter4.component.SimpleSpringComponent">
+      <spring:property name="responseOptions" ref="responseBean"/>
+    </spring:bean>
 	
 	<model name="SimpleSpringExample">
         <service name="SimpleSpringComponent">
             <inbound>
-                <inbound-endpoint address="stdio://System.in?promptMessage=Enter a word:"/>
+                <stdio:inbound-endpoint system="IN"/>
             </inbound>
             <component>
-              <singleton-object  class="esb.chapter4.component.SimpleSpringComponent">
-                <property key="responseOptions" value-ref="ResponseOptions"/>
-              </singleton-object>
+              <spring-object bean="simpleBean"/>
             </component>
             <outbound>
             	<outbound-pass-through-router>
-            		<outbound-endpoint address="stdio://System.out"/>
+            		<stdio:outbound-endpoint system="OUT"/>
             	</outbound-pass-through-router>
 			</outbound>
 		</service>
