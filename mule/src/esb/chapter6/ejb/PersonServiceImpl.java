@@ -3,9 +3,13 @@ package esb.chapter6.ejb;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Init;
+import javax.ejb.RemoteHome;
+import javax.ejb.Remove;
 import javax.ejb.Stateless;
 
 @Stateless
+@RemoteHome(PersonServiceEjbHome.class)
 public class PersonServiceImpl implements PersonService {
 
     private static List<Person> personList = new ArrayList<Person>();
@@ -30,7 +34,27 @@ public class PersonServiceImpl implements PersonService {
         return result;
     }
     
-    public void ejbCreate() {
-        System.out.println("In create");
-      }
+    public void ejbCreate() {}
+    
+    /**
+     * If you do not have an EJBHome or EJBLocalHome interface, this method
+     * can be deleted.
+     */
+    @Init
+    public void create(){}
+
+    /**
+     * This method corresponds to the following methods:
+     *  - EJBObject.remove()
+     *  - EJBHome.remove(ejbObject)
+     *  - EJBLocalObject.remove()
+     *  - EJBLocalHome.remove(ejbObject)
+     *
+     * If you do not have an EJBHome or EJBLocalHome interface, this method
+     * can be deleted.
+     */
+    @Remove
+    public void remove(){}    
+    
+    
 }

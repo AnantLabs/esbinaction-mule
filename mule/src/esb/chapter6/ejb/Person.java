@@ -2,6 +2,9 @@ package esb.chapter6.ejb;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 public class Person implements Serializable  {
 
     String firstName;
@@ -26,5 +29,10 @@ public class Person implements Serializable  {
     
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    
+    @Override
+    public String toString() {
+    	return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
