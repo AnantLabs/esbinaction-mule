@@ -55,7 +55,13 @@
 		</fileset>
 		<fileset dir="${LIB}/jibx/lib/">
 			<include name="*.jar" />
-		</fileset>		
+		</fileset>	
+		<fileset dir="${TOOLS}/openejb-3.0-beta-1/lib">
+			<include name="openejb*.jar" />
+		</fileset>
+		<fileset dir="${TOOLS}/openejb-3.0-beta-1/lib">
+			<include name="geronimo-ejb*.jar" />
+		</fileset>					
 		<pathelement path="${workspace.home}/mule/classes"/>
 	</path>
 

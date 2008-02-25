@@ -20,8 +20,8 @@ files.
 	<property name="script" value="../../scripts/ant"/>
 
 	<!-- import the servicemix tasks into the sm namespace -->
-	<import file="${script}/mule-general.xml" />
-	<import file="${script}/osesb-general.xml" />
+	<import file="${script}/mule-general-ant.xml" />
+	<import file="${script}/osesb-general-ant.xml" />
 		
 	<property name="chapter.home" location="${workspace.home}/mule/resources/chapter6" />
 
@@ -129,18 +129,5 @@ files.
 			<param name="ejbID" value="6a-ejb.jar"/>
 		</antcall>
 	</target>	
-	
-	<target name="chapter6-ejb-deploy-ejb3-connector" description="deploy EJB3 component">
-		<mkdir dir="${work}/ejb3"/>
-		<javac destdir="${work}/ejb3" srcdir="${chapter.home}/../../src-override" classpathref="mule.path">
-			<include name="**/*"/>
-		</javac>
-		<jar destfile="${work}/ejb3-connector.jar">
-			<fileset dir="${work}/ejb3"/>
-		</jar>
-		<copy file="${work}/ejb3-connector.jar" tofile="${MULE_HOME}/lib/user/ejb3-connector.jar"/>
-	</target>	
 		
-		
-	
 </project>
