@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:xfire="http://www.mulesource.org/schema/mule/xfire/2.0"
+  xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
   xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
@@ -9,56 +9,51 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                       http://www.mulesource.org/schema/mule/xfire/2.0 http://www.mulesource.org/schema/mule/xfire/2.0/mule-xfire.xsd
+                      http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd
                       http://www.mulesource.org/schema/mule/wssecurity/2.0 http://www.mulesource.org/schema/mule/wssecurity/2.0/mule-wssecurity.xsd">
   <mule:mule>
 
-    <xfire:connector name="connector" enableJSR181Annotations="true" />
+<!-- 
+    <xfire:connector name="connector" enableJSR181Annotations="true">
+      <property name="serverInHandlers">
+        <list>
+          <bean class="org.codehaus.xfire.util.dom.DOMInHandler" />
+          <bean class="org.codehaus.xfire.security.wss4j.WSS4JInHandler">
+            <property name="properties">
+              <props>
+              <prop key="action">Signature Encrypt</prop>
+              <prop key="user">serverkey</prop> 
+              <prop key="passwordCallbackClass">esb.chapter7.TestPwdCallback</prop>
+              <prop key="signaturePropFile">esb/chapter7/server.crypto.properties</prop>
+              </props>
+            </property>
+          </bean>
+        </list>
+      </property>
+    </xfire:connector>
+    
+     -->
+     
+     <cxf:connector name="cxfConnector">
+            <property name="configurationLocation" value="esb/chapter7/wss-cxf-config.xml" />
+     </cxf:connector>
     
     <beans>
-      <bean name="CocServiceImpl" class="org.esb.chapter7.wsdl.CocServiceImpl"
+      
+      <bean name="CocServiceImpl" class="esb.chapter7.CocServiceImpl"
         init-method="init" />
-        
-    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
-      <property name="beans">
-          <map>
-              <entry key="filter:name=detourFilter" value-ref="detourFilter"/>
-          </map>
-        </property>
-      </bean>
-
-      <bean id="detourFilter" class="org.esb.chapter9.filter.DetourFilter"/>
     </beans>
 
     <mule:model name="wsdl-bottom-up">
       <!-- Calls directly to the service -->
       <mule:service name="cocService">
-        <mule:inbound-router>
-          <mule:inbound-endpoint address="xfire:http://localhost:8081/services">
-            <mule:properties>
-              <entry key="action" value="Signature Encrypt"/>
-              <entry key="user" value="serverkey"/>
-              <entry key="passwordCallbackClass" value="org.esb.chapter7.wsdl.TestPwdCallback"/>
-              <entry key="signaturePropFile" value="org/esb/chapter7/wsdl/server.crypto.properties"/>
-            </mule:properties>
-            <wss:security-filter/>
+        <mule:inbound>
+          <mule:inbound-endpoint address="cxf:http://localhost:8081/services/cocservice">
           </mule:inbound-endpoint>
-        </mule:inbound-router>
+        </mule:inbound>
         <mule:component>
-          <mule:singleton-object instance-ref="CocServiceImpl" />
+          <mule:spring-object bean="CocServiceImpl"/>
         </mule:component>
-      </mule:service>
-      
-      <mule:service name="detour-service">
-        <mule:pass-through-component/>
-        <mule:outbound-router>
-          <mule:forwarding-catch-all-strategy>
-            <mule:outbound-endpoint address="file://normal"/>
-          </mule:forwarding-catch-all-strategy>
-          <mule:filtering-router>
-            <mule:outbound-endpoint address="file://detour"/>
-            <mule:filter ref="detourFilter"/>
-          </mule:filtering-router>
-        </mule:outbound-router>
       </mule:service>
     </mule:model>
 
