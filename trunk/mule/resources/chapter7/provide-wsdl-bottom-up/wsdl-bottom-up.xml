@@ -9,28 +9,22 @@
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                       http://www.mulesource.org/schema/mule/xfire/2.0 http://www.mulesource.org/schema/mule/xfire/2.0/mule-xfire.xsd">
 <mule:mule>
- <!--  xsi:schemaLocation="
-               http://www.springframework.org/schema/beans ./resources/schemas/spring-beans-2.0.xsd
-               http://www.mulesource.org/schema/mule/core/2.0 ./resources/schemas/mule.xsd
-               http://www.mulesource.org/schema/mule/xfire/2.0 ./resources/schemas/mule-xfire.xsd"
-               >
- -->
-  
 
+ 
     <xfire:connector name="connector" enableJSR181Annotations="true" />
-    
+     
     <beans>
-      <bean name="CocServiceImpl" class="org.esb.chapter7.wsdl.CocServiceImpl" init-method="init"/>
+      <bean name="CocServiceImpl" class="esb.chapter7.CocServiceImpl" init-method="init"/>
     </beans>
   
   <mule:model name="wsdl-bottom-up">
     <!-- Calls directly to the service -->
     <mule:service name="cocService">
-      <mule:inbound-router>
+      <mule:inbound>
         <mule:inbound-endpoint address="xfire:http://localhost:8081/services"/>
-      </mule:inbound-router>
+      </mule:inbound>
       <mule:component>
-          <mule:singleton-object instance-ref="CocServiceImpl"/>
+          <mule:spring-object bean="CocServiceImpl"/>
       </mule:component>      
     </mule:service>
   </mule:model>
