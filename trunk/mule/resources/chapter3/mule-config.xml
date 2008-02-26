@@ -3,6 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+  xmlns:bena="http://www.springframework.org/schema/beans"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
@@ -37,6 +38,18 @@
   -->
   <mule:model name="muleExample">
 
+<mule:service name="comp1service">
+  <mule:inbound>
+    <mule:inbound-endpoint address="file://work/in" />
+  </mule:inbound>
+  <mule:component  class="org.esb.chapter3.Component1">
+  </mule:component>
+  <mule:outbound>
+    <mule:outbound-pass-through-router>
+      <mule:outbound-endpoint address="vm://comp2Queue" />
+    </mule:outbound-pass-through-router>
+  </mule:outbound>
+</mule:service>
     <!--
       This component receives messages from a directory and 
       publishes the messages it receives on a JMS Queue.
