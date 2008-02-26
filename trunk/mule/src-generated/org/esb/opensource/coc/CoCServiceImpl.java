@@ -10,7 +10,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.esb.chapter7.wsdl.CocServiceImpl;
+import esb.chapter7.CocServiceImpl;
 
 @WebService(serviceName = "CoCService", targetNamespace = "http://opensource.esb.org/CoC/", endpointInterface = "org.esb.opensource.coc.CoCPortType")
 public class CoCServiceImpl implements CoCPortType {
@@ -25,7 +25,7 @@ public class CoCServiceImpl implements CoCPortType {
      * Return a company
      */
     public Company getCompany(String companyName) {
-        org.esb.chapter7.wsdl.Company company = delegate
+        esb.chapter7.Company company = delegate
                 .getCompany(companyName);
 
         return copyCompanyFromDomain(company);
@@ -42,11 +42,11 @@ public class CoCServiceImpl implements CoCPortType {
      * List companies based on city / streetname
      */
     public ListOfCompanies findCompanies(String city, String streetName) {
-        List<org.esb.chapter7.wsdl.Company> companies = delegate
+        List<esb.chapter7.Company> companies = delegate
         .findCompanies(city, streetName);
         
         ListOfCompanies result = new ListOfCompanies();
-        for (org.esb.chapter7.wsdl.Company foundCompany : companies) {
+        for (esb.chapter7.Company foundCompany : companies) {
             result.getCompany().add(copyCompanyFromDomain(foundCompany));    
         }
         
@@ -69,7 +69,7 @@ public class CoCServiceImpl implements CoCPortType {
     // Some private helper classes
     //------------------------------
     
-    private Company copyCompanyFromDomain(org.esb.chapter7.wsdl.Company company) {
+    private Company copyCompanyFromDomain(esb.chapter7.Company company) {
         Company result = new Company();
 
         if (company != null) {
@@ -82,7 +82,7 @@ public class CoCServiceImpl implements CoCPortType {
             // and all the directors
             BoardOfDirectors directors = new BoardOfDirectors();
             result.setBoardOfDirectors(directors);
-            for (org.esb.chapter7.wsdl.Director director : company.getBoardOfDirectors()) {
+            for (esb.chapter7.Director director : company.getBoardOfDirectors()) {
                 result.getBoardOfDirectors().getDirector().add(copyDirectoryFromDomain(director));
             } 
         }
@@ -91,7 +91,7 @@ public class CoCServiceImpl implements CoCPortType {
         return result;
     }
 
-    private Address copyAddressFromDomain(org.esb.chapter7.wsdl.Address address) {
+    private Address copyAddressFromDomain(esb.chapter7.Address address) {
         Address result = new Address();
         try {
             BeanUtils.copyProperties(result, address);
@@ -103,7 +103,7 @@ public class CoCServiceImpl implements CoCPortType {
         return result;
     }
 
-    private Director copyDirectoryFromDomain(org.esb.chapter7.wsdl.Director director) {
+    private Director copyDirectoryFromDomain(esb.chapter7.Director director) {
         Director result = new Director();
         
         GregorianCalendar cal = new GregorianCalendar();
@@ -123,8 +123,8 @@ public class CoCServiceImpl implements CoCPortType {
         return result;
     }
     
-    private org.esb.chapter7.wsdl.Company copyCompanyToDomain(Company company) {
-        org.esb.chapter7.wsdl.Company result = new org.esb.chapter7.wsdl.Company();
+    private esb.chapter7.Company copyCompanyToDomain(Company company) {
+        esb.chapter7.Company result = new esb.chapter7.Company();
 
         // copy the address
         result.setAddress(copyAddressToDomain(company.getAddress()));
@@ -133,7 +133,7 @@ public class CoCServiceImpl implements CoCPortType {
         result.setName(company.getName());
         
         // and all the directors
-        result.setBoardOfDirectors(new ArrayList<org.esb.chapter7.wsdl.Director>());
+        result.setBoardOfDirectors(new ArrayList<esb.chapter7.Director>());
         for (Director director : company.getBoardOfDirectors().getDirector()) {
             result.getBoardOfDirectors().add(copyDirectorFromDomain(director));
         }
@@ -142,8 +142,8 @@ public class CoCServiceImpl implements CoCPortType {
     }    
     
     
-    private org.esb.chapter7.wsdl.Address copyAddressToDomain(Address address) {
-        org.esb.chapter7.wsdl.Address result = new org.esb.chapter7.wsdl.Address();
+    private esb.chapter7.Address copyAddressToDomain(Address address) {
+        esb.chapter7.Address result = new esb.chapter7.Address();
         try {
             BeanUtils.copyProperties(result, address);
             result.setZipCode(address.getZipcode());
@@ -154,8 +154,8 @@ public class CoCServiceImpl implements CoCPortType {
         return result;
     }   
     
-    private org.esb.chapter7.wsdl.Director copyDirectorFromDomain(Director director) {
-        org.esb.chapter7.wsdl.Director result = new org.esb.chapter7.wsdl.Director();
+    private esb.chapter7.Director copyDirectorFromDomain(Director director) {
+        esb.chapter7.Director result = new esb.chapter7.Director();
                 
         result.setDateOfBirth(director.getDateOfBirth().toGregorianCalendar().getTime());
         result.setFirstName(director.getFirstName());
