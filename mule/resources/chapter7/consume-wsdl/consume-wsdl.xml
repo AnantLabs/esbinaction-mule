@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<mule:mule xmlns="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:xfire="http://www.mulesource.org/schema/mule/xfire/2.0"
   xmlns:xfire-wsdl="http://www.mulesource.org/schema/mule/wsdl-xfire/2.0"
@@ -10,61 +10,65 @@
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                       http://www.mulesource.org/schema/mule/xfire/2.0 http://www.mulesource.org/schema/mule/xfire/2.0/mule-xfire.xsd
                       http://www.mulesource.org/schema/mule/wsdl-xfire/2.0 http://www.mulesource.org/schema/mule/wsdl-xfire/2.0/mule-wsdl-xfire.xsd">
-  <mule:mule>
 
-    <xfire:connector name="testConnector" typeMappingRegistryClass="org.codehaus.xfire.jaxb2.JaxbTypeRegistry"/>
-
-    <mule:model name="consume-wsdl">
-
-      <!-- Calls directly to the service -->
-      <mule:service name="cocServiceConsumeToJava">
-        <mule:inbound-router>
-          <mule:inbound-endpoint address="file://work/chapter7/consume-wsdl/in-to-java">
-            <mule:transformer-byte-array-to-string />
-          </mule:inbound-endpoint>
-        </mule:inbound-router>
-        <mule:outbound-router>
-          <mule:chaining-router>
-            <!-- Calls the Getcompany method -->
-            <mule:outbound-endpoint
-              address="wsdl-xfire:http://localhost:8181/CoCPortType?wsdl&amp;method=getCompany">
-              <mule:properties>
-                <entry key="complexTypes">
-                  <map>
-                    <entry key="org.esb.opensource.coc.Company" value="out:http://coc.opensource.esb.org" />
-                  </map>
-                </entry>
-              </mule:properties>
-            </mule:outbound-endpoint>
-            <mule:outbound-endpoint address="file://work/chapter7/consume-wsdl/out">
-              <mule:custom-transformer class="org.esb.chapter7.wsdl.TestTransfomer" />
-            </mule:outbound-endpoint>
-          </mule:chaining-router>
-        </mule:outbound-router>
-      </mule:service>
+    <xfire:connector name="testConnector"
+      typeMappingRegistryClass="org.codehaus.xfire.jaxb2.JaxbTypeRegistry" />
       
-      <mule:service name="cocServiceConsumeToXML">
-        <mule:inbound-router>
-          <mule:inbound-endpoint
-            address="file://work/chapter7/consume-wsdl/in-to-xml">
-            <mule:transformer-byte-array-to-string />
-          </mule:inbound-endpoint>
-        </mule:inbound-router>
-        <mule:outbound-router>
-          <mule:chaining-router>
-            <!-- Calls the Getcompany method -->
-            <mule:outbound-endpoint  address="wsdl-xfire:http://localhost:8181/CoCPortType?wsdl&amp;method=getCompany">
-            </mule:outbound-endpoint>
-            <mule:outbound-endpoint
-              address="file://work/chapter7/consume-wsdl/out">
-              <mule:custom-transformer
-                class="org.esb.chapter7.wsdl.TestTransfomer" />
-            </mule:outbound-endpoint>
-          </mule:chaining-router>
-        </mule:outbound-router>
-      </mule:service>      
+      <mule:custom-transformer name="toStringTransformer" class="esb.chapter7.SimpleTransfomer"/>
+  
+  <mule:model name="consume-wsdl">
 
-    </mule:model>
+    <!-- Calls directly to the service -->
+    <mule:service name="cocServiceConsumeToJava">
+      <mule:inbound>
+        <mule:inbound-endpoint
+          address="file://work-mule/chapter7/consume-wsdl/in-to-java">
+          <mule:byte-array-to-string-transformer />
+        </mule:inbound-endpoint>
+      </mule:inbound>
+      <mule:outbound>
+        <mule:chaining-router>
+          <!-- Calls the Getcompany method -->
+          <mule:outbound-endpoint
+            address="wsdl-xfire:http://localhost:8181/CoCPortType?wsdl&amp;method=getCompany">
+            <mule:properties>
+              <entry key="complexTypes">
+                <map>
+                  <entry key="org.esb.opensource.coc.Company"
+                    value="out:http://coc.opensource.esb.org" />
+                </map>
+              </entry>
+            </mule:properties>
+          </mule:outbound-endpoint>
+          <mule:outbound-endpoint
+            address="file://work-mule/chapter7/consume-wsdl/out">
+            <mule:transformer ref="toStringTransformer"/>
+          </mule:outbound-endpoint>
+        </mule:chaining-router>
+      </mule:outbound>
+    </mule:service>
 
-  </mule:mule>
-</beans>
+    <mule:service name="cocServiceConsumeToXML">
+      <mule:inbound>
+        <mule:inbound-endpoint
+          address="file://work-mule/chapter7/consume-wsdl/in-to-xml">
+          <mule:byte-array-to-string-transformer />
+        </mule:inbound-endpoint>
+      </mule:inbound>
+      <mule:outbound>
+        <mule:chaining-router>
+          <!-- Calls the Getcompany method -->
+          <mule:outbound-endpoint
+            address="wsdl-xfire:http://localhost:8181/CoCPortType?wsdl&amp;method=getCompany">
+          </mule:outbound-endpoint>
+          <mule:outbound-endpoint
+            address="file://work-mule/chapter7/consume-wsdl/out">
+            <mule:transformer ref="toStringTransformer"/>
+          </mule:outbound-endpoint>
+        </mule:chaining-router>
+      </mule:outbound>
+    </mule:service>
+
+  </mule:model>
+
+</mule:mule>
