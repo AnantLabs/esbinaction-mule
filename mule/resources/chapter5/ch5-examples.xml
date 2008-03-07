@@ -28,6 +28,9 @@ the second chapter.
 				<include name="*.xsd"/>
 			</fileset>
 		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="validation-config.xml"/>
+		</antcall>
 	</target>
 	
 	<target name="transformation-mule" depends="gn:init" description="transformation-mule">

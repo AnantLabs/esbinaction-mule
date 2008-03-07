@@ -96,6 +96,9 @@ the second chapter.
 	
 	<target name="messageflow-spring" depends="gn:init" description="messageflow-spring">
 		<echo message="Starting spring part of example chapter 4"/>
+		<antcall target="gn:jibx-classes">
+	    	<param name="jibx-mapping" value="messageflow/jibx/BookQuoteMapping.xml"/>
+	   	</antcall>
 		<antcall target="gn:run-java-in-classpath">
 			<param name="class" value="esb.chapter4.messageflow.SpringStarter"/>
 		</antcall>

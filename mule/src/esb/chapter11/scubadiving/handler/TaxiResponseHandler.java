@@ -14,12 +14,13 @@ public class TaxiResponseHandler implements ActionHandler {
 	public void execute(ExecutionContext execContext) throws Exception {
 		TaxiBooking taxiBooking = (TaxiBooking) JiBXUtil.unmarshall(
 			(String) execContext.getContextInstance().getVariable("taxiResponse"), TaxiBooking.class);
-		ScubaDivingBooking booking = new ScubaDivingBooking();
-		booking.setTaxiBookingID(taxiBooking.getTaxiBookingID());
-		booking.setTaxiDepartureTime(taxiBooking.getTaxiDepartureTime());
-		booking.setTaxiReturnTime(taxiBooking.getTaxiReturnTime());
-		booking.setTotalPrice(booking.getTotalPrice() + taxiBooking.getPrice());
+		ScubaDivingBooking bookingResponse = (ScubaDivingBooking) 
+			execContext.getContextInstance().getVariable("bookingResponse");
+		bookingResponse.setTaxiBookingID(taxiBooking.getTaxiBookingID());
+		bookingResponse.setTaxiDepartureTime(taxiBooking.getTaxiDepartureTime());
+		bookingResponse.setTaxiReturnTime(taxiBooking.getTaxiReturnTime());
+		bookingResponse.setTotalPrice(bookingResponse.getTotalPrice() + taxiBooking.getPrice());
 		execContext.getContextInstance().setVariable(
-				"bookingResponse", booking);
+				"bookingResponse", bookingResponse);
 	}
 }

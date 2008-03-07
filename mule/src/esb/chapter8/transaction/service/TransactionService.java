@@ -9,6 +9,7 @@ import org.mule.api.transaction.Transaction;
 public class TransactionService {
 	
 	public String processMessage(String message) throws Exception {
+		System.out.println("TransactionService received message " + message);
 		if(!"bad transaction".equalsIgnoreCase(message)) {
 			return "transaction succeeded";
 		}

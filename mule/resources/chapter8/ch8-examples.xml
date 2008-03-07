@@ -30,73 +30,85 @@ the second chapter.
 		<echo message="resources/chapter8/simpleauth directory and run the simpleauth.bat or the simpleauth.sh file."/>
 		
 	</target>
-
-	<target name="component-transformer" depends="gn:init" description="Run the simple component example with a transformer">	
+	
+	<target name="ldap" depends="gn:init" description="Run the LDAP example">	
 		<antcall target="gn:compile-classes">
-			<param name="classes-filter" value="esb/chapter4/**/SimpleIntComponent.*"/>
+			<param name="classes-filter" value="esb/chapter8/security/authentication/**/*"/>
 		</antcall>
 		
-		<jar destfile="${mule.deploy}/chapter4-intcomponent.jar">
+		<jar destfile="${mule.deploy}/chapter8-ldap.jar">
 			<fileset dir="${workspace.home}/mule/classes">
-				<include name="esb/chapter4/**/SimpleIntComponent.*"/>
+				<include name="esb/chapter8/security/authentication/**/*"/>
 			</fileset>
-			<fileset dir="component/mule">
-				<include name="simpleintcomponent-config.xml"/>
+			<fileset dir="ldap/mule">
+				<include name="ldap-config.xml"/>
 			</fileset>
 		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="ldap-config.xml"/>
+		</antcall>
+	</target>
+
+	<target name="authorization" depends="gn:init" description="Run the authorization example">	
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter8/security/authorization/**/*"/>
+		</antcall>
 		
-		<echo message="This example uses the stdio, and can't be started from Ant. Mule has now been"/>			
-		<echo message="setup to work with the sources from this example. To run this example go to the"/>
-		<echo message="resources/chapter4/component run the intcomponent.bat or the intcomponent.sh file."/>
-		
+		<jar destfile="${mule.deploy}/chapter8-authorization.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter8/security/authorization/**/*"/>
+			</fileset>
+			<fileset dir="authorization/mule">
+				<include name="authorization-config.xml"/>
+			</fileset>
+		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="authorization-config.xml"/>
+		</antcall>
 	</target>
 	
-	<target name="component-spring" depends="gn:init" description="Run the simple component example with spring">	
-
+	<target name="transaction" depends="gn:init" description="Run the transaction example">	
 		<antcall target="gn:compile-classes">
-			<param name="classes-filter" value="esb/chapter4/**/SimpleSpringComponent.*"/>
+			<param name="classes-filter" value="esb/chapter8/transaction/**/*"/>
 		</antcall>
 		
-		<jar destfile="${mule.deploy}/chapter4-springcomponent.jar">
+		<jar destfile="${mule.deploy}/chapter8-transaction.jar">
 			<fileset dir="${workspace.home}/mule/classes">
-				<include name="esb/chapter4/**/SimpleSpringComponent.*"/>
+				<include name="esb/chapter8/transaction/**/*"/>
 			</fileset>
-			<fileset dir="component/mule">
-				<include name="simplespringcomponent-config.xml"/>
+			<fileset dir="transaction/mule">
+				<include name="transaction-config.xml"/>
 			</fileset>
 		</jar>
-		
-		<echo message="This example uses the stdio, and can't be started from Ant. Mule has now been"/>			
-		<echo message="setup to work with the sources from this example. To run this example go to the"/>
-		<echo message="resources/chapter4/component run the springcomponent.bat or the springcomponent.sh file."/>
-		
-	</target>	
-	
-	<target name="messageflow-mule" depends="gn:init" description="messageflow-mule">
-		<echo message="Deploying the messageflow example of chapter 4 to Mule"/>
-		<antcall target="gn:compile-classes">
-			<param name="classes-filter" value="esb/chapter4/messageflow/**/*"/>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="transaction-config.xml"/>
 		</antcall>
-		<antcall target="gn:jibx-classes">
-	    	<param name="jibx-mapping" value="messageflow/jibx/BookQuoteMapping.xml"/>
-	   	</antcall>
-		<jar destfile="${mule.deploy}/chapter4-messageflow.jar">
-			<fileset dir="${workspace.home}/mule/classes">
-				<include name="esb/chapter4/messageflow/**/*"/>
-				<include name="esb/util/**/*"/>
-			</fileset>
-			<fileset dir="messageflow/mule">
-				<include name="bookquote-config.xml"/>
-			</fileset>
-		</jar>
 	</target>
 	
-	<target name="messageflow-spring" depends="gn:init" description="messageflow-spring">
-		<echo message="Starting spring part of example chapter 4"/>
-		<antcall target="gn:run-java-in-classpath">
-			<param name="class" value="esb.chapter4.messageflow.SpringStarter"/>
+	<target name="xatransaction" depends="gn:init" description="Run the xatransaction example">	
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter8/transaction/**/*"/>
 		</antcall>
-	</target>	
-
+		
+		<jar destfile="${mule.deploy}/chapter8-xatransaction.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter8/transaction/**/*"/>
+			</fileset>
+			<fileset dir="xatransaction/mule">
+				<include name="xatransaction-config.xml"/>
+			</fileset>
+		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="xatransaction-config.xml"/>
+		</antcall>
+	</target>
+	
+	<target name="jdbc-setup-database" description="setup the database">
+		<antcall target="ext:jdbc-setup-database">
+			<param name="sql-file" value="xatransaction/database/setupDatabase.txt"/>
+			<param name="rc-file" value="xatransaction/database/auth.rc"/>
+			<param name="urlID" value="esbinaction"/>
+		</antcall>
+	</target>
 	
 </project>
