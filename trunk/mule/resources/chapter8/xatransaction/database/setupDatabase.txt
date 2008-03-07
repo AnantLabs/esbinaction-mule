@@ -1,0 +1,8 @@
+drop table PUBLIC.TRANSACTION if exists; 
+ 
+create table TRANSACTION ( 
+    id               IDENTITY, 
+    transactiontime  datetime	not null     
+  ); 
+
+commit;

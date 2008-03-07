@@ -1,59 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:spring="http://www.springframework.org/schema/beans"
-       xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
-       xmlns:jbossts="http://www.mulesource.org/schema/mule/jbossts/2.0"
-       xmlns:jdbc="http://www.mulesource.org/schema/mule/jdbc/2.0"
-    xsi:schemaLocation="
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:spring="http://www.springframework.org/schema/beans"
+  xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+  xmlns:jbossts="http://www.mulesource.org/schema/mule/jbossts/2.0"
+  xmlns:jdbc="http://www.mulesource.org/schema/mule/jdbc/2.0"
+  xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
        http://www.mulesource.org/schema/mule/jbossts/2.0 http://www.mulesource.org/schema/mule/jbossts/2.0/mule-jbossts.xsd
        http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
+
+  <jbossts:transaction-manager />
+
+  <spring:bean id="congestionDatabase"
+      class="org.enhydra.jdbc.standard.StandardXADataSource" destroy-method="shutdown">
+    <spring:property name="driverName" value="org.hsqldb.jdbcDriver" />
+    <spring:property name="url" value="jdbc:hsqldb:hsql://localhost/reservation" />
+  </spring:bean>
+
+  <jdbc:connector name="jdbcConnector" dataSource-ref="congestionDatabase">
+    <jdbc:query key="transaction.insert"
+      value="INSERT INTO PUBLIC.TRANSACTION (id, transactiontime) values (NULL, ${NOW})" />
+  </jdbc:connector>
+
+  <jms:activemq-xa-connector brokerURL="tcp://localhost:61616"
+      name="jmsConnector" specification="1.1" maxRedelivery="1"
+      numberOfConcurrentTransactedReceivers="1">
+    <receiver-threading-profile maxThreadsActive="1" maxThreadsIdle="1"
+      maxBufferSize="1" doThreading="false" poolExhaustedAction="WAIT" />
+    <dispatcher-threading-profile maxThreadsActive="1"
+      maxThreadsIdle="1" maxBufferSize="1" doThreading="false"
+      poolExhaustedAction="WAIT" />
+  </jms:activemq-xa-connector>
+
+  <model name="XATransactionExample">
+    <service name="XATransactionalJMSService">
+      <inbound>
+        <jms:inbound-endpoint queue="xatransaction.in">
+          <jms:xa-transaction action="BEGIN_OR_JOIN" />
+          <properties>
+            <spring:entry key="reuseConsumer" value="true" />
+            <spring:entry key="reuseSession" value="true" />
+          </properties>
+        </jms:inbound-endpoint>
+      </inbound>
+      <component
+        class="esb.chapter8.transaction.service.TransactionService" />
+      <outbound>
+        <outbound-pass-through-router>
+          <jms:outbound-endpoint queue="xajdbc.in">
+            <jms:xa-transaction action="BEGIN_OR_JOIN" />
+          </jms:outbound-endpoint>
+          <jms:xa-transaction action="ALWAYS_BEGIN" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
     
-    <jbossts:jboss-transaction-manager/>
-    
-    <spring:bean id="congestionDatabase"
-      		class="org.enhydra.jdbc.standard.StandardXADataSource"
-      		destroy-method="shutdown">
-    	<spring:property name="driverName" value="org.hsqldb.jdbcDriver"/>
-    	<spring:property name="url" value="jdbc:hsqldb:hsql://localhost/congestion"/>
-	</spring:bean>
-	
-	<jdbc:connector name="jdbcConnector">
-        <jdbc:dataSource instance-ref="congestionDatabase" scope="singleton" />
-        <jdbc:queries>
-            <spring:entry key="test.in"
-                   value="INSERT INTO PUBLIC.EVENTS (id, test) values (NULL, 'test')" />
-        </jdbc:queries>
-    </jdbc:connector>
-    
-    <spring:bean name="txFactory" class="org.mule.transaction.XaTransactionFactory" />
-    
-    <jms:activemq-xa-connector name="jmsConnector" maxRedelivery="1" createMultipleTransactedReceivers="false">
-		<jms:connection-factory class="org.apache.activemq.ActiveMQXAConnectionFactory"/>
-	</jms:activemq-xa-connector>
-    
-    <model name="XATransactionExample">
-		<service name="XATransactionalJMSService">
-			<inbound-router>
-                <inbound-endpoint address="jms://xatransaction.in"> 
-					<transaction action="ALWAYS_BEGIN">
-						<transaction-factory ref="txFactory"/>
-					</transaction>
-                </inbound-endpoint>
-            </inbound-router>
-       		<outbound-router>
-       			<outbound-pass-through-router>
-       				<outbound-endpoint address="jdbc://test.in">
-       					<transaction action="ALWAYS_JOIN">
-							<transaction-factory ref="txFactory"/>
-						</transaction>
-       				</outbound-endpoint>
-       			</outbound-pass-through-router>
-       		</outbound-router>
-		</service>
-	</model>
+    <service name="XAJDBCService">
+      <inbound>
+        <jms:inbound-endpoint queue="xajdbc.in">
+          <jms:xa-transaction action="BEGIN_OR_JOIN" />
+        </jms:inbound-endpoint>
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <jdbc:outbound-endpoint queryKey="transaction.insert">
+            <jdbc:transaction action="ALWAYS_JOIN" />
+          </jdbc:outbound-endpoint>
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+  </model>
 </mule>
 

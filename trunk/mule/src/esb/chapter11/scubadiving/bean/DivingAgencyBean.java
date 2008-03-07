@@ -31,6 +31,7 @@ public class DivingAgencyBean {
 		booking.setInstructorName(instructorName);
 		booking.setPrice(request.getNumberOfDivers() * pricePerPerson);
 		booking.setAddress(address);
+		booking.setName(divingAgencyName);
 		return booking;
 	}
 	

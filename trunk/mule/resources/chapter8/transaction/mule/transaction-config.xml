@@ -10,7 +10,7 @@
        http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
        http://www.mulesource.org/schema/mule/jotm/2.0 http://www.mulesource.org/schema/mule/jotm/2.0/mule-jotm.xsd">
     
-    <spring:bean name="txFactory" class="org.mule.providers.jms.JmsTransactionFactory" />
+    <spring:bean name="txFactory" class="org.mule.transport.jms.JmsTransactionFactory" />
     
     <jms:activemq-connector name="jmsConnector" maxRedelivery="1" brokerURL="tcp://localhost:61616"/>
     

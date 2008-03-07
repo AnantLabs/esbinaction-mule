@@ -11,8 +11,15 @@ public class DivingBooking implements Serializable {
 	private Date divingStartingTime;
 	private String instructorName;
 	private String address;
+	private String name;
 	private double price;
 	
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 	public long getDivingBookID() {
 		return divingBookID;
 	}
@@ -37,11 +44,11 @@ public class DivingBooking implements Serializable {
 	public void setInstructorName(String instructorName) {
 		this.instructorName = instructorName;
 	}
-	public String getAddress() {
-		return address;
+	public String getName() {
+		return name;
 	}
-	public void setAddress(String address) {
-		this.address = address;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public double getPrice() {
 		return price;

@@ -14,6 +14,7 @@
     <value name="divingStartingTime" field="divingStartingTime"/>
     <value name="instructorName" field="instructorName"/>
     <value name="address" field="address"/>
+    <value name="name" field="name"/>
     <value name="price" field="price"/>
   </mapping>
 </binding>

@@ -13,8 +13,6 @@
     <property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
-
-	<echo message="${lib.home}/ant-contrib/ant-contrib-1.0b3.jar"/>
 	
 	<!-- define the tasks for the ant-contrib libraries -->
 	<taskdef resource="net/sf/antcontrib/antlib.xml" uri="urn:contrib-ant">
@@ -53,10 +51,24 @@
 		<fileset dir="${tools.home}/apache-activemq-4.1.1">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${lib.home}/jibx/lib/">
+		<fileset dir="${lib.home}/jibx/lib">
 			<include name="*.jar" />
 		</fileset>
 	</path>
+  
+    <!-- define the classpath to use for spring -->
+    <path id="spring.path">
+      <fileset dir="${tools.home}/apache-activemq-4.1.1">
+        <include name="*.jar" />
+      </fileset>
+      <fileset dir="${lib.home}/jibx/lib">
+        <include name="*.jar" />
+      </fileset>
+      <fileset dir="${lib.home}/spring-hibernate-2.0.6">
+        <include name="*.jar" />
+      </fileset>
+      <pathelement path="../../classes"/>
+    </path>
 
 	<!-- 
 	    make sure the init directory exists, and show the settings for
@@ -77,7 +89,7 @@
     </target>
   
     <target name="gn:run-java-in-classpath" depends="gn:init">
-       <java fork="true" classpathref="mule.path" classname="${class}" />
+       <java fork="true" classpathref="spring.path" classname="${class}" />
     </target>
 	
 	<target name="gn:compile-classes" depends="gn:init">
@@ -92,12 +104,27 @@
 	</target>
 	
 	<target name="gn:jibx-classes" depends="gn:init">
-		  <!-- Run JiBX binding compiler -->
-		  <bind verbose="false" load="true" binding="${jibx-mapping}">
-		    <classpath>
-		      <pathelement path="${workspace.home}/mule/classes"/>
-		      <pathelement location="${lib.home}/jibx/libs/jibx-run.jar"/>
-		    </classpath>
-		  </bind> 
+	  <!-- Run JiBX binding compiler -->
+	  <bind verbose="false" load="true" binding="${jibx-mapping}">
+	    <classpath>
+	      <pathelement path="${workspace.home}/mule/classes"/>
+	      <pathelement location="${lib.home}/jibx/libs/jibx-run.jar"/>
+	    </classpath>
+	  </bind> 
 	</target>
+  
+    <target name="gn:jibx-classes-multiple" depends="gn:init">
+      <!-- Run JiBX binding compiler -->
+      <bind verbose="false" load="true">
+        <classpath>
+          <pathelement path="${workspace.home}/mule/classes"/>
+          <pathelement location="${lib.home}/jibx/libs/jibx-run.jar"/>
+        </classpath>
+          <bindingfileset dir="${jibx-directory}">
+            <include name="${jibx-mapping1}"/>
+            <include name="${jibx-mapping2}"/>
+            <include name="${jibx-mapping3}"/>
+          </bindingfileset>
+      </bind> 
+    </target>
 </project>

@@ -25,6 +25,7 @@ public class DivingResponseHandler implements ActionHandler {
 		booking.setInstructorName(divingBooking.getInstructorName());
 		booking.setTotalPrice(divingBooking.getPrice());
 		booking.setSchoolAddress(divingBooking.getAddress());
+		booking.setSchoolName(divingBooking.getName());
 		execContext.getContextInstance().setVariable(
 				"bookingResponse", booking);
 	}

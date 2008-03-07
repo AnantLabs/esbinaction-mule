@@ -16,15 +16,12 @@ the second chapter.
 		<antcall target="gn:compile-classes">
 			<param name="classes-filter" value="esb/chapter11/scubadiving/**/*"/>
 		</antcall>
-		<antcall target="gn:jibx-classes">
-	    	<param name="jibx-mapping" value="jibx/DivingMapping.xml"/>
+		<antcall target="gn:jibx-classes-multiple">
+			<param name="jibx-directory" value="jibx"/>
+	    	<param name="jibx-mapping1" value="DivingMapping.xml"/>
+	    	<param name="jibx-mapping2" value="LunchMapping.xml"/>
+	    	<param name="jibx-mapping3" value="TaxiMapping.xml"/>
 	   	</antcall>
-		<antcall target="gn:jibx-classes">
-	    	<param name="jibx-mapping" value="jibx/LunchMapping.xml"/>
-	   	</antcall>
-		<antcall target="gn:jibx-classes">
-	    	<param name="jibx-mapping" value="jibx/TaxiMapping.xml"/>
-	   	</antcall>	
 		<jar destfile="${mule.deploy}/chapter11-scubadiving.jar">
 			<fileset dir="${workspace.home}/mule/classes">
 				<include name="esb/chapter11/scubadiving/**/*"/>
@@ -40,6 +37,9 @@ the second chapter.
 				<include name="*.xml"/>
 			</fileset>
 		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="scubadiving-config.xml"/>
+		</antcall>
 	</target>
 	
 </project>

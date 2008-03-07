@@ -1,4 +1,4 @@
-package esb.chapter8.security.mule;
+package esb.chapter8.security.authorization.mule;
 
 import org.acegisecurity.AccessDeniedException;
 import org.mule.RequestContext;
@@ -8,6 +8,7 @@ import org.mule.service.DefaultServiceExceptionStrategy;
 
 public class AuthorizationExceptionStrategy extends DefaultServiceExceptionStrategy {
 	protected void defaultHandler(Throwable t) {
+		System.out.println("error******** " + t.getCause());
 	  	if(t.getCause() instanceof AccessDeniedException) {
 	  		super.defaultHandler(new UnauthorisedException(CoreMessages.authDeniedOnEndpoint(
 	  				RequestContext.getEventContext().getEndpointURI())));

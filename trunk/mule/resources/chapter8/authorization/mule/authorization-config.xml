@@ -63,7 +63,7 @@
       	</spring:property>
       	<spring:property name="objectDefinitionSource">
             <spring:value>
-                  esb.chapter8.security.service.AuthorizationService.onCall=ROLE_USERS
+                  esb.chapter8.security.authorization.service.AuthorizationService.onCall=ROLE_USERS
             </spring:value>
       	</spring:property>
 	</spring:bean>
@@ -98,7 +98,7 @@
       	<spring:property name="proxyTargetClass" value="true"/>
 	</spring:bean>
 	
-	<spring:bean id="authorizationComponent" class="esb.chapter8.security.service.AuthorizationService"/>
+	<spring:bean id="authorizationComponent" class="esb.chapter8.security.authorization.service.AuthorizationService"/>
 	
 	<spring:bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter"/>
 
@@ -106,14 +106,14 @@
 	
 		<service name="AuthorizationHTTPService">
 			<inbound>
-                <http:inbound-endpoint address="http://localhost:8888" synchronous="true">
+                <http:inbound-endpoint address="http://localhost:8888/authorization" synchronous="true">
 					<acegi:http-security-filter realm="mule-realm"/>
                 </http:inbound-endpoint>
             </inbound>
            	<component>
             	<spring-object bean="authorizationComponent"/>
            	</component>
-       		<custom-exception-strategy class="esb.chapter8.security.mule.AuthorizationExceptionStrategy"/>
+       		<custom-exception-strategy class="esb.chapter8.security.authorization.mule.AuthorizationExceptionStrategy"/>
 		</service>
 	</model>
 </mule>

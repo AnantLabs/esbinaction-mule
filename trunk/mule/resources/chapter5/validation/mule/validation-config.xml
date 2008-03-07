@@ -23,7 +23,7 @@
             </inbound>
             <outbound>
             	<outbound-pass-through-router>
-            		<jms:outbound-endpoint address="validation.out"/>
+            		<jms:outbound-endpoint queue="validation.out"/>
             	</outbound-pass-through-router>
 			</outbound>
 		</service>
