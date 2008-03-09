@@ -16,8 +16,8 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
                       <entry key="action" value="Signature Encrypt" />
                       <entry key="passwordCallbackRef" value-ref="serverCallback"/>
                       <entry key="user" value="serverkey"/> 
-                      <entry key="decryptionPropFile" value="esb/chapter7/client.crypto.properties"/>
-                      <entry key="signaturePropFile" value="esb/chapter7/client.crypto.properties"/>                      
+                      <entry key="decryptionPropFile" value="esb/chapter7/server.crypto.properties"/>
+                      <entry key="signaturePropFile" value="esb/chapter7/server.crypto.properties"/>                      
                   </map>
               </constructor-arg>
           </bean>

@@ -8,43 +8,38 @@ http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
 http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
 
-<!-- <jaxws:client name="{http://opensource.esb.org/CoC/}CocServiceImplPort" createdFromAPI="true"> -->
+  <!-- <jaxws:client name="{http://opensource.esb.org/CoC/}CocServiceImplPort" createdFromAPI="true"> -->
 
-<jaxws:client name="{http://opensource.esb.org/CoC/}CocServiceImplService" createdFromAPI="true">
-  <jaxws:outInterceptors>
-      <bean class="org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor"/>
-      <bean class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
-          <constructor-arg>
-              <map>
-                      <entry key="action" value="Signature Encrypt" />
-                      <entry key="passwordCallbackRef" value-ref="wsCallback"/>
-                      <entry key="encryptionUser" value="myKey"/>
-                      <entry key="user" value="clientKey"/> 
-                      <entry key="decryptionPropFile" value="esb/chapter7/client.crypto.properties"/>
-                      <entry key="signaturePropFile" value="esb/chapter7/client.crypto.properties"/> 
-              </map>
-          </constructor-arg>
-      </bean>
-  </jaxws:outInterceptors>
-</jaxws:client>
+  <bean name="SAAJOutInterceptor"
+    class="org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor" />
+  <bean name="WSS4JOutInterceptor"
+    class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
+    <constructor-arg>
+      <map>
+        <!-- We're going to sign and encrypt the message -->
+        <entry key="action" value="Signature Encrypt" />
+        <!-- We need a password callback to retrieve the sign. key -->
+        <entry key="passwordCallbackRef" value-ref="wsCallback" />
+        <!-- The user specified here is the private key used for signing -->
+        <entry key="user" value="clientkey" /> 
+        <!-- The encryptionUser points to the alias/public key used for encryption -->
+        <entry key="encryptionUser" value="serverkey" />
+        <!-- The property file uses for de/encryption -->
+        <entry key="decryptionPropFile" value="esb/chapter7/client.crypto.properties" />
+        <!--  The property file used for signing/validation -->
+        <entry key="signaturePropFile" value="esb/chapter7/client.crypto.properties" />
+      </map>
+    </constructor-arg>
+  </bean>
 
-<jaxws:client name="{http://opensource.esb.org/CoC/}CocServiceImplPort" createdFromAPI="true">
-  <jaxws:outInterceptors>
-      <bean class="org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor" />
-      <bean class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
-          <constructor-arg>
-              <map>
-                      <entry key="action" value="Signature Encrypt" />
-                      <entry key="passwordCallbackRef" value-ref="wsCallback"/>
-                      <entry key="encryptionUser" value="myKey"/>
-                      <entry key="user" value="clientKey"/> 
-                      <entry key="decryptionPropFile" value="esb/chapter7/client.crypto.properties"/>
-                      <entry key="signaturePropFile" value="esb/chapter7/client.crypto.properties"/> 
-              </map>
-          </constructor-arg>
-      </bean>
-  </jaxws:outInterceptors>
-</jaxws:client>
+  <bean id="cxf" class="org.apache.cxf.bus.CXFBusImpl">
+    <property name="outInterceptors">
+      <list>
+        <ref bean="SAAJOutInterceptor" />
+        <ref bean="WSS4JOutInterceptor" />
+      </list>
+    </property>
+  </bean>
 
-  <bean id="wsCallback" class="esb.chapter7.TestPwdCallback"/>
+  <bean id="wsCallback" class="esb.chapter7.TestPwdCallback" />
 </beans>
