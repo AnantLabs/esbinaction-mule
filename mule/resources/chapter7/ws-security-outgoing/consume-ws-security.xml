@@ -1,59 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:xfire="http://www.mulesource.org/schema/mule/xfire/2.0"
-  xmlns:xfire-wsdl="http://www.mulesource.org/schema/mule/wsdl-xfire/2.0"
   xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:wss="http://www.mulesource.org/schema/mule/wssecurity/2.0"
+  xmlns:cxf-wsdl="http://www.mulesource.org/schema/mule/cxf-wsdl/2.0"
+  xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
   xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-                      http://www.mulesource.org/schema/mule/xfire/2.0 http://www.mulesource.org/schema/mule/xfire/2.0/mule-xfire.xsd
-                      http://www.mulesource.org/schema/mule/wsdl-xfire/2.0 http://www.mulesource.org/schema/mule/wsdl-xfire/2.0/mule-wsdl-xfire.xsd
-                      http://www.mulesource.org/schema/mule/wssecurity/2.0 http://www.mulesource.org/schema/mule/wssecurity/2.0/mule-wssecurity.xsd">
+                      http://www.mulesource.org/schema/mule/wssecurity/2.0 http://www.mulesource.org/schema/mule/wssecurity/2.0/mule-wssecurity.xsd
+                      http://www.mulesource.org/schema/mule/cxf-wsdl/2.0 http://www.mulesource.org/schema/mule/cxf-wsdl/2.0/mule-cxf-wsdl.xsd
+                      http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd">
   <mule:mule>
- 
-    <xfire:connector name="testConnector" typeMappingRegistryClass="org.codehaus.xfire.jaxb2.JaxbTypeRegistry"/>
+
+  <cxf-wsdl:connector name="wsdlCxfConnector">
+    <property name="configurationLocation" value="esb/chapter7/wss-cxf-config-client.xml" />
+  </cxf-wsdl:connector>
+
     <mule:model name="consume-wsdl">
 
       <!-- Calls directly to the service -->
       <mule:service name="cocServiceConsumeToJava">
-        <mule:inbound-router>
-          <mule:inbound-endpoint address="file://work/chapter7/consume-wsdl/in-to-java">
-            <mule:transformer-byte-array-to-string />
+        <mule:inbound>
+          <mule:inbound-endpoint
+            address="file://work-mule/chapter7/consume-wsdl/in">
+            <mule:byte-array-to-string-transformer />
           </mule:inbound-endpoint>
-        </mule:inbound-router>
-        <mule:outbound-router>
+        </mule:inbound>
+        <mule:outbound>
           <mule:chaining-router>
-            <!-- Calls the Getcompany method -->
-             <mule:outbound-endpoint
-              address="wsdl-xfire:http://localhost:8181/CoCPortType?wsdl&amp;method=getCompany">  
-            <!-- <mule:outbound-endpoint
-              address="wsdl-xfire:http://localhost:8081/services/cocService?wsdl&amp;method=getCompany"> -->               
-<!--               <mule:properties>
-                <entry key="complexTypes">
-                  <map>
-                    <entry key="org.esb.opensource.coc.Company" value="out:http://coc.opensource.esb.org" />
-                  </map>
-                </entry>
-              </mule:properties>  -->
-              <wss:security-filter>
-                  <!--  used for signing and encryption -->
-                  <wss:property key="signaturePropFile" value="org/esb/chapter7/wsdl/client.crypto.properties"/>                   
-                  <wss:property key="action" value="Signature Encrypt"/>
-                  <!-- username to use for the action, this is the alias in the keystore used for signing --> 
-                  <wss:property key="user" value="clientkey"/>
-                  <wss:property key="passwordCallbackClass" value="org.esb.chapter7.wsdl.TestPwdCallback"/>
-                  <!-- The public key to use for encryption -->
-                  <wss:property key="encryptionUser" value="myKey"/>
-              </wss:security-filter>
-            </mule:outbound-endpoint>
-            <mule:outbound-endpoint address="file://work/chapter7/consume-wsdl/out">
-              <mule:custom-transformer class="org.esb.chapter7.wsdl.TestTransfomer" />
+          <!-- &amp;method=getCompany -->
+            <mule:outbound-endpoint
+              address="wsdl-cxf:http://localhost:8081/services/cocservice?wsdl&amp;method=getCompany" connector-ref="wsdlCxfConnector"/>               
+            <mule:outbound-endpoint
+              address="file://mule-work/chapter7/consume-wsdl/out">
+              <mule:custom-transformer
+                class="esb.chapter7.SimpleTransfomer" />
             </mule:outbound-endpoint>
           </mule:chaining-router>
-        </mule:outbound-router>
+        </mule:outbound>
       </mule:service>
     </mule:model>
 

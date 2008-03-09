@@ -13,27 +13,6 @@
                       http://www.mulesource.org/schema/mule/wssecurity/2.0 http://www.mulesource.org/schema/mule/wssecurity/2.0/mule-wssecurity.xsd">
   <mule:mule>
 
-<!-- 
-    <xfire:connector name="connector" enableJSR181Annotations="true">
-      <property name="serverInHandlers">
-        <list>
-          <bean class="org.codehaus.xfire.util.dom.DOMInHandler" />
-          <bean class="org.codehaus.xfire.security.wss4j.WSS4JInHandler">
-            <property name="properties">
-              <props>
-              <prop key="action">Signature Encrypt</prop>
-              <prop key="user">serverkey</prop> 
-              <prop key="passwordCallbackClass">esb.chapter7.TestPwdCallback</prop>
-              <prop key="signaturePropFile">esb/chapter7/server.crypto.properties</prop>
-              </props>
-            </property>
-          </bean>
-        </list>
-      </property>
-    </xfire:connector>
-    
-     -->
-     
      <cxf:connector name="cxfConnector">
             <property name="configurationLocation" value="esb/chapter7/wss-cxf-config.xml" />
      </cxf:connector>
