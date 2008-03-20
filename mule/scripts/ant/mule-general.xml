@@ -9,7 +9,7 @@
 	<property name="tools.home" value="${book.home}/tools" />
 	<property name="lib.home" value="${book.home}/libraries" />
 	<property name="patches.home" value="${book.home}/esb/patches" />
-	<property name="mule.home" location="${book.home}/esb/mule-2.0.0-RC2" />
+	<property name="mule.home" location="${book.home}/esb/mule-2.0.0-RC3" />
     <property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
