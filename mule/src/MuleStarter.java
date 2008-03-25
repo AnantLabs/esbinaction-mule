@@ -1,5 +1,4 @@
 import org.mule.MuleServer;
-import org.mule.routing.filters.xml.JXPathFilter;
 
 
 public class MuleStarter {

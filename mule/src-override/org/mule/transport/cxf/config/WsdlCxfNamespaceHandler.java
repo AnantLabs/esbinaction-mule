@@ -11,7 +11,6 @@
 package org.mule.transport.cxf.config;
 
 import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
-import org.mule.transport.cxf.CxfConnector;
 import org.mule.transport.cxf.wsdl.CxfWsdlConnector;
 
 public class WsdlCxfNamespaceHandler extends AbstractMuleNamespaceHandler
@@ -21,7 +20,7 @@ public class WsdlCxfNamespaceHandler extends AbstractMuleNamespaceHandler
     {
         registerMetaTransportEndpoints("wsdl-cxf");
         registerConnectorDefinitionParser(CxfWsdlConnector.class);
-        registerBeanDefinitionParser(FeaturesDefinitionParser.FEATURES, new FeaturesDefinitionParser());
+        //registerBeanDefinitionParser(FeaturesDefinitionParser.FEATURES, new FeaturesDefinitionParser());
     }
 
 }
