@@ -78,6 +78,10 @@ the various services and tools that are used in the examples.
 		<property name="jms.home" value="${tools.home}/apache-activemq-4.1.1"/>
 		
 		<java fork="true" jar="${jms.home}/bin/run.jar">
+			<jvmarg value="-Djavax.net.ssl.keyStorePassword=password"/>
+			<jvmarg value="-Djavax.net.ssl.trustStorePassword=password"/>
+			<jvmarg value="-Djavax.net.ssl.keyStore=${jms.home}/conf/broker.ks"/>
+			<jvmarg value="-Djavax.net.ssl.trustStore=${jms.home}/conf/broker.ts"/>
 			<jvmarg value="-Dactivemq.home=${jms.home}"/>
 		</java>
 	</target>
