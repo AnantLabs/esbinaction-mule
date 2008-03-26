@@ -29,6 +29,8 @@ public class LunchServiceHandler implements ActionHandler {
 				execContext.getContextInstance().getVariable("bookingResponse");
 		bookingResponse.setTotalPrice(bookingResponse.getTotalPrice() + 
 				(14.95 * bookingRequest.getNumberOfDivers()));
+		execContext.getContextInstance().setVariable(
+				"bookingResponse", bookingResponse);
 	}
 	
 }

@@ -9,32 +9,22 @@
 
 	<decision name="decisionForDivingSchool">
 		<transition to="InvokeSharkDivingAgency" name="sharks">
-			<condition>
-				#{booking.interest == 'Sharks'}
-			</condition>
+			<condition><![CDATA[#{booking.interest == 'Sharks'}]]></condition>
 		</transition>
 		<transition to="InvokeWreckAndCaveDivingAgency" name="wreckandcave">
-			<condition>
-				#{booking.interest == 'Wrecks' or booking.interest == 'Caves'}
-			</condition>
+			<condition><![CDATA[#{booking.interest == 'Wrecks' or booking.interest == 'Caves'}]]></condition>
 		</transition>
 		<transition to="InvokeDolphinDivingAgency" name="dolphin">
-			<condition>
-				#{booking.interest == 'Dolphins'}
-			</condition>
+			<condition><![CDATA[#{booking.interest == 'Dolphins'}]]></condition>
 		</transition>
 	</decision>
 	
 	<decision name="decisionForLunch">
 		<transition to="InvokeLunchService" name="lunch">
-			<condition>
-				#{booking.lunchIncluded == true}
-			</condition>
+			<condition><![CDATA[#{booking.lunchIncluded == true}]]></condition>
 		</transition>
 		<transition to="InvokeTaxiService" name="taxi">
-			<condition>
-				#{booking.lunchIncluded == false}
-			</condition>
+			<condition><![CDATA[#{booking.lunchIncluded == false}]]></condition>
 		</transition>
 	</decision>
 
