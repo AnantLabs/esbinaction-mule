@@ -79,7 +79,7 @@
             </inbound>
             <echo-component/>
             <outbound>
-                <endpoint-selector-router selectorProperty="endpoint">
+                <endpoint-selector-router selectorExpression="header:endpoint">
                     <outbound-endpoint ref="SharkDivingIn"/>
                     <outbound-endpoint ref="WreckAndCaveDivingIn"/>
                     <outbound-endpoint ref="DolphinDivingIn"/>
