@@ -13,12 +13,12 @@ the second chapter.
 	
 	<target name="component" depends="gn:init" description="Run the simple component example">	
 		<antcall target="gn:compile-classes">
-			<param name="classes-filter" value="esb/chapter4/**/SimpleComponent.*"/>
+			<param name="classes-filter" value="esb/chapter4/component/simple/*"/>
 		</antcall>
 		
 		<jar destfile="${mule.deploy}/chapter4-component.jar">
 			<fileset dir="${workspace.home}/mule/classes">
-				<include name="esb/chapter4/**/SimpleComponent.*"/>
+				<include name="esb/chapter4/component/simple/*"/>
 			</fileset>
 			<fileset dir="component/mule">
 				<include name="simplecomponent-config.xml"/>
@@ -33,12 +33,12 @@ the second chapter.
 
 	<target name="component-transformer" depends="gn:init" description="Run the simple component example with a transformer">	
 		<antcall target="gn:compile-classes">
-			<param name="classes-filter" value="esb/chapter4/**/SimpleIntComponent.*"/>
+			<param name="classes-filter" value="esb/chapter4/component/transformer/*"/>
 		</antcall>
 		
 		<jar destfile="${mule.deploy}/chapter4-intcomponent.jar">
 			<fileset dir="${workspace.home}/mule/classes">
-				<include name="esb/chapter4/**/SimpleIntComponent.*"/>
+				<include name="esb/chapter4/component/transformer/*"/>
 			</fileset>
 			<fileset dir="component/mule">
 				<include name="simpleintcomponent-config.xml"/>
@@ -54,12 +54,12 @@ the second chapter.
 	<target name="component-spring" depends="gn:init" description="Run the simple component example with spring">	
 
 		<antcall target="gn:compile-classes">
-			<param name="classes-filter" value="esb/chapter4/**/SimpleSpringComponent.*"/>
+			<param name="classes-filter" value="esb/chapter4/component/spring/*"/>
 		</antcall>
 		
 		<jar destfile="${mule.deploy}/chapter4-springcomponent.jar">
 			<fileset dir="${workspace.home}/mule/classes">
-				<include name="esb/chapter4/**/SimpleSpringComponent.*"/>
+				<include name="esb/chapter4/component/spring/*"/>
 			</fileset>
 			<fileset dir="component/mule">
 				<include name="simplespringcomponent-config.xml"/>

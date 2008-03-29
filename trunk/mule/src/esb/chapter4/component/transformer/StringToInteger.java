@@ -11,8 +11,7 @@ public class StringToInteger extends AbstractTransformer {
 		try {
 			return Integer.valueOf(strPayload);
 		} catch(Exception e) {
-			System.out.println("No valid Integer: " + strPayload);
-			return new Integer(-1);
+			throw new TransformerException(this, e);
 		}
 	}
 }

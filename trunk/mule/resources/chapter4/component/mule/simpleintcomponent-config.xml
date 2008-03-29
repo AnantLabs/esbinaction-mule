@@ -19,7 +19,7 @@
                 <stdio:inbound-endpoint system="IN" connector-ref="inConnector"
                 		  transformer-refs="StringToInteger"/>
             </inbound>
-            <component class="esb.chapter4.component.SimpleIntComponent"/>
+            <component class="esb.chapter4.component.transformer.SimpleIntComponent"/>
         </service>
     </model>
 </mule>

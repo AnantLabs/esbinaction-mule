@@ -1,4 +1,4 @@
-package esb.chapter4.component;
+package esb.chapter4.component.spring;
 
 public class SimpleSpringComponent {
 	

@@ -10,7 +10,7 @@
 
     <stdio:connector name="inConnector" promptMessage="Enter a word"/>
 
-	<spring:bean id="responseBean" class="esb.chapter4.component.ResponseOptions">
+	<spring:bean id="responseBean" class="esb.chapter4.component.spring.ResponseOptions">
 		<spring:property name="options">
 			<spring:map>
 				<spring:entry key="EAI" value="Where have you been lately?"/>
@@ -22,7 +22,7 @@
 		</spring:property>
 	</spring:bean>
   
-    <spring:bean id="simpleBean" class="esb.chapter4.component.SimpleSpringComponent">
+    <spring:bean id="simpleBean" class="esb.chapter4.component.spring.SimpleSpringComponent">
       <spring:property name="responseOptions" ref="responseBean"/>
     </spring:bean>
 	

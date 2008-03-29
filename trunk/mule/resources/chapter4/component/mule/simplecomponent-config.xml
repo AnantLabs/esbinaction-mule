@@ -15,7 +15,7 @@
 	    	<inbound>
                 <stdio:inbound-endpoint system="IN" connector-ref="inConnector"/>
             </inbound>
-            <component class="esb.chapter4.component.SimpleComponent"/>
+            <component class="esb.chapter4.component.simple.SimpleComponent"/>
         </service>
     </model>
 </mule>
