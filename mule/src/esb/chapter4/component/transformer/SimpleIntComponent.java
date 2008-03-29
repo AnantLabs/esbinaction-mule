@@ -1,4 +1,4 @@
-package esb.chapter4.component;
+package esb.chapter4.component.transformer;
 
 import org.apache.log4j.Logger;
 
