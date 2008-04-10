@@ -25,9 +25,9 @@ public class DivingAgencyBean {
 			logger.info(divingAgencyName + " received a request");
 		}
 		DivingBooking booking = new DivingBooking();
-		booking.setDivingBookID(new Random().nextLong());
-		booking.setDivingStartingTime(fillTime(request.getRequestDate(), startingTime));
-		booking.setDivingEndTime(fillTime(request.getRequestDate(), endTime));
+		booking.setBookingID(new Random().nextLong());
+		booking.setStartTime(fillTime(request.getRequestDate(), startingTime));
+		booking.setEndTime(fillTime(request.getRequestDate(), endTime));
 		booking.setInstructorName(instructorName);
 		booking.setPrice(request.getNumberOfDivers() * pricePerPerson);
 		booking.setAddress(address);

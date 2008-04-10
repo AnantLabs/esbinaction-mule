@@ -8,10 +8,16 @@ public class RestaurantResponse implements Serializable {
 	private String restaurant;
 	private String response;
 	private boolean tableAvailable;
+	private RestaurantInquiry inquiry;
 	
-	public RestaurantResponse() {
+	public RestaurantInquiry getInquiry() {
+		return inquiry;
 	}
-	
+
+	public void setInquiry(RestaurantInquiry inquiry) {
+		this.inquiry = inquiry;
+	}
+
 	public String getResponse() {
 		return response;
 	}

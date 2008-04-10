@@ -77,7 +77,6 @@
             <inbound>
                 <inbound-endpoint ref="ProcessEngine"/>
             </inbound>
-            <echo-component/>
             <outbound>
                 <endpoint-selector-router selectorExpression="header:endpoint">
                     <outbound-endpoint ref="SharkDivingIn"/>

@@ -13,7 +13,17 @@
     <property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
-	
+    <property name="cxf.home" location="${lib.home}/apache-cxf-2.0.3-incubator"/>
+  
+    <path id="cxf.classpath">
+      <fileset dir="${cxf.home}/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${cxf.home}/modules">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+  
 	<!-- define the tasks for the ant-contrib libraries -->
 	<taskdef resource="net/sf/antcontrib/antlib.xml" uri="urn:contrib-ant">
 		<classpath>
@@ -126,5 +136,17 @@
             <include name="${jibx-mapping3}"/>
           </bindingfileset>
       </bind> 
+    </target>
+    
+    <target name="gn:cxfWSDLToJava">
+      <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+          <arg value="-client"/>
+            <arg value="-d"/>
+            <arg value="../../src"/>
+            <arg value="http://www.webservicex.net/globalweather.asmx?WSDL"/>
+            <classpath>
+              <path refid="cxf.classpath"/>
+            </classpath>
+        </java>
     </target>
 </project>

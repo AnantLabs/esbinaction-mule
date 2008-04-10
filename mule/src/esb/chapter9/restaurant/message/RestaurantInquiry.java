@@ -1,50 +1,56 @@
 package esb.chapter9.restaurant.message;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class RestaurantInquiry implements Serializable {
 
 	private static final long serialVersionUID = -4546768116622879476L;
-	
-	private String reservationTime;
+	private String guestName;
 	private int persons;
-	
-	public RestaurantInquiry() {
+	private Date reservationTime;
+	private int roomNumber;
+		
+	public String getGuestName() {
+		return guestName;
 	}
-	
-	public RestaurantInquiry(String reservationTime, int persons) {
-		this.reservationTime = reservationTime;
-		this.persons = persons;
+
+	public void setGuestName(String guestName) {
+		this.guestName = guestName;
 	}
-	
+
 	public int getPersons() {
 		return persons;
 	}
+
 	public void setPersons(int persons) {
 		this.persons = persons;
 	}
-	public String getReservationTime() {
+
+	public Date getReservationTime() {
 		return reservationTime;
 	}
-	public void setReservationTime(String reservationTime) {
+
+	public void setReservationTime(Date reservationTime) {
 		this.reservationTime = reservationTime;
 	}
-	
-	public String toString() {
-	    final String TAB = "    ";
-	    
-	    String retValue = "";
-	    
-	    retValue = "RestaurantInquiry ( "
-	        + super.toString() + TAB
-	        + "time = " + this.reservationTime + TAB
-	        + "persons = " + this.persons + TAB
-	        + " )";
-	    
-	    return retValue;
+
+	public int getRoomNumber() {
+		return roomNumber;
 	}
 
-	
-	
-	
+	public void setRoomNumber(int roomNumber) {
+		this.roomNumber = roomNumber;
+	}
+
+	public String toString() {
+	   final String TAB = "    ";
+	   String retValue = "RestaurantInquiry ( "
+	        + super.toString() + TAB
+	        + "guestName = " + this.guestName + TAB
+	        + "persons = " + this.persons + TAB
+	        + "roomNumber = " + this.roomNumber
+	        + " )"; 
+	    return retValue;
+	}
 }

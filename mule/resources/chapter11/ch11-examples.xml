@@ -11,6 +11,15 @@ the second chapter.
 	<import file="${script}/mule-general.xml" />
 	<import file="${script}/osesb-general.xml" />
 	
+	<target name="test">
+		<!-- <unzip src="C:\osesb\esb\apache-servicemix-3.1.2\install\ode-jbi-1.1.1.zip" dest="c:\osesb\esb\jar"/> -->
+		<jar destfile="C:\osesb\esb\apache-servicemix-3.2.2-SNAPSHOT\hotdeploy\ode-jbi-1.1.1.zip">
+			<fileset dir="c:\osesb\esb\jar">
+				<include name="**"/>
+			</fileset>
+		</jar>
+	</target>
+	
 	<target name="scubadiving" depends="gn:init" description="scubadiving-mule">
 		<echo message="Deploying the scubadiving example of chapter 11 to Mule"/>
 		<antcall target="gn:compile-classes">

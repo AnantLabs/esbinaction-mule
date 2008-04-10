@@ -6,10 +6,22 @@ the second chapter.
 <project name="chapter 5 - Mule" basedir=".">
 
 	<property name="script" value="../../scripts/ant"/>
-
+	
 	<!-- import the servicemix tasks into the sm namespace -->
 	<import file="${script}/mule-general.xml" />
 	<import file="${script}/osesb-general.xml" />
+	
+	<target name="routing-mule" depends="gn:init" description="routing-mule">
+		<echo message="Starting mule with routing example of chapter 5"/>
+		<jar destfile="${mule.deploy}/chapter5-routing.jar">
+			<fileset dir="routing/mule">
+				<include name="routing-config.xml"/>
+			</fileset>
+		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="routing-config.xml"/>
+		</antcall>
+	</target>
 	
 	<target name="validation-mule" depends="gn:init" description="validation-mule">
 		<echo message="Starting mule with validation example of chapter 5"/>
@@ -35,12 +47,19 @@ the second chapter.
 	
 	<target name="transformation-mule" depends="gn:init" description="transformation-mule">
 		<echo message="Starting mule with transformation example of chapter 5"/>
+
+		<antcall target="gn:cxfWSDLToJava"/>
+		
 		<antcall target="gn:compile-classes">
 			<param name="classes-filter" value="esb/chapter5/transformation/**/*"/>
+		</antcall>
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="net/webservicex/*"/>
 		</antcall>
 		<jar destfile="${mule.deploy}/chapter5-transformation.jar">
 			<fileset dir="${workspace.home}/mule/classes">
 				<include name="esb/chapter5/transformation/**/*"/>
+				<include name="net/webservicex/*"/>
 				<include name="esb/util/**/*"/>
 			</fileset>
 			<fileset dir="transformation/mule">

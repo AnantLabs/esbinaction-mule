@@ -6,9 +6,9 @@ import java.util.Date;
 public class DivingBooking implements Serializable {
 
 	private static final long serialVersionUID = -1753194693313597308L;
-	private long divingBookID;
-	private Date divingEndTime;
-	private Date divingStartingTime;
+	private long bookingID;
+	private Date endTime;
+	private Date startTime;
 	private String instructorName;
 	private String address;
 	private String name;
@@ -20,23 +20,17 @@ public class DivingBooking implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public long getDivingBookID() {
-		return divingBookID;
+	public long getBookingID() {
+		return bookingID;
 	}
-	public void setDivingBookID(long divingBookID) {
-		this.divingBookID = divingBookID;
+	public void setBookingID(long bookingID) {
+		this.bookingID = bookingID;
 	}
-	public Date getDivingEndTime() {
-		return divingEndTime;
+	public Date getEndTime() {
+		return endTime;
 	}
-	public void setDivingEndTime(Date divingEndTime) {
-		this.divingEndTime = divingEndTime;
-	}
-	public Date getDivingStartingTime() {
-		return divingStartingTime;
-	}
-	public void setDivingStartingTime(Date divingStartingTime) {
-		this.divingStartingTime = divingStartingTime;
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 	public String getInstructorName() {
 		return instructorName;
@@ -55,5 +49,11 @@ public class DivingBooking implements Serializable {
 	}
 	public void setPrice(double price) {
 		this.price = price;
+	}
+	public Date getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 }

@@ -6,6 +6,7 @@ import org.mule.api.routing.filter.Filter;
 
 import esb.chapter9.restaurant.dao.ReservationDAOIF;
 import esb.chapter9.restaurant.model.Reservation;
+import esb.chapter9.restaurant.persist.ExpirationBean;
 
 /**
  * Simple mule filter that checks whether a message is received within
@@ -14,13 +15,13 @@ import esb.chapter9.restaurant.model.Reservation;
  */
 public class ExpirationCheckFilter implements Filter {
 	
-	private static Logger logger = Logger.getLogger(ExpirationCheckFilter.class);
+	private static final Logger logger = Logger.getLogger(ExpirationCheckFilter.class);
 	private ReservationDAOIF reservationDAO;
 	
 	public boolean accept(MuleMessage message) {
-		long reservationID = message.getLongProperty(ExpirationRouter.RESPONSE_ID, -1);
+		long reservationID = message.getLongProperty(ExpirationBean.RESPONSE_ID, -1);
 		if(reservationID == -1) {
-			logger.error("received message without a " + ExpirationRouter.RESPONSE_ID + " header property");
+			logger.error("received message without a " + ExpirationBean.RESPONSE_ID + " header property");
 		}
 		Reservation reservation = reservationDAO.getReservation(reservationID);
 		if(reservation == null || reservation.getReservationID() == null) return false;
