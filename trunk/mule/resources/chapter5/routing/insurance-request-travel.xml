@@ -1,0 +1,6 @@
+<insurance-request xmlns="http://insurance.com">
+	<insurance-type>Travel</insurance-type>
+	<name>John Doe</name>
+	<address>Church Street 299 Boston</address>
+	<telephone>940-203980983</telephone>
+</insurance-request>

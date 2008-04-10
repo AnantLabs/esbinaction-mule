@@ -1,6 +1,7 @@
 <binding>
   <mapping name="DivingRequest" class="esb.chapter11.scubadiving.model.DivingRequest" ns="http://divingagency.hawaii.com/xsd">
   	<namespace uri="http://divingagency.hawaii.com/xsd" default="elements"/>
+    <value name="bookingName" field="bookingName"/>
     <value name="hotelName" field="hotelName"/>
     <value name="requestDate" field="requestDate"
     	serializer="esb.util.framework.DateJiBXSerializer.serialize" 
@@ -9,9 +10,9 @@
   </mapping>
   <mapping name="DivingBooking" class="esb.chapter11.scubadiving.model.DivingBooking" ns="http://divingagency.hawaii.com/xsd">
   	<namespace uri="http://divingagency.hawaii.com/xsd" default="elements"/>
-    <value name="divingBookID" field="divingBookID"/>
-    <value name="divingEndTime" field="divingEndTime"/>
-    <value name="divingStartingTime" field="divingStartingTime"/>
+    <value name="bookingID" field="bookingID"/>
+    <value name="endTime" field="endTime"/>
+    <value name="startTime" field="startTime"/>
     <value name="instructorName" field="instructorName"/>
     <value name="address" field="address"/>
     <value name="name" field="name"/>

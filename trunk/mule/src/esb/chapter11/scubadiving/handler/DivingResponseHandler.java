@@ -19,9 +19,9 @@ public class DivingResponseHandler implements ActionHandler {
 		DivingBooking divingBooking = (DivingBooking) JiBXUtil.unmarshall(
 			(String) execContext.getContextInstance().getVariable("divingResponse"), DivingBooking.class);
 		ScubaDivingBooking booking = new ScubaDivingBooking();
-		booking.setDivingBookingID(divingBooking.getDivingBookID());
-		booking.setDivingStartingTime(divingBooking.getDivingStartingTime());
-		booking.setDivingEndTime(divingBooking.getDivingEndTime());
+		booking.setDivingBookingID(divingBooking.getBookingID());
+		booking.setDivingStartingTime(divingBooking.getStartTime());
+		booking.setDivingEndTime(divingBooking.getEndTime());
 		booking.setInstructorName(divingBooking.getInstructorName());
 		booking.setTotalPrice(divingBooking.getPrice());
 		booking.setSchoolAddress(divingBooking.getAddress());

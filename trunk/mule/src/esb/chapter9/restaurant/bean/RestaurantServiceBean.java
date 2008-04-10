@@ -1,10 +1,13 @@
 package esb.chapter9.restaurant.bean;
 
+import org.apache.log4j.Logger;
+
 import esb.chapter9.restaurant.message.RestaurantInquiry;
 import esb.chapter9.restaurant.message.RestaurantResponse;
 
 public class RestaurantServiceBean implements RestaurantServiceIF {
 	
+	private static final Logger logger = Logger.getLogger(RestaurantServiceBean.class);
 	private String restaurantName;
 	private int maximumPersons;
 	private int numberPersonsReservation;
@@ -12,7 +15,9 @@ public class RestaurantServiceBean implements RestaurantServiceIF {
 	private String deniedResponse;
 	
 	public RestaurantResponse processInquiry(RestaurantInquiry inquiry) {
+		logger.info(restaurantName + " received table request from " + inquiry.getGuestName());
 		RestaurantResponse response = new RestaurantResponse();
+		response.setInquiry(inquiry);
 		response.setRestaurant(restaurantName);
 		if((inquiry.getPersons() + numberPersonsReservation) > maximumPersons) {
 			response.setResponse(deniedResponse);

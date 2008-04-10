@@ -27,6 +27,9 @@ the second chapter.
 				<include name="restaurant-beans.xml"/>
 			</fileset>
 		</jar>
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="restaurant-config.xml"/>
+		</antcall>
 	</target>
 	
 	<target name="jdbc-setup-database" description="setup the database">

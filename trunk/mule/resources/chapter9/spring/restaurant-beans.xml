@@ -30,7 +30,17 @@
 		<property name="maximumPersons" value="80"/>
 		<property name="numberPersonsReservation" value="76"/>
   	</bean>
-  	
+    
+    <bean id="expirationBean"
+        class="esb.chapter9.restaurant.persist.ExpirationBean">
+      <property name="reservationDAO" ref="restaurantDAO"/>
+    </bean>
+    
+    <bean id="confirmationBean"
+        class="esb.chapter9.restaurant.persist.ConfirmationBean">
+      <property name="reservationDAO" ref="restaurantDAO"/>
+    </bean>
+    
   	<bean id="restaurantDAO"
   			class="esb.chapter9.restaurant.dao.hibernate.ReservationHibernateDAO">
   		<property name="sessionFactory" ref="hibernateSessionFactory"/>
