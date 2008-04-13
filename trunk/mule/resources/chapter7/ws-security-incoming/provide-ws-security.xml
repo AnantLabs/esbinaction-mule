@@ -18,20 +18,18 @@
      </cxf:connector>
     
     <beans>
-      
-      <bean name="CocServiceImpl" class="esb.chapter7.CocServiceImpl"
-        init-method="init" />
+      <bean name="ChamberOfCommerceServiceImpl" class="esb.chapter7.ChamberOfCommerceServiceImpl" init-method="init"/>
     </beans>
 
-    <mule:model name="wsdl-bottom-up">
+    <mule:model name="wsdl-bottom-up-ws-security">
       <!-- Calls directly to the service -->
       <mule:service name="cocService">
         <mule:inbound>
-          <mule:inbound-endpoint address="cxf:http://localhost:8081/services/cocservice">
+          <mule:inbound-endpoint address="cxf:http://localhost:8081/services/">
           </mule:inbound-endpoint>
         </mule:inbound>
         <mule:component>
-          <mule:spring-object bean="CocServiceImpl"/>
+          <mule:spring-object bean="ChamberOfCommerceServiceImpl"/>
         </mule:component>
       </mule:service>
     </mule:model>

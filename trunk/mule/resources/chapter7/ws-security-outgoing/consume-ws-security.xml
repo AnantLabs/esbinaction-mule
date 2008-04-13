@@ -13,9 +13,17 @@
                       http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd">
   <mule:mule>
 
-  <cxf-wsdl:connector name="wsdlCxfConnector">
-    <property name="configurationLocation" value="esb/chapter7/wss-cxf-config-client.xml" />
-  </cxf-wsdl:connector>
+    <cxf-wsdl:connector name="wsdlCxfConnector">
+      <property name="configurationLocation" value="esb/chapter7/wss-cxf-config-client.xml" />
+    </cxf-wsdl:connector>
+  
+    <cxf:connector name="cxfConnector">
+            <property name="configurationLocation" value="esb/chapter7/wss-cxf-config.xml" />
+     </cxf:connector>
+    
+    <beans>
+      <bean name="ChamberOfCommerceServiceImpl" class="esb.chapter7.ChamberOfCommerceServiceImpl" init-method="init"/>
+    </beans>
 
     <mule:model name="consume-wsdl">
 
@@ -31,7 +39,12 @@
           <mule:chaining-router>
           <!-- &amp;method=getCompany -->
             <mule:outbound-endpoint
-              address="wsdl-cxf:http://localhost:8081/services/cocservice?wsdl&amp;method=getCompany" connector-ref="wsdlCxfConnector"/>               
+              address="wsdl-cxf:http://localhost:8081/services/CoCservice?wsdl&amp;method=getCompany" connector-ref="wsdlCxfConnector">
+              	<mule:properties>
+              		<entry key="service" value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplService"></entry>
+              		<entry key="port" value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort"></entry>
+              	</mule:properties>
+              </mule:outbound-endpoint>               
             <mule:outbound-endpoint
               address="file://mule-work/chapter7/consume-wsdl/out">
               <mule:custom-transformer
@@ -40,6 +53,18 @@
           </mule:chaining-router>
         </mule:outbound>
       </mule:service>
+
+	<!--  security enabled service to call -->
+      <mule:service name="cocService">
+        <mule:inbound>
+          <mule:inbound-endpoint address="cxf:http://localhost:8081/services/">
+          </mule:inbound-endpoint>
+        </mule:inbound>
+        <mule:component>
+          <mule:spring-object bean="ChamberOfCommerceServiceImpl"/>
+        </mule:component>
+      </mule:service>
+
     </mule:model>
 
   </mule:mule>

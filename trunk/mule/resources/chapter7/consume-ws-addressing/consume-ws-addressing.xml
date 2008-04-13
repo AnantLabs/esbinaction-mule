@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule:mule xmlns="http://www.springframework.org/schema/beans"
+	xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+	xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
+	xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd">
+
+
+	<cxf:connector name="ws-addressing"
+		configurationLocation="esb/chapter7/cxf-addressing-config.xml" />
+
+	<beans>
+		<bean name="ChamberOfCommerceServiceImpl"
+			class="esb.chapter7.ChamberOfCommerceServiceImpl" init-method="init" />
+	</beans>
+
+	<mule:model name="cxf-ws-addressing">
+
+		<!-- Calls directly to the service -->
+		<mule:service name="cocService">
+			<mule:inbound>
+				<mule:inbound-endpoint	address="cxf:http://localhost:8081/services">
+					<mule:custom-transformer
+						class="esb.chapter7.WSAddressingTransformer" />				
+				</mule:inbound-endpoint>
+			</mule:inbound>
+			<mule:component>
+				<mule:spring-object bean="ChamberOfCommerceServiceImpl" />
+			</mule:component>
+		</mule:service>
+	</mule:model>
+
+</mule:mule>

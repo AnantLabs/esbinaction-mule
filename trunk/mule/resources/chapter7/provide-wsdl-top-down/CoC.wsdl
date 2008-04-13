@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+	This WSDL file defines a chamberofcommerce (CoC) service. This
+	WSDL will be used to generate a server stub, which will be used
+	to implement a webservice which can be called by external clients.  
+ -->
 <wsdl:definitions xmlns:osesb="http://opensource.esb.org/CoC/"
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
