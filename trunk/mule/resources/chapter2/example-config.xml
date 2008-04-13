@@ -36,11 +36,6 @@
           <mule:outbound-endpoint address="jms://failure.queue" />
         </mule:forwarding-catch-all-strategy>
         <mule:inbound-endpoint address="jms://list.in" />
-        <mule:selective-consumer-router>
-<!--           <mule:custom-filter class="org.mule.routing.filters.xml.JXPathFilter">
-            <property name="pattern" value=".[true]"/>
-          </mule:custom-filter> -->
-        </mule:selective-consumer-router>
       </mule:inbound>
       
       <mule:bridge-component/>
