@@ -6,7 +6,7 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLStreamReader;
 
-import org.codehaus.xfire.util.STAXUtils;
+import org.apache.cxf.staxutils.StaxUtils;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.TransformerException;
@@ -33,7 +33,7 @@ public class MethodSelector extends AbstractMessageAwareTransformer  {
             throw new TransformerException(MessageFactory.createStaticMessage("Error while creating document: " + e.getMessage()));
         }
         
-        XMLStreamReader reader = STAXUtils.createXMLStreamReader(new StringReader(data));
+        XMLStreamReader reader = StaxUtils.createXMLStreamReader(new StringReader(data));
         message.setPayload(reader);
         
         return reader;
