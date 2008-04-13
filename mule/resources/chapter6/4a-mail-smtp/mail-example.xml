@@ -17,7 +17,7 @@
           <mule:byte-array-to-string-transformer/>
         </mule:inbound-endpoint>
       </mule:inbound>
-      <mule:pass-through-component />
+      <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
           <mule:outbound-endpoint address="smtp://jos:jos@localhost:10025?address=tijs@localhost">

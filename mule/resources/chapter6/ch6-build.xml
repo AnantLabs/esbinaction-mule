@@ -8,126 +8,135 @@ This build file assumes that the SM_HOME and the OS_ESB properties are set
 to respectively the servicemix installation and the 'opensource ESB' provided
 files. 
 -->
-<project name="chapter 6 - Mule" basedir="../.." default="init" xmlns:sm="urn:servicemix">
+<project name="chapter 6 - Mule" basedir="." default="init" xmlns:sm="urn:servicemix">
 
 	<!-- read in the system's environment -->
 	<property environment="env" />
 
-	<!-- We can't continue without these properties -->
-<!--	<fail unless="env.MULE_HOME" message="MULE_HOME property not set, can't continue." /> -->
-	<fail unless="env.OS_ESB" message="OS_ESB property not set, can't continue." />
-
-	<property name="script" value="../../scripts/ant"/>
+	<property name="script" value="../../scripts/ant" />
 
 	<!-- import the servicemix tasks into the sm namespace -->
-	<import file="${script}/mule-general-ant.xml" />
-	<import file="${script}/osesb-general-ant.xml" />
-		
+	<import file="${script}/mule-general.xml" />
+	<import file="${script}/osesb-general.xml" />
+
 	<property name="chapter.home" location="${workspace.home}/mule/resources/chapter6" />
 
 	<target name="init">
 		<antcall target="gn:init" />
 		<echo message="Mule home is set to ${MULE_HOME}." />
-		<echo message="Opensource ESB is set to ${OS_ESB}." />
 		<echo message="Chapter home is set to ${chapter.home}." />
 		<echo message="Workspace home is set to ${workspace.home}." />
 	</target>
-	
-	<target name="chapter6-file-example-1a" depends="gn:init" description="Chapter 6 - File example 1">	
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/1a-file/file-example.xml"/>
-		</antcall>
-	</target>
-	
-	<target name="chapter6-file-example-1b" depends="gn:init" description="Chapter 6 - File example 2">	
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/1b-file/file-example2.xml"/>
-		</antcall>
-	</target>	
-	
-	<target name="chapter6-jms-example-2a" depends="gn:init" description="Chapter 6 - JMS example 1">	
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/2a-jms-queue/jms-example.xml"/>
-		</antcall>
-	</target>	
-				
-	<target name="chapter6-jms-example-2b" depends="gn:init" description="Chapter 6 - JMS example 2">	
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/2b-jms-topic/jms-example.xml"/>
-		</antcall>
-	</target>
-	
-	<target name="chapter6-jdbc-read-3a" depends="gn:init" description="Chapter 6 - JDBC Example 1">
-		<copy file="${OS_ESB}/tools/hsqldb/lib/hsqldb.jar" todir="${MULE_HOME}/lib/user"/>
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/3a-jdbc-read/jdbc-example.xml"/>
-		</antcall>
-	</target>		
-	
-	<target name="chapter6-jdbc-read-3a-jdbc-setup-database" depends="init" description="setup the database">
-		<copy file="${OS_ESB}/tools/hsqldb/lib/hsqldb.jar" todir="${MULE_HOME}/lib/user"/>
-		<antcall target="ext:jdbc-setup-database">
-			<param name="sql-file" value="${chapter.home}/3b-jdbc-write/setupDatabase.txt"/>
-			<param name="rc-file" value="${chapter.home}/3a-jdbc-read/auth.rc"/>
-			<param name="urlID" value="chapter6"/>
-		</antcall>
-	</target>	
 
-	<target name="chapter6-jdbc-write-3b" depends="gn:init" description="Chapter 6 - JDBC Example 2">	
+	<target name="chapter6-file-example-1a" depends="gn:init" description="Chapter 6 - File example 1">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/3a-jdbc-write/jdbc-example.xml"/>
+			<param name="file" value="${chapter.home}/1a-file/file-example.xml" />
 		</antcall>
-	</target>		
-	
+	</target>
+
+	<target name="chapter6-file-example-1b" depends="gn:init" description="Chapter 6 - File example 2">
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/1b-file/file-example2.xml" />
+		</antcall>
+	</target>
+
+	<target name="chapter6-jms-example-2a" depends="gn:init" description="Chapter 6 - JMS example 1">
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/2a-jms-queue/jms-example.xml" />
+		</antcall>
+	</target>
+
+	<target name="chapter6-jms-example-2b" depends="gn:init" description="Chapter 6 - JMS example 2">
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/2b-jms-topic/jms-example.xml" />
+		</antcall>
+	</target>
+
+	<target name="chapter6-jdbc-read-3a-jdbc-setup-database" depends="init" description="setup the database">
+		<antcall target="ext:jdbc-setup-database">
+			<param name="sql-file" value="${chapter.home}/3b-jdbc-write/setupDatabase.txt" />
+			<param name="rc-file" value="${chapter.home}/3a-jdbc-read/auth.rc" />
+			<param name="urlID" value="chapter6" />
+		</antcall>
+	</target>
+
+	<target name="chapter6-jdbc-read-3a" depends="gn:init" description="Chapter 6 - JDBC Example 1">
+
+		<javac classpathref="mule.path" debug="true" 
+			destdir="${workspace.home}/mule/classes" 
+			srcdir="${workspace.home}/mule/src-override">
+			<include name="org/mule/transport/jdbc/**/*.java" />
+		</javac>
+
+		<jar destfile="${mule.deploy}/jdbc-connector-fix.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="org/mule/transport/jdbc/JdbcConnector.class" />
+			</fileset>
+		</jar>
+
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/3a-jdbc-read/jdbc-example.xml" />
+		</antcall>
+	</target>
+
+	<target name="chapter6-jdbc-write-3b" depends="gn:init" description="Chapter 6 - JDBC Example 2">
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/3b-jdbc-write/jdbc-example.xml" />
+		</antcall>
+	</target>
+
 	<target name="chapter6-jdbc-write-3b-setup-database" depends="init" description="setup the database">
 		<antcall target="ext:jdbc-setup-database">
-			<param name="sql-file" value="${chapter.home}/3a-jdbc-read/setupDatabase.txt"/>
-			<param name="rc-file" value="${chapter.home}/3a-jdbc-read/auth.rc"/>
-			<param name="urlID" value="chapter6"/>
+			<param name="sql-file" value="${chapter.home}/3a-jdbc-read/setupDatabase.txt" />
+			<param name="rc-file" value="${chapter.home}/3a-jdbc-read/auth.rc" />
+			<param name="urlID" value="chapter6" />
 		</antcall>
 	</target>
-	
-	<target name="chapter6-mail-smtp-4a" depends="gn:init" description="Chapter 6 - Mail stmp">	
+
+	<target name="chapter6-mail-smtp-4a" depends="gn:init" description="Chapter 6 - Mail stmp">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/4a-mail-smtp/mail-example.xml"/>
+			<param name="file" value="${chapter.home}/4a-mail-smtp/mail-example.xml" />
 		</antcall>
 	</target>
-	
-	<target name="chapter6-mail-pop3-4b" depends="gn:init" description="Chapter 6 - Mail pop3">	
+
+	<target name="chapter6-mail-pop3-4b" depends="gn:init" description="Chapter 6 - Mail pop3">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/4b-mail-pop3/mail-example.xml"/>
+			<param name="file" value="${chapter.home}/4b-mail-pop3/mail-example.xml" />
 		</antcall>
 	</target>
-	
-	<target name="chapter6-ftp-read-5b" depends="gn:init" description="Chapter 6 - ftp read">	
+
+	<target name="chapter6-ftp-read-5b" depends="gn:init" description="Chapter 6 - ftp read">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/5b-ftp-read/ftp-example.xml"/>
+			<param name="file" value="${chapter.home}/5b-ftp-read/ftp-example.xml" />
 		</antcall>
-	</target>	
-	
-	<target name="chapter6-ftp-write-5a" depends="gn:init" description="Chapter 6 - ftp write">	
+	</target>
+
+	<target name="chapter6-ftp-write-5a" depends="gn:init" description="Chapter 6 - ftp write">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/5a-ftp-write/ftp-example.xml"/>
+			<param name="file" value="${chapter.home}/5a-ftp-write/ftp-example.xml" />
 		</antcall>
-	</target>	
-	
-	<target name="chapter6-ejb" depends="gn:init" description="Chapter 6 - connect to an esb">
+	</target>
+
+	<target name="chapter6-ejb" depends="gn:init" description="Chapter 6 - connect to an ejb">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/6a-ejb/ejb-example.xml"/>
+			<param name="file" value="${chapter.home}/6a-ejb/ejb-example.xml" />
+			<param name="classes-filter" value="esb/chapter6/**/*.class"/>
+			<param name="target-jar" value="mule-chapter6.jar"/>
 		</antcall>
-	</target>		
-	
+	</target>
+
 	<target name="chapter6-ejb-deploy-ejb" description="deploy the ejb example">
 		<antcall target="ext:openejb-deploy">
-			<param name="include-classes" value="esb/chapter6/ejb/**.*"/>
-			<param name="ejb-dest-file" value="6a-ejb.jar"/>
+			<param name="include-classes" value="esb/chapter6/ejb/**.*" />
+			<param name="ejb-dest-file" value="6a-ejb.jar" />
+			<param name="classes-dir" value="${workspace.home}/mule/classes" />
 		</antcall>
 	</target>
-	
+
 	<target name="chapter6-ejb-undeploy-ejb" description="undeploy the ejb example">
 		<antcall target="ext:openejb-undeploy">
-			<param name="ejbID" value="6a-ejb.jar"/>
+			<param name="ejbID" value="6a-ejb.jar" />
 		</antcall>
-	</target>	
-		
+	</target>
+
 </project>

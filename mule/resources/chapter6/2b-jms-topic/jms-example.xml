@@ -1,74 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule:mule xmlns="http://www.springframework.org/schema/beans"
-  xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="
+	xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+	xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
 
-  
-  
-  <!--  the JMS configuration, tell mule where we want to connect to for JMS -->
-  <jms:activemq-connector name="jmsConnection" brokerURL="tcp://localhost:61616"/>
 
-  <mule:model name="jms-model">
-    <mule:service name="file-to-jms">
-      <mule:inbound>
-        <mule:inbound-endpoint address="file://work-mule/chapter6/2b/in">
-          <mule:properties>
-            <entry key="pollingFrequencey" value="3000" />
-          </mule:properties>
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:pass-through-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="jms://topic:topic1"/>
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-    
-    <mule:service name="jms-1-to-file">
-      <mule:inbound>
-         <mule:inbound-endpoint address="jms://topic:topic1">
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:pass-through-component/>
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="file://work/chapter6/2b/out-1"/>
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-    
-    <mule:service name="jms-2-to-file">
-      <mule:inbound>
-         <mule:inbound-endpoint address="jms://topic:topic1">
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:pass-through-component/>
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="file://work/chapter6/2b/out-2"/>
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-    
-   <mule:service name="jms-3-to-file">
-      <mule:inbound>
-         <mule:inbound-endpoint address="jms://topic:topic1">
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:pass-through-component/>
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="file://work-mule/chapter6/2b/out-3"/>
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-    
-  </mule:model>
+
+	<!--  the JMS configuration, tell mule where we want to connect to for JMS -->
+	<jms:activemq-connector name="jmsConnection"
+		brokerURL="tcp://localhost:61616" />
+
+	<mule:model name="jms-model">
+		<mule:service name="file-to-jms">
+			<mule:inbound>
+				<mule:inbound-endpoint
+					address="file://work-mule/chapter6/2b/in">
+					<mule:properties>
+						<entry key="pollingFrequencey" value="3000" />
+					</mule:properties>
+				</mule:inbound-endpoint>
+			</mule:inbound>
+			<mule:bridge-component />
+			<mule:outbound>
+				<mule:outbound-pass-through-router>
+					<mule:outbound-endpoint
+						address="jms://topic:topic1" />
+				</mule:outbound-pass-through-router>
+			</mule:outbound>
+		</mule:service>
+
+		<mule:service name="jms-1-to-file">
+			<mule:inbound>
+				<mule:inbound-endpoint address="jms://topic:topic1">
+				</mule:inbound-endpoint>
+			</mule:inbound>
+			<mule:bridge-component />
+			<mule:outbound>
+				<mule:outbound-pass-through-router>
+					<mule:outbound-endpoint
+						address="file://work/chapter6/2b/out-1" />
+				</mule:outbound-pass-through-router>
+			</mule:outbound>
+		</mule:service>
+
+		<mule:service name="jms-2-to-file">
+			<mule:inbound>
+				<mule:inbound-endpoint address="jms://topic:topic1">
+				</mule:inbound-endpoint>
+			</mule:inbound>
+			<mule:bridge-component />
+			<mule:outbound>
+				<mule:outbound-pass-through-router>
+					<mule:outbound-endpoint
+						address="file://work/chapter6/2b/out-2" />
+				</mule:outbound-pass-through-router>
+			</mule:outbound>
+		</mule:service>
+
+		<mule:service name="jms-3-to-file">
+			<mule:inbound>
+				<mule:inbound-endpoint address="jms://topic:topic1">
+				</mule:inbound-endpoint>
+			</mule:inbound>
+			<mule:bridge-component />
+			<mule:outbound>
+				<mule:outbound-pass-through-router>
+					<mule:outbound-endpoint
+						address="file://work-mule/chapter6/2b/out-3" />
+				</mule:outbound-pass-through-router>
+			</mule:outbound>
+		</mule:service>
+
+	</mule:model>
 
 </mule:mule>

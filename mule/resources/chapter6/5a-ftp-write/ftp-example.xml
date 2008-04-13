@@ -15,7 +15,7 @@
       <mule:inbound>
         <mule:inbound-endpoint address="file://work-mule/chapter6/5a/in"/>
       </mule:inbound>
-      <mule:pass-through-component />
+      <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
           <mule:outbound-endpoint address="ftp://bob:123password@localhost:2121/">

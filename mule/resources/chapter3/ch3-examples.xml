@@ -13,9 +13,6 @@ files.
 	<!-- read in the system's environment -->
 	<property environment="env" />
 
-	<!-- We can't continue without these properties -->
-	<fail unless="env.OS_ESB" message="OS_ESB property not set, can't continue." />
-
 	<property name="script" value="../../scripts/ant"/>
 
 	<!-- import the servicemix tasks into the sm namespace -->

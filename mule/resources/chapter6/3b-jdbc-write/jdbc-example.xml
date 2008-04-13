@@ -21,7 +21,6 @@
 
   <jdbc:connector name="hsqldb-connector" pollingFrequency="5000" dataSource-ref="datasource">
     <jdbc:query key="write" value="INSERT into testtable (id, name, processed) VALUES(NULL, ${payload}, false"/>
-    <jdbc:query key="get.ack" value="UPDATE testtable SET processed = true WHERE id = ${id}"/>
   </jdbc:connector>
 
   <mule:model name="jdbc-model">
@@ -35,7 +34,7 @@
           </mule:properties>
         </mule:inbound-endpoint>
       </mule:inbound>
-      <mule:pass-through-component />      
+      <mule:bridge-component />      
       <mule:outbound>
         <mule:outbound-pass-through-router>
           <mule:outbound-endpoint address="jdbc://write"/>
