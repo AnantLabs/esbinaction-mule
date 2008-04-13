@@ -26,24 +26,27 @@ the various services and tools that are used in the examples.
 	</target>
 	
 	<target name="ext:start-openejb" description="start the open-ejb ejb container">
-		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-1/"/>
-		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-1.jar">
-			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-1.jar"/>
+		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-2/"/>
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-2.jar">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-2.jar"/>
 			<arg value="start"/>
 		</java>
 	</target>
 	
 	<!-- internal target that can be used to deploy an ejb to openejb -->
 	<target name="ext:openejb-deploy">
+	
+	 	<delete file="${openejb.home}/apps/${ejb-dest-file}"/>
+	
 		<jar destfile="${work}/${ejb-dest-file}">
-			<fileset dir="${workspace.home}/classes">
+			<fileset dir="${classes-dir}">
 				<include name="${include-classes}"/>
 			</fileset>
 		</jar>
 		
-		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-1/"/>
-		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-1.jar">
-			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-1.jar"/>
+		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-2/"/>
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-2.jar">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-2.jar"/>
 			<arg value="deploy"/>
 			<arg value="${work}/${ejb-dest-file}"/>					
 		</java>		
@@ -51,17 +54,20 @@ the various services and tools that are used in the examples.
 	
 	<!-- internal target that can be used to deploy an ejb to openejb -->
 	<target name="ext:openejb-undeploy">		
-		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-1/"/>
-		<delete file="${openejb.home}/apps/${ejbID}"/>
-		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-1.jar">
-			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-1.jar"/>
+		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-2/"/>
+		<!-- <delete file="${openejb.home}/apps/${ejbID}"/> -->
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-2.jar" failOnError="false">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-2.jar"/>
 			<arg value="undeploy"/>
-			<arg value="${work}/${ejbID}"/>					
+			<arg value="${openejb.home}/apps/${ejbID}"/>					
 		</java>
+		
+		<delete file="${openejb.home}/apps/${ejbID}"/>
+
 	</target>	
   
   <target name="ext:start-AnomicFTPD" description="start the ftp server">
-      <property name="ftp.home" value="${tools.home}/AnomicFTPD_v0.92"/>
+      <property name="ftp.home" value="${tools.home}/AnomicFTPD_v0.93_build20080215"/>
       
       <filter token="ftproot" value="${ftp.home}/ftproot"/>
       <copy file="${ftp.home}/ftpd.groups.template" tofile="${ftp.home}/ftpd.groups" filtering="true"/>
