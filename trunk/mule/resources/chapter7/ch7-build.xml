@@ -8,102 +8,112 @@ This build file assumes that the SM_HOME and the OS_ESB properties are set
 to respectively the servicemix installation and the 'opensource ESB' provided
 files. 
 -->
-<project name="chapter 7 - Mule" basedir="../.." default="init" xmlns:sm="urn:servicemix">
+<project name="chapter 7 - Mule" basedir="." default="init" xmlns:sm="urn:servicemix" xmlns:cxf="antlib:org.apache.cxf.ant.extensions">
 
 	<!-- read in the system's environment -->
 	<property environment="env" />
 
-	<!-- We can't continue without these properties -->
-<!--	<fail unless="env.MULE_HOME" message="MULE_HOME property not set, can't continue." /> -->
-	<fail unless="env.OS_ESB" message="OS_ESB property not set, can't continue." />
-
-	<property name="script" value="../../scripts/ant"/>
+	<property name="script" value="../../scripts/ant" />
 
 	<!-- import the servicemix tasks into the sm namespace -->
-	<import file="${script}/mule-general-ant.xml" />
-	<import file="${script}/osesb-general-ant.xml" />
-		
+	<import file="${script}/mule-general.xml" />
+	<import file="${script}/osesb-general.xml" />
+
 	<property name="chapter.home" location="${workspace.home}/mule/resources/chapter7" />
 
 	<target name="init">
 		<antcall target="gn:init" />
-		<echo message="Mule home is set to ${MULE_HOME}." />
-		<echo message="Opensource ESB is set to ${OS_ESB}." />
 		<echo message="Chapter home is set to ${chapter.home}." />
 		<echo message="Workspace home is set to ${workspace.home}." />
 	</target>
-	
-	<target name="chapter7-top-down-provide" depends="gn:init" description="Chapter 6 - File example 1">	
+
+	<target name="chapter7-top-down-provide" depends="gn:init" description="Chapter 7 - top down">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/provide-wsdl-top-down/wsdl-first.xml"/>
+			<param name="file" value="${chapter.home}/provide-wsdl-top-down/wsdl-first.xml" />
+			<param name="target-jar" value="chapter7-topdown.jar" />
+			<param name="classes-filter" value="esb/chapter7/**/*" />
+			<param name="generated-classes-filter" value="org/esb/opensource/coc/**/*" />
 		</antcall>
 	</target>
-	
-	<target name="chapter7-bottom-up-provide" depends="gn:init" description="Chapter 6 - File example 2">	
+
+	<target name="chapter7-bottom-up-provide" depends="gn:init" description="Chapter 7 - bottom up">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/provide-wsdl-bottom-up/wsdl-bottom-up.xml"/>
+			<param name="file" value="${chapter.home}/provide-wsdl-bottom-up/wsdl-bottom-up.xml" />
+			<param name="target-jar" value="chapter7-bottom-up.jar" />
+			<param name="classes-filter" value="esb/chapter7/**/*" />
 		</antcall>
 	</target>
-	
-	<target name="chapter7-consume-ws" depends="gn:init" description="Chapter 6 - File example 2">	
+
+	<target name="chapter7-consume-ws" depends="gn:init" description="Chapter 7 - wss provide">
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/consume-wsdl/consume-wsdl.xml"/>
+			<param name="file" value="${chapter.home}/consume-wsdl/consume-wsdl.xml" />
 		</antcall>
 	</target>
-	
-	<target name="chapter7-consume-ws-server" depends="gn:init" description="Chapter 6 - File example 2">
-		<property name="xfire.home" location="${LIB}/xfire-1.2.6" />
-		<java classname="esb.chapter7.CocServer" fork="true">
+
+	<target name="chapter7-wss-provide" depends="gn:init" description="Chapter 6 - File example 2">
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/ws-security-incoming/provide-ws-security.xml" />
+			<param name="target-jar" value="chapter7-bottom-up-wss.jar" />
+			<param name="classes-filter" value="esb/chapter7/**/*" />
+			<param name="resource-filter" value="esb/chapter7/**/*" />
+		</antcall>
+	</target>
+
+	<target name="chapter7-wss-consume" depends="gn:init" description="Chapter 7 - wss-consume">
+
+		<javac classpathref="mule.path" debug="true" destdir="${workspace.home}/mule/classes" srcdir="${workspace.home}/mule/src-override">
+			<include name="org/mule/transport/cxf/**/*.java" />
+		</javac>
+
+		<jar destfile="${mule.deploy}/cxf-wsdl-connector-fix.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="org/mule/transport/cxf/**/*" />
+			</fileset>
+			<fileset dir="${workspace.home}/mule/src-override">
+				<include name="META-INF/**/*" />
+			</fileset>
+		</jar>
+
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/ws-security-outgoing/consume-ws-security.xml" />
+			<param name="target-jar" value="chapter7-wss-consume.jar" />
+			<param name="classes-filter" value="esb/chapter7/**/*" />
+			<param name="resource-filter" value="esb/chapter7/**/*" />
+		</antcall>
+	</target>
+
+	<target name="chapter7-wsa-consume" depends="gn:init" description="Chapter 6 - File example 2">
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/consume-ws-addressing/consume-ws-addressing.xml" />
+			<param name="target-jar" value="chapter7-wsa-provide.jar" />
+			<param name="classes-filter" value="esb/chapter7/**/*" />
+			<param name="resource-filter" value="esb/chapter7/**/*" />			
+		</antcall>
+	</target>
+
+	<target name="cxf-generate-server-stubs" depends="init" description="generate the server stubs">
+
+		<path id="cxf.path">
+			<fileset dir="${lib.home}/apache-cxf-2.0.5-incubator/modules">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${lib.home}/apache-cxf-2.0.5-incubator/lib">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+
+
+		<java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+			<arg value="-server" />
+			<arg value="-impl" />
+			<arg value="-d" />
+			<arg value="${workspace.home}/mule/src-generated" />
+			<arg value="${chapter.home}/provide-wsdl-top-down/CoC.wsdl" />
 			<classpath>
-				<fileset dir="${xfire.home}/modules">
-					<include name="*.jar" />
-				</fileset>
-				<fileset dir="${xfire.home}/lib">
-					<include name="*.jar" />
-				</fileset>
-				<pathelement path="${workspace.home}/mule/classes"/>
+				<path refid="cxf.path" />
 			</classpath>
 		</java>
-	</target>	
-	
-	<target name="chapter7-wss-provide" depends="gn:init" description="Chapter 6 - File example 2">	
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/ws-security-incoming/provide-ws-security.xml"/>
-		</antcall>
-	</target>
-	
-	<target name="chapter7-wss-consume" depends="gn:init" description="Chapter 6 - File example 2">	
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/1b-file/file-example2.xml"/>
-		</antcall>
-	</target>
-	
-	<target name="chapter7-wsa-consume" depends="gn:init" description="Chapter 6 - File example 2">	
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/1b-file/file-example2.xml"/>
-		</antcall>
-	</target>	
-	
-	<target name="xfire-generate-server-stubs" depends="init" description="generate the server stubs">
-			<!--<property name="cxfconnector.home" location="${LIB}/mule-transport-cxf-1.0-M2" /> -->
-			<property name="xfire.home" location="${LIB}/xfire-1.2.6" />
-			<path id="xfire.classpath">
-				<!--
-				<fileset dir="${cxfconnector.home}/lib">
-					<include name="*.jar" />
-				</fileset>
-				-->
-				<fileset dir="${xfire.home}/modules">
-					<include name="*.jar" />
-				</fileset>
-				<fileset dir="${xfire.home}/lib">
-					<include name="*.jar" />
-				</fileset>
-			</path>
 
-			<taskdef name="wsgen" classname="org.codehaus.xfire.gen.WsGenTask" classpathref="xfire.classpath" />
-			<wsgen outputDirectory="${workspace.home}/src-generated" wsdl="${chapter.home}/provide-wsdl-top-down/CoC.wsdl" 
-				overwrite="false" generateserverstubs="true" />
-		</target>	
-	
+	</target>
+
 </project>

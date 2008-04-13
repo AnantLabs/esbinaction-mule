@@ -12,7 +12,7 @@
     <ejb:connector name="open-ejb" 
                    jndiInitialFactory="org.openejb.client.RemoteInitialContextFactory" 
                    jndiProviderUrl="ejbd://localhost:4201"
-                   securityPolicy="resources/chapter6/6a-ejb/wideopen.policy"/>     
+                   securityPolicy="../../workspace/workspace-mule/mule/resources/chapter6/6a-ejb/wideopen.policy"/>     
 
   <mule:model name="file-model">
     <mule:service name="file-reader-writer">
@@ -22,7 +22,7 @@
           <mule:custom-transformer class="esb.chapter6.QueryTransformer"/>
         </mule:inbound-endpoint>
       </mule:inbound>
-      <mule:pass-through-component />
+      <mule:bridge-component/>
       <mule:outbound>
         <mule:chaining-router>
           <mule:outbound-endpoint address="ejb://localhost:4201/PersonServiceImplRemoteHome?method=searchPersons"/>
