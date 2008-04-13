@@ -8,7 +8,7 @@ This build file assumes that the SM_HOME and the OS_ESB properties are set
 to respectively the servicemix installation and the 'opensource ESB' provided
 files. 
 -->
-<project name="chapter 3 - Mule" basedir="../.."  xmlns:sm="urn:servicemix">
+<project name="chapter 3 - Mule" basedir="."  xmlns:sm="urn:servicemix">
 
 	<!-- read in the system's environment -->
 	<property environment="env" />
@@ -29,6 +29,7 @@ files.
 			<param name="file" value="${chapter.home}/mule-config.xml"/>
 			<param name="classes-filter" value="esb/chapter3/**/*"/>
 			<param name="jibx-mapping" value="${chapter.home}/mapping.xml"/>
+			<param name="target-jar" value="chapter3.jar"/>
 		</antcall>
 	</target>
 	

@@ -8,13 +8,10 @@ This build file assumes that the SM_HOME and the OS_ESB properties are set
 to respectively the servicemix installation and the 'opensource ESB' provided
 files. 
 -->
-<project name="chapter 2 - Mule" basedir="../.."  xmlns:sm="urn:servicemix">
+<project name="chapter 2 - Mule" basedir="."  xmlns:sm="urn:servicemix">
 
 	<!-- read in the system's environment -->
 	<property environment="env" />
-
-	<!-- We can't continue without these properties -->
-	<fail unless="env.OS_ESB" message="OS_ESB property not set, can't continue." />
 
 	<property name="script" value="../../scripts/ant"/>
 
@@ -25,9 +22,18 @@ files.
 	<property name="chapter.home" location="${workspace.home}/mule/resources/chapter2" />
 	
 	<target name="chapter2-getting-started" depends="gn:init" description="Run the getting started example from chapter 2">	
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter2/**/*"/>
+		</antcall>
+		
+		<jar destfile="${mule.deploy}/chapter2-component.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter2/**/*"/>
+			</fileset>
+		</jar>
+		
 		<antcall target="gn:run-mule-with-xmlconfig">
 			<param name="file" value="${chapter.home}/example-config.xml"/>
-			<param name="classes-filter" value="esb/chapter2/**/*"/>
 		</antcall>
 	</target>
 	
