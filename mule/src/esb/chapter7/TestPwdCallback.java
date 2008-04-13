@@ -12,28 +12,23 @@ import org.apache.ws.security.WSPasswordCallback;
 
 public class TestPwdCallback implements CallbackHandler {
 
-    private static Map passwords = new HashMap();
+	private static Map passwords = new HashMap();
 
-    static
-    {
-        passwords.put("clientkey", "clientpass");
-        passwords.put("serverkey", "serverpass");
-    }
+	static {
+		passwords.put("clientkey", "storePass");
+		passwords.put("serverkey", "storePass");
+	}
 
-    public void handle(Callback[] callbacks)
-        throws IOException, UnsupportedCallbackException
-    {
-        for (int i = 0; i < callbacks.length; i++)
-        {
-            WSPasswordCallback pc = (WSPasswordCallback) callbacks[i];
-            
-            String pass = (String) passwords.get(pc.getIdentifer());
-            if (pass != null)
-            {
-                pc.setPassword(pass);
-            }
-        }
-    
-}
-    
+	public void handle(Callback[] callbacks) throws IOException,
+			UnsupportedCallbackException {
+		for (int i = 0; i < callbacks.length; i++) {
+			WSPasswordCallback pc = (WSPasswordCallback) callbacks[i];
+
+			String pass = (String) passwords.get(pc.getIdentifer());
+			if (pass != null) {
+				pc.setPassword(pass);
+			}
+		}
+	}
+
 }
