@@ -31,35 +31,43 @@ public class WSAddressingTransformer extends AbstractMessageAwareTransformer{
     @Override
     public Object transform(MuleMessage message, String outputEncoding) throws TransformerException {
         
-
-        // first get all the data, and copy it to a bytearray
-        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-        try {
-            IOUtils.copyLarge((InputStream) message.getPayload(), bOut);
-        } catch (IOException e) {
-            throw new TransformerException(this,e);
-        }
-        
-        // create a new message that we can parse based on the bytes
-        MessageImpl m = new MessageImpl();
-        m.setContent(InputStream.class, new ByteArrayInputStream(bOut.toByteArray()));
-        SoapMessage soapMEssage = new SoapMessage(m);
-        
-        // use the readheaders interceptor from CXF to parse all the headers
-        ReadHeadersInterceptor interceptor = new ReadHeadersInterceptor(BusFactory.getDefaultBus());
-        interceptor.handleMessage(soapMEssage);
-        
-        // just check whether the namespace ends with addressing, if so add the header to our mulemessage
-        List<Header> headers = soapMEssage.getHeaders();
-        for (Header header : headers) {
-            String namespace = header.getName().getNamespaceURI();
-            if (namespace.endsWith("addressing")) {
-                message.setProperty(header.getName().getLocalPart(), header.getObject());
+    	// a feature of the cxf connector is that the input passes through the
+    	// transformer twice. So we only try to transform the data when an
+    	// inputStream is received
+    	if (message.getPayload() instanceof InputStream) {
+    		// first get all the data, and copy it to a bytearray
+            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+            System.out.println(message.getPayload());
+            Object obj = message.getPayload();
+            try {
+                IOUtils.copyLarge((InputStream) message.getPayload(), bOut);
+            } catch (IOException e) {
+                throw new TransformerException(this,e);
             }
             
-        }
-        // Add a new inputstream to the message so the rest of the processing isn't interrupted
-        message.setPayload(new ByteArrayInputStream(bOut.toByteArray()));
-        return message;
+            // create a new message that we can parse based on the bytes
+            MessageImpl m = new MessageImpl();
+            m.setContent(InputStream.class, new ByteArrayInputStream(bOut.toByteArray()));
+            SoapMessage soapMEssage = new SoapMessage(m);
+            
+            // use the readheaders interceptor from CXF to parse all the headers
+            ReadHeadersInterceptor interceptor = new ReadHeadersInterceptor(BusFactory.getDefaultBus());
+            interceptor.handleMessage(soapMEssage);
+            
+            // just check whether the namespace ends with addressing, if so add the header to our mulemessage
+            List<Header> headers = soapMEssage.getHeaders();
+            for (Header header : headers) {
+                String namespace = header.getName().getNamespaceURI();
+                if (namespace.endsWith("addressing")) {
+                    message.setProperty(header.getName().getLocalPart(), header.getObject());
+                }
+                
+            }
+            // Add a new inputstream to the message so the rest of the processing isn't interrupted
+            message.setPayload(new ByteArrayInputStream(bOut.toByteArray()));
+            return message;
+    	} else {
+    		return message;
+    	}
     }
 }

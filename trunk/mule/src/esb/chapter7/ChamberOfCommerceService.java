@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.jws.WebService;
 
-public interface CoCService {
+public interface ChamberOfCommerceService {
     
     List<Company> findCompanies(String city, String streeName);
     Company getCompany(String companyName);
