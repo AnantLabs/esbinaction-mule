@@ -9,7 +9,7 @@
 	<property name="tools.home" value="${book.home}/tools" />
 	<property name="lib.home" value="${book.home}/libraries" />
 	<property name="patches.home" value="${book.home}/esb/patches" />
-	<property name="mule.home" location="${book.home}/esb/mule-2.0.1-SNAPSHOT" />
+	<property name="mule.home" location="${book.home}/esb/mule-2.0.0" />
 	<property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
@@ -76,7 +76,10 @@
 		<fileset dir="${lib.home}/xfire-1.2.6">
 			<include name="*.jar"/>
 			<include name="**/*.jar"/>
-		</fileset>		
+		</fileset>
+        <fileset dir="${lib.home}/bsh">
+          <include name="*.jar"/>
+        </fileset>		
 	</path>
 
 	<!-- define the classpath to use for spring -->
