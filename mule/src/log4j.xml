@@ -55,16 +55,6 @@
     <logger name="org.apache.activemq.transport.discovery">
         <level value="ERROR"/>
     </logger>
-    <logger name="org.apache.servicemix">
-        <!-- To enable debug logging, replace the INFO by DEBUG -->
-        <level value="INFO"/>
-    </logger>
-    <logger name="org.apache.servicemix.jbi.config">
-        <level value="INFO"/>
-    </logger>
-    <logger name="org.apache.servicemix.jbi.deployment">
-        <level value="INFO"/>
-    </logger>
     <logger name="org.codehaus.xfire">
       <level value="INFO"/>
     </logger>

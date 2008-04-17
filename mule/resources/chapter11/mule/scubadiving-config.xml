@@ -27,7 +27,7 @@
 	<bpm:connector name="jBpmConnector" bpms-ref="jbpm" />
 	
 	<jms:activemq-connector name="activeMQConnector" brokerURL="tcp://localhost:61616"/>
-	
+  
 	<custom-transformer name="XMLToDivingRequest" 
 		class="esb.util.framework.XMLToObjectTransformer">
 		<spring:property name="targetClassName" value="esb.chapter11.scubadiving.model.DivingRequest"/>
@@ -47,7 +47,7 @@
 		class="esb.util.framework.ObjectToXMLTransformer"/>
 	
 	<bpm:endpoint name="ProcessEngine" process="ScubaDivingBookingProcess"/>
-	<jms:endpoint name="ScubaDivingRequest" queue="process.start"/>
+	<jms:endpoint name="ScubaDivingRequest" queue="process.start" />
 	<vm:endpoint name="SharkDivingIn" path="sharkdiving.in"/>
 	<vm:endpoint name="WreckAndCaveDivingIn" path="wreckandcavediving.in"/>
 	<vm:endpoint name="DolphinDivingIn" path="dolphindiving.in"/>
@@ -65,7 +65,6 @@
                 <inbound-endpoint ref="DivingResponse"/>
                 <inbound-endpoint ref="TaxiResponse"/>
             </inbound>
-            <echo-component/>
             <outbound>
                 <filtering-router>
                     <outbound-endpoint ref="ProcessEngine" synchronous="false" />
