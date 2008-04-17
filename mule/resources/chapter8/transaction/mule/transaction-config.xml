@@ -20,7 +20,7 @@
                 <jms:inbound-endpoint queue="transaction.in">
 					<jms:transaction action="ALWAYS_BEGIN"/>
                 </jms:inbound-endpoint>
-            </inbound>
+			</inbound>
            	<component class="esb.chapter8.transaction.service.TransactionService"/>
        		<outbound>
        			<outbound-pass-through-router>
