@@ -10,14 +10,11 @@
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
 
-
-<beans>
   <bean name="datasource" class="org.enhydra.jdbc.standard.StandardDataSource">
     <property name="driverName" value="org.hsqldb.jdbcDriver"/>
     <property name="url" value="jdbc:hsqldb:hsql://localhost/xdb"/>
     <property name="user" value="sa"/>
   </bean>
-</beans>
 
   <jdbc:connector name="hsqldb-connector" pollingFrequency="5000" dataSource-ref="datasource">
     <jdbc:query key="get" value="SELECT * FROM testtable where processed = false"/>

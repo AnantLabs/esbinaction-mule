@@ -16,8 +16,9 @@
 	<model name="SimpleIntExample">
         <service name="SimpleIntComponent">
             <inbound>
-                <stdio:inbound-endpoint system="IN" connector-ref="inConnector"
-                		  transformer-refs="StringToInteger"/>
+                <stdio:inbound-endpoint system="IN" connector-ref="inConnector">
+                  <transformer ref="StringToInteger"/>
+                </stdio:inbound-endpoint>
             </inbound>
             <component class="esb.chapter4.component.transformer.SimpleIntComponent"/>
         </service>

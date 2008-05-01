@@ -10,7 +10,7 @@
        http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
        http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
 
-    <jms:activemq-connector name="jmsConnector"  brokerURL="tcp://localhost:61616"/>
+    <jms:activemq-connector name="jmsConnector" brokerURL="tcp://localhost:61616"/>
     
     <jms:jmsmessage-to-object-transformer name="JMSToObject"/>
     <jms:object-to-jmsmessage-transformer name="ObjectToJMS"/>
@@ -31,8 +31,10 @@
             <outbound>
             	<multicasting-router>
             		<jms:outbound-endpoint queue="amazon.input"/>
-            		<jms:outbound-endpoint queue="barnes.input"
-            			transformer-refs="JMSToObject ISBNToXML ObjectToJMS"/>
+            		<jms:outbound-endpoint queue="barnes.input">
+                      <transformer ref="ISBNToXML"/>
+                      <transformer ref="ObjectToJMS"/>
+                    </jms:outbound-endpoint>
             	</multicasting-router>
 			</outbound>
         </service>
@@ -44,21 +46,22 @@
             <component class="esb.chapter4.messageflow.mule.MessageLogger" />
             <outbound>
 				<outbound-pass-through-router>
-					<vm:outbound-endpoint path="aggregateQuotes.input"
-						transformer-refs="JMSToObject"/>
+					<vm:outbound-endpoint path="aggregateQuotes.input"/>
 				</outbound-pass-through-router>
 			</outbound>
         </service>
         
         <service name="BarnesResponseHandler">
         	<inbound>
-                <jms:inbound-endpoint queue="barnes.output"/>
+                <jms:inbound-endpoint queue="barnes.output">
+                  <transformer ref="JMSToObject"/>
+                  <transformer ref="XMLToObject"/>
+                </jms:inbound-endpoint>
             </inbound>
             <component class="esb.chapter4.messageflow.mule.MessageLogger" />
             <outbound>
 				<outbound-pass-through-router>
-					<vm:outbound-endpoint path="aggregateQuotes.input" 
-						transformer-refs="JMSToObject XMLToObject"/>
+					<vm:outbound-endpoint path="aggregateQuotes.input"/>
 				</outbound-pass-through-router>
 			</outbound>
         </service>
