@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:spring="http://www.springframework.org/schema/beans"
+  xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+  xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+       http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
+       http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
+
+  <spring:beans>
+    <spring:import resource="restaurant-beans.xml" />
+  </spring:beans>
+
+  <jms:activemq-connector name="jmsConnector"
+    brokerURL="tcp://localhost:61616" />
+
+  <jms:endpoint name="inquiry-topic" topic="inquiries.in" />
+  <vm:endpoint name="inquiry-out" path="restaurant.response" />
+
+  <model name="RestaurantModel">
+
+    <service name="LakeviewRestaurantService">
+      <inbound>
+        <inbound-endpoint ref="inquiry-topic"    
+                          remoteSync="true" />   
+        <wire-tap-router>                        
+          <file:outbound-endpoint path="work-mule/wireTap" />     
+        </wire-tap-router>                       
+      </inbound>
+      <component>
+        <spring-object bean="lakeviewRestaurant" />
+      </component>
+      <outbound>
+        <outbound-pass-through-router>
+          <outbound-endpoint ref="inquiry-out" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+
+
+    <service name="DuckRestaurantService">
+      <inbound>
+        <inbound-endpoint ref="inquiry-topic" remoteSync="true" />
+      </inbound>
+      <component>
+        <spring-object bean="duckRestaurant" />
+      </component>
+      <outbound>
+        <outbound-pass-through-router>
+          <outbound-endpoint ref="inquiry-out" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+
+    <service name="YokohamaRestaurantService">
+      <inbound>
+        <inbound-endpoint ref="inquiry-topic" remoteSync="true" />
+      </inbound>
+      <component>
+        <spring-object bean="yokohamaRestaurant" />
+      </component>
+      <outbound>
+        <outbound-pass-through-router>
+          <outbound-endpoint ref="inquiry-out" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+
+    <service name="PersistResponse">
+      <inbound>
+        <inbound-endpoint ref="inquiry-out" />
+      </inbound>
+      <component>
+        <spring-object bean="expirationBean" />
+      </component>
+    </service>
+
+    <service name="ReservationResponseConsumer">
+      <inbound>
+        <jms:inbound-endpoint queue="reservation.confirmation"
+          remoteSync="true" />
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <vm:outbound-endpoint path="handle.confirmation" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+
+    <service name="ReservationResponseService">
+      <inbound>
+        <forwarding-catch-all-strategy>
+          <jms:outbound-endpoint queue="confirmation.error" />
+        </forwarding-catch-all-strategy>
+        <vm:inbound-endpoint path="handle.confirmation" />
+        <selective-consumer-router>
+          <custom-filter
+            class="esb.chapter9.restaurant.router.ExpirationCheckFilter">
+            <spring:property name="reservationDAO"
+              ref="restaurantDAO" />
+          </custom-filter>
+        </selective-consumer-router>
+      </inbound>
+      <component>
+        <spring-object bean="confirmationBean" />
+      </component>
+      <outbound>
+        <filtering-router>
+          <jms:outbound-endpoint queue="lakeview.confirmation" />
+          <message-property-filter pattern="choice=Lakeview" />
+        </filtering-router>
+        <filtering-router>
+          <jms:outbound-endpoint queue="theroyalduck.confirmation" />
+          <message-property-filter pattern="choice=The royal duck" />
+        </filtering-router>
+        <filtering-router>
+          <jms:outbound-endpoint queue="yokohama.confirmation" />
+          <message-property-filter pattern="choice=Yokohama" />
+        </filtering-router>
+      </outbound>
+    </service>
+  </model>
+</mule>

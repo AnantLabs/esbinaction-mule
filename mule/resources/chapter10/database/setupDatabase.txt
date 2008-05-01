@@ -1,0 +1,26 @@
+drop table PUBLIC.RESERVATION if exists; 
+drop table PUBLIC.RESTAURANT if exists;
+ 
+create table RESERVATION ( 
+    id              IDENTITY, 
+    restaurantId    INTEGER      	  not null,
+    guestname		varchar(256)	  not null,
+    roomnumber		INTEGER			  not null,
+    numberpersons	INTEGER			  not null,
+    reservationtime	datetime		  not null,
+    currenttime     datetime          not null     
+  ); 
+  
+insert into PUBLIC.RESERVATION(id, restaurantId, guestname, roomnumber, numberpersons, reservationtime, currenttime) values (NULL, 1, 'John Doe', 200, 4, '2008-07-07 20:00', '2008-07-07 10:43'); 
+ 
+create table RESTAURANT ( 
+	id			IDENTITY, 
+	name    	varchar(256)      not null,
+	timeout 	BIGINT 			  not null
+); 
+ 
+insert into PUBLIC.RESTAURANT(id, name, timeout) values (NULL, 'Lakeview', 60000); 
+insert into PUBLIC.RESTAURANT(id, name, timeout) values (NULL, 'The royal duck', 180000);
+insert into PUBLIC.RESTAURANT(id, name, timeout) values (NULL, 'Yokohama', 10000);
+ 
+commit;
