@@ -8,10 +8,9 @@ import org.mule.service.DefaultServiceExceptionStrategy;
 
 public class AuthorizationExceptionStrategy extends DefaultServiceExceptionStrategy {
 	protected void defaultHandler(Throwable t) {
-		System.out.println("error******** " + t.getCause());
 	  	if(t.getCause() instanceof AccessDeniedException) {
-	  		super.defaultHandler(new UnauthorisedException(CoreMessages.authDeniedOnEndpoint(
-	  				RequestContext.getEventContext().getEndpointURI())));
+	  		super.defaultHandler(new UnauthorisedException(CoreMessages.authFailedForUser(
+	  				RequestContext.getEventContext().getSession().getSecurityContext().getAuthentication().getPrincipal())));
 	  	} else {
 	  		super.defaultHandler(t);
 	  	}

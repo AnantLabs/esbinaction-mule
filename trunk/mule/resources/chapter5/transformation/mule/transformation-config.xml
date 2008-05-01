@@ -28,7 +28,10 @@
 	<model name="TransformationExample">
         <service name="WeatherInvokeService">
             <inbound>
-                <stdio:inbound-endpoint system="IN" transformer-refs="StringToList ObjectToArray"/>
+                <stdio:inbound-endpoint system="IN">
+                  <transformer ref="StringToList"/>
+                  <transformer ref="ObjectToArray"/>
+                </stdio:inbound-endpoint>
             </inbound>
             <outbound>
             	<chaining-router>
@@ -38,13 +41,15 @@
 			</outbound>
 		</service>
 		<service name="WeatherResponseOutput">
-			<inbound>
-				<vm:inbound-endpoint path="weather.output" transformer-refs="XSLT"/>
-			</inbound>
-			<outbound>
-				<outbound-pass-through-router>
-					<stdio:outbound-endpoint system="OUT"/>
-				</outbound-pass-through-router>
+	       <inbound>
+		      <vm:inbound-endpoint path="weather.output">
+                 <transformer ref="XSLT"/>
+              </vm:inbound-endpoint>
+	       </inbound>
+	       <outbound>
+			   <outbound-pass-through-router>
+			     <stdio:outbound-endpoint system="OUT"/>
+			   </outbound-pass-through-router>
 			</outbound>
 		</service>
 	</model>

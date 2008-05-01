@@ -37,7 +37,7 @@
         </spring:property>
 	</spring:bean>
 	
-	<spring:bean id="keyEncryption" class="org.mule.extras.pgp.KeyBasedEncryptionStrategy"/>
+	<spring:bean id="keyEncryption" class="org.mule.module.pgp.KeyBasedEncryptionStrategy"/>
 	
 	<custom-transformer name="SimpleAuthTransformer" class="esb.chapter8.security.authentication.transformer.SimpleAuthenticationTransformer"/>
 
@@ -49,7 +49,9 @@
             </inbound>
             <outbound>
             	<outbound-pass-through-router>
-            		<vm:outbound-endpoint path="security.in" transformer-refs="SimpleAuthTransformer"/>
+            		<vm:outbound-endpoint path="security.in">
+                      <transformer ref="SimpleAuthTransformer"/>
+                    </vm:outbound-endpoint>
             	</outbound-pass-through-router>
             </outbound>
 		</service>
@@ -60,13 +62,13 @@
                 	<encryption-security-filter strategy-ref="keyEncryption"/>
                 </vm:inbound-endpoint>
             </inbound>
-            <component>
-            	<pooled-object class="esb.chapter8.security.authentication.service.AuthenticationService">
-            		<properties>
-            			<spring:entry key="authenticated" value="true"/>
-            		</properties>
-            	</pooled-object>
-            </component>
+            <pooled-component>
+              <singleton-object class="esb.chapter8.security.authentication.service.AuthenticationService"> 
+                <properties>
+                    <spring:entry key="authenticated" value="true"/>
+                </properties>
+              </singleton-object>
+            </pooled-component>
             <outbound>
             	<outbound-pass-through-router>
             		<stdio:outbound-endpoint system="OUT"/>
@@ -78,13 +80,13 @@
 			<inbound>
                 <vm:inbound-endpoint path="security.error"/>
             </inbound>
-            <component>
-            	<pooled-object class="esb.chapter8.security.authentication.service.AuthenticationService">
-            		<properties>
-            			<spring:entry key="authenticated" value="false"/>
-            		</properties>
-            	</pooled-object>
-            </component>
+            <pooled-component>
+              <singleton-object class="esb.chapter8.security.authentication.service.AuthenticationService"> 
+                <properties>
+                    <spring:entry key="authenticated" value="false"/>
+                </properties>
+              </singleton-object>
+            </pooled-component>
             <outbound>
             	<outbound-pass-through-router>
             		<stdio:outbound-endpoint system="OUT"/>

@@ -69,11 +69,11 @@
                 </http:inbound-endpoint>
             </inbound>
             <component>
-            	<pooled-object class="esb.chapter8.security.authentication.service.AuthenticationService">
+            	<singleton-object class="esb.chapter8.security.authentication.service.AuthenticationService">
             		<properties>
             			<spring:entry key="authenticated" value="true"/>
             		</properties>
-            	</pooled-object>
+            	</singleton-object>
             </component>
 		</service>
 		
@@ -82,11 +82,11 @@
                 <vm:inbound-endpoint path="ldap.error"/>
             </inbound>
             <component>
-            	<pooled-object class="esb.chapter8.security.authentication.service.AuthenticationService">
+            	<singleton-object class="esb.chapter8.security.authentication.service.AuthenticationService">
             		<properties>
             			<spring:entry key="authenticated" value="false"/>
             		</properties>
-            	</pooled-object>
+            	</singleton-object>
             </component>
 		</service>
 	</model>

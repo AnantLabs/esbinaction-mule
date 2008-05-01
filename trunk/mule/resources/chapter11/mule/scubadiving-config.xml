@@ -90,53 +90,63 @@
 	
 		<service name="SharkDivingAgency">
             <inbound>
-            	<inbound-endpoint ref="SharkDivingIn" 
-            		transformer-refs="XMLToDivingRequest"/>
+            	<inbound-endpoint ref="SharkDivingIn">
+                  <transformer ref="XMLToDivingRequest"/>
+                 </inbound-endpoint>
             </inbound>
             <component>
             	<spring-object bean="sharkDivingService"/>
             </component>
 	   		<outbound>
 	   			<outbound-pass-through-router>
-	   				<outbound-endpoint ref="DivingResponse" transformer-refs="ObjectToXML"/>
+	   				<outbound-endpoint ref="DivingResponse">
+                      <transformer ref="ObjectToXML"/>
+                    </outbound-endpoint>
 	   			</outbound-pass-through-router>
 	     	</outbound>                    	 
 		</service>
 		
 		<service name="WreckAndCaveDivingAgency">
             <inbound>
-            	<inbound-endpoint ref="WreckAndCaveDivingIn" 
-            		transformer-refs="XMLToDivingRequest"/>
+            	<inbound-endpoint ref="WreckAndCaveDivingIn">
+                  <transformer ref="XMLToDivingRequest"/>
+                </inbound-endpoint>
             </inbound>
             <component>
             	<spring-object bean="wreckAndCaveDivingService"/>
             </component>
 	   		<outbound>
 	        	<outbound-pass-through-router>
-	   				<outbound-endpoint ref="DivingResponse" transformer-refs="ObjectToXML"/>
+	   				<outbound-endpoint ref="DivingResponse">
+                      <transformer ref="ObjectToXML"/>
+                    </outbound-endpoint>
 	   			</outbound-pass-through-router>
 	     	</outbound>                    	 
 		</service>
 		
 		<service name="DolphinDivingAgency">
             <inbound>
-            	<inbound-endpoint ref="DolphinDivingIn" 
-            		transformer-refs="XMLToDivingRequest"/>
+            	<inbound-endpoint ref="DolphinDivingIn">
+                  <transformer ref="XMLToDivingRequest"/>
+                </inbound-endpoint>
             </inbound>
             <component>
             	<spring-object bean="dolphinDivingService"/>
             </component>
 	   		<outbound>
 	        	<outbound-pass-through-router>
-	   				<outbound-endpoint ref="DivingResponse" transformer-refs="ObjectToXML"/>
+	   				<outbound-endpoint ref="DivingResponse">
+                      <transformer ref="ObjectToXML"/>
+                    </outbound-endpoint>
 	   			</outbound-pass-through-router>
 	     	</outbound>                    	 
 		</service>
 		
 		<service name="LunchService">
             <inbound>
-            	<inbound-endpoint ref="LunchIn"
-            		transformer-refs="XMLToLunchBooking"/>
+            	<inbound-endpoint ref="LunchIn">
+                  <transformer ref="XMLToLunchBooking"/>
+                </inbound-endpoint>
             </inbound>
             <component>
             	<spring-object bean="lunchService"/>
@@ -145,15 +155,18 @@
 		
 		<service name="TaxiService">
             <inbound>
-            	<inbound-endpoint ref="TaxiIn"
-            		transformer-refs="XMLToTaxiRequest"/>
+            	<inbound-endpoint ref="TaxiIn">
+                  <transformer ref="XMLToTaxiRequest"/>
+                </inbound-endpoint>
             </inbound>
             <component>
             	<spring-object bean="taxiService"/>
             </component>
             <outbound>
             	<outbound-pass-through-router>
-            		<outbound-endpoint ref="TaxiResponse" transformer-refs="ObjectToXML"/>
+            		<outbound-endpoint ref="TaxiResponse">
+                      <transformer ref="ObjectToXML"/>
+                    </outbound-endpoint>
             	</outbound-pass-through-router>
             </outbound>
 		</service>
