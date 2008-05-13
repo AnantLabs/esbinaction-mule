@@ -86,8 +86,9 @@
 		<fileset dir="${lib.home}/jibx/lib">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${lib.home}/spring-hibernate-2.0.6">
-			<include name="*.jar" />
+		<fileset dir="${lib.home}/spring-framework-2.0.8">
+			<include name="dist/*.jar" />
+			<include name="lib/**/*.jar" />
 		</fileset>
 		<pathelement path="../../classes" />
 	</path>

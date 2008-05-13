@@ -54,10 +54,10 @@ the various services and tools that are used in the examples.
 	
 	<!-- internal target that can be used to deploy an ejb to openejb -->
 	<target name="ext:openejb-undeploy">		
-		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-2/"/>
+		<property name="openejb.home" value="${tools.home}/openejb-3.0/"/>
 		<!-- <delete file="${openejb.home}/apps/${ejbID}"/> -->
-		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-2.jar" failOnError="false">
-			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-2.jar"/>
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0.jar" failOnError="false">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0.jar"/>
 			<arg value="undeploy"/>
 			<arg value="${openejb.home}/apps/${ejbID}"/>					
 		</java>
