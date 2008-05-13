@@ -13,7 +13,7 @@
 	<property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
-	<property name="cxf.home" location="${lib.home}/apache-cxf-2.0.3-incubator" />
+	<property name="cxf.home" location="${lib.home}/apache-cxf-2.0.5-incubator" />
 
 	<path id="cxf.classpath">
 		<fileset dir="${cxf.home}/lib">
@@ -70,12 +70,8 @@
 		<fileset dir="${tools.home}/hsqldb/lib">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${tools.home}/openejb-3.0-beta-2/lib">
+		<fileset dir="${tools.home}/openejb-3.0/lib">
 			<include name="*.jar"/>
-		</fileset>
-		<fileset dir="${lib.home}/xfire-1.2.6">
-			<include name="*.jar"/>
-			<include name="**/*.jar"/>
 		</fileset>
         <fileset dir="${lib.home}/bsh">
           <include name="*.jar"/>
