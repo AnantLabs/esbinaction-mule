@@ -9,6 +9,7 @@ the various services and tools that are used in the examples.
 	<property name="book.home" location="../../../../.." />
 	<property name="tools.home" value="${book.home}/tools" />
 	<property name="workspace.home" location="../../../" />
+	<property name="test.home" value="${book.home}/osesb-test-client" />
 
 	<!--
 	  Starts mailserver with the following settings:
@@ -124,5 +125,8 @@ the various services and tools that are used in the examples.
 		</java>
 	</target>
 	
+	<target name="ext:test-client" description="start the Swing test client">
+		<java fork="true" jar="${test.home}/osesb-test-client.jar.jar" dir="${test.home}" />
+	</target>
 
 </project>
