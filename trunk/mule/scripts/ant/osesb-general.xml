@@ -126,7 +126,7 @@ the various services and tools that are used in the examples.
 	</target>
 	
 	<target name="ext:test-client" description="start the Swing test client">
-		<java fork="true" jar="${test.home}/osesb-test-client.jar.jar" dir="${test.home}" />
+		<java fork="true" jar="${test.home}/osesb-test-client.jar" dir="${test.home}" />
 	</target>
 
 </project>
