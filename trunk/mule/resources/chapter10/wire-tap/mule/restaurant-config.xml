@@ -19,6 +19,8 @@
   <jms:activemq-connector name="jmsConnector"
     brokerURL="tcp://localhost:61616" />
 
+  <jms:jmsmessage-to-object-transformer name="jmsToObject"/>
+
   <jms:endpoint name="inquiry-topic" topic="inquiries.in" />
   <vm:endpoint name="inquiry-out" path="restaurant.response" />
 
@@ -29,7 +31,7 @@
         <inbound-endpoint ref="inquiry-topic"    
                           remoteSync="true" />   
         <wire-tap-router>                        
-          <file:outbound-endpoint path="work-mule/wireTap" />     
+          <file:outbound-endpoint path="work-mule/chapter10/wireTap" transformer-refs="jmsToObject"/>     
         </wire-tap-router>                       
       </inbound>
       <component>

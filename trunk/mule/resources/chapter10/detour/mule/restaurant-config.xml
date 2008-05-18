@@ -4,21 +4,39 @@
   xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
   xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
+  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+  xmlns:jmx="http://www.mulesource.org/schema/mule/management/2.0"
   xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd
-       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
+       http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
+       http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/management/2.0 http://www.mulesource.org/schema/mule/management/2.0/mule-management.xsd">
 
   <spring:beans>
     <spring:import resource="restaurant-beans.xml" />
+    <spring:bean name="detourFilter"
+      class="esb.chapter10.DetourFilter" />
+    <spring:bean id="exporter"
+      class="org.springframework.jmx.export.MBeanExporter">
+      <spring:property name="beans">
+        <spring:map>
+          <spring:entry key="filter:name=detourFilter"
+            value-ref="detourFilter" />
+        </spring:map>
+      </spring:property>
+    </spring:bean>
   </spring:beans>
 
+  <jmx:jmx-default-config />
   <jms:activemq-connector name="jmsConnector"
     brokerURL="tcp://localhost:61616" />
 
   <jms:endpoint name="inquiry-topic" topic="inquiries.in" />
   <vm:endpoint name="inquiry-out" path="restaurant.response" />
+
+  <jms:jmsmessage-to-object-transformer name="jmsToObject" />
 
   <model name="RestaurantModel">
 
@@ -45,7 +63,8 @@
           <vm:outbound-endpoint path="inquiry.in" />
         </forwarding-catch-all-strategy>
         <filtering-router>
-          <outbound-endpoint address="file://work-mule/detour-in" />
+          <file:outbound-endpoint path="work-mule/chapter10/detour-in"
+            transformer-refs="jmsToObject" />
           <filter ref="detourFilter" />
         </filtering-router>
       </outbound>
@@ -53,11 +72,13 @@
 
     <service name="detour-service-out">
       <inbound>
-        <file:inbound-endpoint path="work-mule/detour-out" />
+        <file:inbound-endpoint path="work-mule/chapter10/detour-out">
+          <byte-array-to-object-transformer/>
+        </file:inbound-endpoint>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <vm:endpoint path="inquiry.in" />
+          <vm:outbound-endpoint path="inquiry.in" />
         </outbound-pass-through-router>
       </outbound>
     </service>

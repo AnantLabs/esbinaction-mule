@@ -19,7 +19,7 @@
     <spring:bean name="datasource"
       class="org.enhydra.jdbc.standard.StandardDataSource">
       <spring:property name="driverName" value="org.hsqldb.jdbcDriver" />
-      <spring:property name="url" value="jdbc:hsqldb:hsql://localhost/xdb" />
+      <spring:property name="url" value="jdbc:hsqldb:hsql://localhost/reservation" />
       <spring:property name="user" value="sa" />
     </spring:bean>
 
@@ -32,9 +32,11 @@
   <jdbc:connector name="hsqldb-connector" dataSource-ref="datasource" >
   <jdbc:query key="write" value="INSERT 
                into MSGSTORE (id, timestamp, persons, reservationtime) 
-               VALUES(NULL, ${timestamp}, 
-                      ${persons}, ${reservationTime}" />
+               VALUES(NULL, NULL, 
+                      ${jxpath:persons}, ${jxpath:reservationTime})" />
   </jdbc:connector>
+  
+  
 
   <model name="RestaurantModel">
 
@@ -42,7 +44,10 @@
       <inbound>
         <inbound-endpoint ref="inquiry-topic" remoteSync="true" />
         <wire-tap-router>
-          <jdbc:outbound-endpoint queryKey="write"/>
+          <jdbc:outbound-endpoint queryKey="write">
+              <jms:jmsmessage-to-object-transformer/>
+              <custom-transformer name="timestampTransformer" class="esb.chapter10.TimestampTransformer"/>
+          </jdbc:outbound-endpoint>
         </wire-tap-router>
       </inbound>
       <component>
