@@ -23,7 +23,7 @@
 		<!-- Calls directly to the service -->
 		<mule:service name="cocService">
 			<mule:inbound>
-				<mule:inbound-endpoint	address="cxf:http://localhost:8081/services">
+				<mule:inbound-endpoint	address="cxf:http://localhost:8081/services/cocService">
 					<mule:custom-transformer
 						class="esb.chapter7.WSAddressingTransformer" />				
 				</mule:inbound-endpoint>

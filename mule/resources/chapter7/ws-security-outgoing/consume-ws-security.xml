@@ -31,7 +31,7 @@
       <mule:service name="cocServiceConsumeToJava">
         <mule:inbound>
           <mule:inbound-endpoint
-            address="file://work-mule/chapter7/consume-wsdl/in">
+            address="file://work-mule/chapter7/consume-wss/in">
             <mule:byte-array-to-string-transformer />
           </mule:inbound-endpoint>
         </mule:inbound>
@@ -46,7 +46,7 @@
               	</mule:properties>
               </mule:outbound-endpoint>               
             <mule:outbound-endpoint
-              address="file://mule-work/chapter7/consume-wsdl/out">
+              address="file://work-mule/chapter7/consume-wss/out">
               <mule:custom-transformer
                 class="esb.chapter7.SimpleTransfomer" />
             </mule:outbound-endpoint>
