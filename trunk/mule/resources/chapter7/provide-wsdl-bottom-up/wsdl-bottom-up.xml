@@ -9,9 +9,6 @@
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                       http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd">
 <mule:mule>
-
- 
-    <cxf:connector name="connector"/>
      
     <beans>
       <bean name="ChamberOfCommerceServiceImpl" class="esb.chapter7.ChamberOfCommerceServiceImpl" init-method="init"/>
@@ -21,7 +18,7 @@
     <!-- Calls directly to the service -->
     <mule:service name="cocService">
       <mule:inbound>
-        <mule:inbound-endpoint address="cxf:http://localhost:8081/services"/>
+        <cxf:inbound-endpoint address="http://localhost:8080/services/cocService"/>
       </mule:inbound>
       <mule:component>
           <mule:spring-object bean="ChamberOfCommerceServiceImpl"/>
