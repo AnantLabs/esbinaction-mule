@@ -46,7 +46,6 @@
         <wire-tap-router>
           <jdbc:outbound-endpoint queryKey="write">
               <jms:jmsmessage-to-object-transformer/>
-              <custom-transformer name="timestampTransformer" class="esb.chapter10.TimestampTransformer"/>
           </jdbc:outbound-endpoint>
         </wire-tap-router>
       </inbound>
