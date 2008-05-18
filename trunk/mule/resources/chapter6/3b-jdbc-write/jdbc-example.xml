@@ -8,36 +8,40 @@
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
 
 
-<beans>
-  <bean name="datasource" class="org.enhydra.jdbc.standard.StandardDataSource">
-    <property name="driverName" value="org.hsqldb.jdbcDriver"/>
-    <property name="url" value="jdbc:hsqldb:hsql://localhost/xdb"/>
-    <property name="user" value="sa"/>
-  </bean>
-</beans>
+  <beans>
+    <bean name="datasource"
+      class="org.enhydra.jdbc.standard.StandardDataSource">
+      <property name="driverName" value="org.hsqldb.jdbcDriver" />
+      <property name="url" value="jdbc:hsqldb:hsql://localhost/xdb" />
+      <property name="user" value="sa" />
+    </bean>
+  </beans>
+  
+  <file:connector name="fileConnector" streaming="false"/>
 
-  <jdbc:connector name="hsqldb-connector" pollingFrequency="5000" dataSource-ref="datasource">
-    <jdbc:query key="write" value="INSERT into testtable (id, name, processed) VALUES(NULL, ${payload}, false"/>
+  <jdbc:connector name="hsqldb-connector" pollingFrequency="5000"
+    dataSource-ref="datasource">
+    <jdbc:query key="write"
+      value="INSERT into testtable (id, name, processed) VALUES(NULL, ${payload}, false)" />
   </jdbc:connector>
 
-  <mule:model name="jdbc-model">
-    <mule:service name="jdbc-reader">
+  <file:file-to-string-transformer name="fileToString"/>
 
+  <mule:model name="jdbc-model">
+    <mule:service name="jdbc-writer">
       <mule:inbound>
-        <mule:inbound-endpoint address="file://work/chapter6/3b/in">
-          <mule:byte-array-to-string-transformer/>
-          <mule:properties>
-            <entry key="pollingFrequency" value="3000"/>
-          </mule:properties>
-        </mule:inbound-endpoint>
+        <file:inbound-endpoint path="work-mule/chapter6/3b/in"
+          pollingFrequency="3000" transformer-refs="fileToString">
+        </file:inbound-endpoint>
       </mule:inbound>
-      <mule:bridge-component />      
+      <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="jdbc://write"/>
+          <jdbc:outbound-endpoint queryKey="write" />
         </mule:outbound-pass-through-router>
       </mule:outbound>
     </mule:service>

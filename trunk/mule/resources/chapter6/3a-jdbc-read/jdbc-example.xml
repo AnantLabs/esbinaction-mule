@@ -10,30 +10,34 @@
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
 
-  <bean name="datasource" class="org.enhydra.jdbc.standard.StandardDataSource">
-    <property name="driverName" value="org.hsqldb.jdbcDriver"/>
-    <property name="url" value="jdbc:hsqldb:hsql://localhost/xdb"/>
-    <property name="user" value="sa"/>
-  </bean>
 
-  <jdbc:connector name="hsqldb-connector" pollingFrequency="5000" dataSource-ref="datasource">
-    <jdbc:query key="get" value="SELECT * FROM testtable where processed = false"/>
-    <jdbc:query key="get.ack" value="UPDATE testtable SET processed = true WHERE id = ${id}"/>
+  <beans>
+    <bean name="datasource"
+      class="org.enhydra.jdbc.standard.StandardDataSource">
+      <property name="driverName" value="org.hsqldb.jdbcDriver" />
+      <property name="url" value="jdbc:hsqldb:hsql://localhost/xdb" />
+      <property name="user" value="sa" />
+    </bean>
+  </beans>
+
+  <jdbc:connector name="hsqldb-connector"
+    dataSource-ref="datasource">
+    <jdbc:query key="get"
+      value="SELECT * FROM testtable where processed = false" />
+    <jdbc:query key="get.ack"
+      value="UPDATE testtable SET processed = true WHERE id = ${jxpath:id}" />
   </jdbc:connector>
 
   <mule:model name="jdbc-model">
     <mule:service name="jdbc-reader">
       <mule:inbound>
-        <mule:inbound-endpoint address="jdbc://get">
-          <mule:properties>
-            <entry key="pollingFrequency" value="3000"/>
-          </mule:properties>
-        </mule:inbound-endpoint>
+        <jdbc:inbound-endpoint queryKey="get" pollingFrequency="3000" />
       </mule:inbound>
       <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="file://work-mule/chapter6/3a/out">
+          <mule:outbound-endpoint
+            address="file://work-mule/chapter6/3a/out">
             <mule:properties>
               <entry key="outputPattern"
                 value="${UUID}-${SYSTIME}-${COUNT}.dat" />

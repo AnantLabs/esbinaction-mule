@@ -5,29 +5,25 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
+
+  <file:connector name="fileConnector" outputAppend="true" />
 
   <mule:model name="file-model">
     <mule:service name="file-reader-writer">
       <mule:inbound>
-        <mule:inbound-endpoint address="file://work-mule/chapter6/1b/in">
-          <mule:properties>
-            <entry key="pollingFrequencey" value="3000" />
-            <entry key="fileAge" value="10000" />
-            <entry key="moveToDirectory" value="work-mule/chapter6/1b/bak"/>
-            <entry key="moveToPattern" value="${UUID}.bak"/>
-          </mule:properties>
-        </mule:inbound-endpoint>
+        <file:inbound-endpoint path="work-mule/chapter6/1b/in"
+          pollingFrequency="3000" fileAge="10000"
+          moveToDirectory="work-mule/chapter6/1b/bak"
+          moveToPattern="${UUID}.bak" />
       </mule:inbound>
-      <mule:bridge-component/>
+      <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="file://work-mule/chapter6/1b/out">
-            <mule:properties>
-              <entry key="outputPattern" value="${COUNT}.dat" />
-              <entry key="outputAppend" value="true"/>
-            </mule:properties>
-          </mule:outbound-endpoint>
+          <file:outbound-endpoint 
+            path="work-mule/chapter6/1b/out"
+            outputPattern="${COUNT}.dat" />
         </mule:outbound-pass-through-router>
       </mule:outbound>
     </mule:service>
