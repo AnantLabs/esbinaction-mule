@@ -68,10 +68,7 @@ the various services and tools that are used in the examples.
 	</target>	
   
   <target name="ext:start-AnomicFTPD" description="start the ftp server">
-      <property name="ftp.home" value="${tools.home}/AnomicFTPD_v0.93_build20080215"/>
-      
-      <filter token="ftproot" value="${ftp.home}/ftproot"/>
-      <copy file="${ftp.home}/ftpd.groups.template" tofile="${ftp.home}/ftpd.groups" filtering="true"/>
+    <property name="ftp.home" value="${tools.home}/AnomicFTPD_v0.93_build20080215"/>
       
     <java fork="true" classname="ftpd" dir="${ftp.home}">
       <jvmarg value="-Duser.home=${ftp.home}"/>
