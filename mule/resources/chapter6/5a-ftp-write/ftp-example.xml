@@ -7,24 +7,27 @@
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-               http://www.mulesource.org/schema/mule/ftp/2.0 http://www.mulesource.org/schema/mule/ftp/2.0/mule-ftp.xsd">
+               http://www.mulesource.org/schema/mule/ftp/2.0 http://www.mulesource.org/schema/mule/ftp/2.0/mule-ftp.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
+  <ftp:connector name="ftpConnector" validateConnections="true" />
 
   <mule:model name="file-model">
-    <mule:service name="file-reader-writer">
+    <mule:service name="file-reader-ftp-writer">
       <mule:inbound>
-        <mule:inbound-endpoint address="file://work-mule/chapter6/5a/in"/>
+        <file:inbound-endpoint path="work-mule/chapter6/5a/in" />
       </mule:inbound>
       <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="ftp://bob:123password@localhost:2121/">
-            <mule:properties>
-              <entry key="outputPattern" value="Copy-Of-${ORIGINALNAME}-${SYSTIME}.dat" />
-              <entry key="validateConnections" value="true"/>
-              <entry key="passive" value="false"/>
-            </mule:properties>
-          </mule:outbound-endpoint>
+          <ftp:outbound-endpoint 
+            user="bob" 
+            password="123password"
+            host="localhost" 
+            port="2121"
+            outputPattern="Copy-Of-${ORIGINALNAME}-${SYSTIME}.dat"
+            passive="false" 
+            path="data"/>
         </mule:outbound-pass-through-router>
       </mule:outbound>
     </mule:service>

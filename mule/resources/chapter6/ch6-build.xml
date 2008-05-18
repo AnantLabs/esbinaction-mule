@@ -68,11 +68,13 @@ files.
 			<include name="org/mule/transport/jdbc/**/*.java" />
 		</javac>
 
+		<!--
 		<jar destfile="${mule.deploy}/jdbc-connector-fix.jar">
 			<fileset dir="${workspace.home}/mule/classes">
 				<include name="org/mule/transport/jdbc/JdbcConnector.class" />
 			</fileset>
 		</jar>
+		-->
 
 		<antcall target="gn:run-mule-with-xmlconfig">
 			<param name="file" value="${chapter.home}/3a-jdbc-read/jdbc-example.xml" />
@@ -118,14 +120,29 @@ files.
 	</target>
 
 	<target name="chapter6-ejb" depends="gn:init" description="Chapter 6 - connect to an ejb">
+		
 		<antcall target="gn:run-mule-with-xmlconfig">
 			<param name="file" value="${chapter.home}/6a-ejb/ejb-example.xml" />
-			<param name="classes-filter" value="esb/chapter6/**/*.class"/>
+			<param name="classes-filter" value="esb/chapter6/**/*"/>
 			<param name="target-jar" value="mule-chapter6.jar"/>
 		</antcall>
 	</target>
 
 	<target name="chapter6-ejb-deploy-ejb" description="deploy the ejb example">
+		
+		<delete>
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter6/ejb/" />
+				<include name="esb/util/**/*" />
+			</fileset>
+		</delete>
+		
+		<javac classpathref="mule.path" debug="true" 
+			destdir="${workspace.home}/mule/classes" 
+			srcdir="${workspace.home}/mule/src">
+			<include name="esb/chapter6/ejb/**/*.java" />
+		</javac>
+		
 		<antcall target="ext:openejb-deploy">
 			<param name="include-classes" value="esb/chapter6/ejb/**.*" />
 			<param name="ejb-dest-file" value="6a-ejb.jar" />

@@ -6,33 +6,32 @@
   xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
-  
- 
-    <bean name="fileFilter" class="org.mule.transport.file.filters.FilenameWildcardFilter">
-      <property name="pattern" value="*.txt"></property>
-    </bean>
-  
+               http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
+
+
+  <bean name="fileFilter"
+    class="org.mule.transport.file.filters.FilenameWildcardFilter">
+    <property name="pattern" value="*.txt"></property>
+  </bean>
+
+  <file:connector name="fileConnector" autoDelete="true" />
 
   <mule:model name="file-model">
     <mule:service name="file-reader-writer">
       <mule:inbound>
-        <mule:inbound-endpoint address="file://work-mule/chapter6/1a/in">
-          <mule:properties>
-            <entry key="pollingFrequencey" value="3000" />
-            <entry key="autoDelete" value="true" />
-          </mule:properties>
-          <mule:filter ref="fileFilter"/>
-        </mule:inbound-endpoint>
+        <file:inbound-endpoint 
+            path="work-mule/chapter6/1a/in"
+            pollingFrequency="3000">
+          <mule:filter ref="fileFilter" />
+        </file:inbound-endpoint>
       </mule:inbound>
-      <mule:bridge-component/>
+      <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="file://work-mule/chapter6/1a/out">
-            <mule:properties>
-              <entry key="outputPattern" value="${DATE:HH-mm-ss.SSS}-${UUID}-${SYSTIME}-${COUNT}.dat" />
-            </mule:properties>
-          </mule:outbound-endpoint>
+          <file:outbound-endpoint 
+            path="work-mule/chapter6/1a/out"
+            outputPattern="${DATE:HH-mm-ss.SSS}-${UUID}-${SYSTIME}-${COUNT}.dat" />
         </mule:outbound-pass-through-router>
       </mule:outbound>
     </mule:service>

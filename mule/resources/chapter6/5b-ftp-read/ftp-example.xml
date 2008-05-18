@@ -7,23 +7,22 @@
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-               http://www.mulesource.org/schema/mule/ftp/2.0 http://www.mulesource.org/schema/mule/ftp/2.0/mule-ftp.xsd">
- 
+               http://www.mulesource.org/schema/mule/ftp/2.0 http://www.mulesource.org/schema/mule/ftp/2.0/mule-ftp.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
+
+  <ftp:connector name="ftpConnector" validateConnections="true" />
+
   <mule:model name="ftp-model">
     <mule:service name="ftp-reader">
       <mule:inbound>
-        <mule:inbound-endpoint address="ftp://bob:123password@localhost:2121/">
-          <mule:properties>
-            <entry key="pollingFrequency" value="10000" />
-            <entry key="validateConnections" value="true" />
-            <entry key="passive" value="false" />
-          </mule:properties>
-        </mule:inbound-endpoint>
+        <ftp:inbound-endpoint user="bob" password="123password"
+          host="localhost" port="2121" pollingFrequency="10000"
+          passive="false" path="data" />
       </mule:inbound>
       <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
-        <mule:outbound-endpoint address="file://work-mule/chapter6/5b/out" />
+          <file:outbound-endpoint path="work-mule/chapter6/5b/out" />
         </mule:outbound-pass-through-router>
       </mule:outbound>
     </mule:service>

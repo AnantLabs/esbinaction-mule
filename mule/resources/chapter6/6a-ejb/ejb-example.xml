@@ -7,26 +7,29 @@
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-               http://www.mulesource.org/schema/mule/ejb/2.0 http://www.mulesource.org/schema/mule/ejb/2.0/mule-ejb.xsd">
+               http://www.mulesource.org/schema/mule/ejb/2.0 http://www.mulesource.org/schema/mule/ejb/2.0/mule-ejb.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
-    <ejb:connector name="open-ejb" 
-                   jndiInitialFactory="org.openejb.client.RemoteInitialContextFactory" 
-                   jndiProviderUrl="ejbd://localhost:4201"
-                   securityPolicy="../../workspace/workspace-mule/mule/resources/chapter6/6a-ejb/wideopen.policy"/>     
+  <ejb:connector name="open-ejb"
+    jndiInitialFactory="org.openejb.client.RemoteInitialContextFactory"
+    jndiProviderUrl="ejbd://localhost:4201"
+    securityPolicy="../../workspace/workspace-mule/mule/resources/chapter6/6a-ejb/wideopen.policy" />
+
+  <file:file-to-string-transformer name="fileToString" />
+  <mule:custom-transformer name="StringToQuery" class="esb.chapter6.QueryTransformer" />
 
   <mule:model name="file-model">
     <mule:service name="file-reader-writer">
       <mule:inbound>
-        <mule:inbound-endpoint address="file://work-mule/chapter6/6a/in">
-          <mule:byte-array-to-string-transformer/>
-          <mule:custom-transformer class="esb.chapter6.QueryTransformer"/>
-        </mule:inbound-endpoint>
+        <file:inbound-endpoint path="work-mule/chapter6/6a/in" transformer-refs="fileToString StringToQuery"/>
       </mule:inbound>
-      <mule:bridge-component/>
+      <mule:bridge-component />
       <mule:outbound>
         <mule:chaining-router>
-          <mule:outbound-endpoint address="ejb://localhost:4201/PersonServiceImplRemoteHome?method=searchPersons"/>
-          <mule:outbound-endpoint address="file://work-mule/chapter6/6a/out"/>
+          <ejb:outbound-endpoint host="localhost" port="4201"
+            method="searchPersons"
+            object="PersonServiceImplRemoteHome" />
+          <file:outbound-endpoint path="work-mule/chapter6/6a/out" />
         </mule:chaining-router>
       </mule:outbound>
     </mule:service>

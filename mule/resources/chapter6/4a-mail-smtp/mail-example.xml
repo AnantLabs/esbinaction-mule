@@ -8,26 +8,26 @@
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/smtp/2.0 http://www.mulesource.org/schema/mule/smtp/2.0/mule-smtp.xsd">
 
+  <file:file-to-string-transformer name="fileToString" />
+
   <mule:model name="mail-model">
-    <mule:service name="file-reader">
+    <mule:service name="file-to-mail">
       <mule:inbound>
-        <mule:inbound-endpoint address="file://work-mule/chapter6/4a/in">
-          <mule:byte-array-to-string-transformer/>
-        </mule:inbound-endpoint>
+        <file:inbound-endpoint path="work-mule/chapter6/4a/in"
+          transformer-refs="fileToString">
+        </file:inbound-endpoint>
       </mule:inbound>
       <mule:bridge-component />
       <mule:outbound>
         <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="smtp://jos:jos@localhost:10025?address=tijs@localhost">
-            <mule:properties>
-              <entry key="ccAddresses" value="jos@localhost"/>
-              <entry key="fromAddress" value="mule@localhost"/>
-              <entry key="replyToAddresses" value="piet@localhost"/>
-              <entry key="subject" value="You've got mail from Mule!"/>
-            </mule:properties>
-          </mule:outbound-endpoint>
+          <smtp:outbound-endpoint to="tijs@localhost"
+            cc="jos@localhost" from="mule@localhost"
+            replyTo="piet@localhost"
+            subject="You've got mail from Mule!" host="localhost"
+            port="10025" user="jos" password="jos" />
         </mule:outbound-pass-through-router>
       </mule:outbound>
     </mule:service>
