@@ -5,9 +5,11 @@ import java.util.List;
 import javax.jws.WebService;
 
 public interface ChamberOfCommerceService {
-    
-    List<Company> findCompanies(String city, String streeName);
-    Company getCompany(String companyName);
-    void changeCompany(String companyName, Company companyInfo);
+
+    public List<Company> findCompanies(String city, String streeName);
+
+    public Company getCompany(String companyName);
+
+    public void changeCompany(String companyName, Company companyInfo);
 
 }

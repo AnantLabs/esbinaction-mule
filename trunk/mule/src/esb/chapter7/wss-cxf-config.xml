@@ -7,22 +7,29 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
 http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
-  <jaxws:server name="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort" createdFromAPI="true">
-      <jaxws:inInterceptors>
-          <bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor"/>
-          <bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
-              <constructor-arg>
-                  <map>
-                      <entry key="action" value="Signature Encrypt" />
-                      <entry key="passwordCallbackRef" value-ref="serverCallback"/>
-                      <entry key="user" value="serverkey"/> 
-                      <entry key="decryptionPropFile" value="esb/chapter7/server.crypto.properties"/>
-                      <entry key="signaturePropFile" value="esb/chapter7/server.crypto.properties"/>                      
-                  </map>
-              </constructor-arg>
-          </bean>
-      </jaxws:inInterceptors>
+  <jaxws:server
+    name="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort"
+    createdFromAPI="true">
+    <jaxws:inInterceptors>
+      <bean
+        class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+      <bean
+        class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+        <constructor-arg>
+          <map>
+            <entry key="action" value="Signature Encrypt" />
+            <entry key="passwordCallbackRef"
+              value-ref="serverCallback" />
+            <entry key="user" value="serverkey" />
+            <entry key="decryptionPropFile"
+              value="esb/chapter7/server.crypto.properties" />
+            <entry key="signaturePropFile"
+              value="esb/chapter7/server.crypto.properties" />
+          </map>
+        </constructor-arg>
+      </bean>
+    </jaxws:inInterceptors>
   </jaxws:server>
 
-  <bean id="serverCallback" class="esb.chapter7.TestPwdCallback"/>
+  <bean id="serverCallback" class="esb.chapter7.TestPwdCallback" />
 </beans>

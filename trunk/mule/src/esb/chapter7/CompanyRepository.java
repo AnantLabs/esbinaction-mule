@@ -16,10 +16,13 @@ public class CompanyRepository{
     
     private Hashtable<String, Company> registry = new Hashtable<String, Company>();
     
-    public void init() {
+    public CompanyRepository() {
         addCompany1();
         addCompany2();
         adddCompany3();
+    }
+    
+    public void init() {
     }
     
     public Company getCompany(String companyName) {

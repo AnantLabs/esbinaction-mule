@@ -9,6 +9,7 @@ import org.mule.transformer.AbstractTransformer;
 
 public class XMLToObjectTransformer extends AbstractTransformer {
 
+    
 	private String targetClassName;
 
 	protected Object doTransform(Object data, String encoding) throws TransformerException {
