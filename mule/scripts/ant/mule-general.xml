@@ -9,7 +9,7 @@
 	<property name="tools.home" value="${book.home}/tools" />
 	<property name="lib.home" value="${book.home}/libraries" />
 	<property name="patches.home" value="${book.home}/esb/patches" />
-	<property name="mule.home" location="${book.home}/esb/mule-2.0.0" />
+	<property name="mule.home" location="${book.home}/esb/mule-2.0.1" />
 	<property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
@@ -75,7 +75,8 @@
 		</fileset>
         <fileset dir="${lib.home}/bsh">
           <include name="*.jar"/>
-        </fileset>		
+        </fileset>
+		<pathelement path="${workspace.home}/mule/classes" />
 	</path>
 
 	<!-- define the classpath to use for spring -->
@@ -115,7 +116,6 @@
 				</antcall>
 			</c:then>
 		</c:if>
-		
 		
 		<c:if>
 			<isset property="generated-classes-filter" />
@@ -158,7 +158,7 @@
 
 		<java fork="true" classpathref="mule.path" dir="${mule.home}" classname="org.mule.MuleServer">
 			<arg line="-config ${file}" />
-			<jvmarg value="-Xdebug" />
+            <jvmarg value="-Xdebug" />
 			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" />
 		</java>
 	</target>
@@ -168,8 +168,16 @@
 	</target>
 
 	<target name="gn:compile-classes" depends="gn:init">
-
-		<javac classpathref="mule.path" debug="true" destdir="${workspace.home}/mule/classes" srcdir="${workspace.home}/mule/src">
+		<delete>
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="${classes-filter}" />
+				<include name="esb/util/**/*" />
+			</fileset>
+		</delete>
+		<javac classpathref="mule.path" 
+				debug="true" 
+				destdir="${workspace.home}/mule/classes" 
+				srcdir="${workspace.home}/mule/src">
 			<include name="${classes-filter}" />
 			<include name="esb/util/**/*" />
 		</javac>
@@ -185,10 +193,7 @@
 	<target name="gn:jibx-classes" depends="gn:init">
 		<!-- Run JiBX binding compiler -->
 		<bind verbose="false" load="true" binding="${jibx-mapping}">
-			<classpath>
-				<pathelement path="${workspace.home}/mule/classes" />
-				<pathelement location="${lib.home}/jibx/libs/jibx-run.jar" />
-			</classpath>
+			<classpath refid="mule.path"/>
 		</bind>
 	</target>
 
