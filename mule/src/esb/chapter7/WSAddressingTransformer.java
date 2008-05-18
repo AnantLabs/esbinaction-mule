@@ -61,7 +61,6 @@ public class WSAddressingTransformer extends AbstractMessageAwareTransformer{
                 if (namespace.endsWith("addressing")) {
                     message.setProperty(header.getName().getLocalPart(), header.getObject());
                 }
-                
             }
             // Add a new inputstream to the message so the rest of the processing isn't interrupted
             message.setPayload(new ByteArrayInputStream(bOut.toByteArray()));
