@@ -65,7 +65,6 @@
                 <inbound-endpoint ref="DivingResponse"/>
                 <inbound-endpoint ref="TaxiResponse"/>
             </inbound>
-            <log-component/>
             <outbound>
                 <filtering-router>
                     <outbound-endpoint ref="ProcessEngine" synchronous="false" />
