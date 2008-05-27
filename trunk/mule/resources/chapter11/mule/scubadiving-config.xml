@@ -77,14 +77,14 @@
                 <inbound-endpoint ref="ProcessEngine"/>
             </inbound>
             <outbound>
-                <endpoint-selector-router evaluator="header" expression="endpoint">
+                <bpm:outbound-router>
                     <outbound-endpoint ref="SharkDivingIn"/>
                     <outbound-endpoint ref="WreckAndCaveDivingIn"/>
                     <outbound-endpoint ref="DolphinDivingIn"/>
                     <outbound-endpoint ref="LunchIn"/>
                     <outbound-endpoint ref="TaxiIn"/>
                     <outbound-endpoint ref="ScubaDivingBooking"/>
-                </endpoint-selector-router>
+                </bpm:outbound-router>
             </outbound>
         </service>
 	
