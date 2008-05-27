@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<root-container name="ScubaDivingBookingProcess" width="816" height="660">
+<root-container name="ScubaDivingBookingProcess" width="907" height="660">
   <node name="start" x="194" y="15" width="132" height="36">
     <edge>
       <label x="5" y="-10"/>

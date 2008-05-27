@@ -34,7 +34,7 @@
                 <expectedSource>ScubaDivingRequest</expectedSource>
             </action>
             <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
-                <variable>booking</variable>
+                <variable name="booking"></variable>
             </action>
             <action class="org.mule.transport.bpm.jbpm.actions.Continue" />
 		</event>
@@ -107,7 +107,7 @@
                 <expectedSource>DivingResponse</expectedSource>
             </action>
             <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
-                <variable>divingResponse</variable>
+                <variable name="divingResponse"></variable>
             </action>
             <action class="esb.chapter11.scubadiving.handler.DivingResponseHandler"></action>
 			<action class="org.mule.transport.bpm.jbpm.actions.Continue" />
@@ -121,7 +121,7 @@
                 <expectedSource>TaxiResponse</expectedSource>
             </action>
             <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
-                <variable>taxiResponse</variable>
+                <variable name="taxiResponse"></variable>
             </action>
             <action class="esb.chapter11.scubadiving.handler.TaxiResponseHandler"></action>
 			<action class="org.mule.transport.bpm.jbpm.actions.Continue" />
