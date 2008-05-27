@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process-definition name="ScubaDivingBookingProcess"
-  xmlns="http://jbpm.org/3/jpdl"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://jbpm.org/3/jpdl http://jbpm.org/jpdl-3.1.xsd">
+<process-definition name="ScubaDivingBookingProcess">
 
 	<start-state name="start">
 		<transition to="ReceiveRequest" name="divingschool"></transition>
