@@ -19,11 +19,20 @@
   <string name="resource.parsers" value="org/jbpm/jpdl/par/jbpm.parsers.xml" />
   <string name="resource.varmapping" value="org/jbpm/context/exe/jbpm.varmapping.xml" />
 
-  <long   name="jbpm.msg.wait.timout" value="5000" singleton="true" />
-  <int    name="jbpm.byte.block.size" value="1024" singleton="true" />
+  <long name="jbpm.msg.wait.timout" value="5000" singleton="true" />
+  <int name="jbpm.byte.block.size" value="1024" singleton="true" />
   <string name="mail.smtp.host" value="localhost" />
-  <bean   name="jbpm.task.instance.factory" class="org.jbpm.taskmgmt.impl.DefaultTaskInstanceFactoryImpl" singleton="true" />
-  <bean   name="jbpm.variable.resolver" class="org.jbpm.jpdl.el.impl.JbpmVariableResolver" singleton="true" />
-  <bean   name="jbpm.mail.address.resolver" class="org.jbpm.identity.mail.IdentityAddressResolver" singleton="true" />
+  <bean name="jbpm.task.instance.factory" class="org.jbpm.taskmgmt.impl.DefaultTaskInstanceFactoryImpl" singleton="true" />
+  <bean name="jbpm.variable.resolver" class="org.jbpm.jpdl.el.impl.JbpmVariableResolver" singleton="true" />
+  <bean name="jbpm.mail.address.resolver" class="org.jbpm.identity.mail.IdentityAddressResolver" singleton="true" />
+  
+  <bean name="jbpm.job.executor" class="org.jbpm.job.executor.JobExecutor">
+    <field name="jbpmConfiguration"><ref bean="jbpmConfiguration" /></field>
+    <field name="name"><string value="JbpmJobExector" /></field>
+    <field name="nbrOfThreads"><int value="1" /></field>
+    <field name="idleInterval"><int value="2500" /></field>
+    <field name="maxIdleInterval"><int value="3600000" /></field>
+    <field name="historyMaxSize"><int value="20" /></field>
+  </bean>
 
 </jbpm-configuration>
