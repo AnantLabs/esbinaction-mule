@@ -10,7 +10,7 @@
 
     <!-- jBPM Configuration -->
     <bean id="jbpmConfig"
-        class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBeanWorkaround">
+        class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBean">
         <property name="sessionFactory">
             <ref local="jbpmSessionFactory" />
         </property>

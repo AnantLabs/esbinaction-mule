@@ -65,6 +65,7 @@
                 <inbound-endpoint ref="DivingResponse"/>
                 <inbound-endpoint ref="TaxiResponse"/>
             </inbound>
+            <log-component/>
             <outbound>
                 <filtering-router>
                     <outbound-endpoint ref="ProcessEngine" synchronous="false" />
@@ -77,7 +78,7 @@
                 <inbound-endpoint ref="ProcessEngine"/>
             </inbound>
             <outbound>
-                <endpoint-selector-router selectorExpression="header:endpoint">
+                <endpoint-selector-router evaluator="header" expression="endpoint">
                     <outbound-endpoint ref="SharkDivingIn"/>
                     <outbound-endpoint ref="WreckAndCaveDivingIn"/>
                     <outbound-endpoint ref="DolphinDivingIn"/>
