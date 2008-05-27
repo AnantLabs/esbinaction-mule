@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<process-definition
-  xmlns="urn:jbpm.org:jpdl-3.2"  name="ScubaDivingBookingProcess">
+<process-definition name="ScubaDivingBookingProcess"
+  xmlns="http://jbpm.org/3/jpdl"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jbpm.org/3/jpdl http://jbpm.org/jpdl-3.1.xsd">
 
 	<start-state name="start">
 		<transition to="ReceiveRequest" name="divingschool"></transition>
@@ -34,7 +35,7 @@
                 <expectedSource>ScubaDivingRequest</expectedSource>
             </action>
             <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
-                <variable name="booking"></variable>
+                <variable>booking</variable>
             </action>
             <action class="org.mule.transport.bpm.jbpm.actions.Continue" />
 		</event>
@@ -107,7 +108,7 @@
                 <expectedSource>DivingResponse</expectedSource>
             </action>
             <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
-                <variable name="divingResponse"></variable>
+                <variable>divingResponse</variable>
             </action>
             <action class="esb.chapter11.scubadiving.handler.DivingResponseHandler"></action>
 			<action class="org.mule.transport.bpm.jbpm.actions.Continue" />
@@ -121,7 +122,7 @@
                 <expectedSource>TaxiResponse</expectedSource>
             </action>
             <action class="org.mule.transport.bpm.jbpm.actions.StoreIncomingData">
-                <variable name="taxiResponse"></variable>
+                <variable>taxiResponse</variable>
             </action>
             <action class="esb.chapter11.scubadiving.handler.TaxiResponseHandler"></action>
 			<action class="org.mule.transport.bpm.jbpm.actions.Continue" />
