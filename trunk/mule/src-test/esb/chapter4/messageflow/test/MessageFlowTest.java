@@ -54,5 +54,18 @@ public class MessageFlowTest {
 		assertEquals("BarnesAndNoble", bookQuote.getCompanyName());
 		logger.info("received cheapest quote from " + bookQuote.getCompanyName() + ", " + bookQuote.getPrice());
 	}
+	
+	@Test
+	public void amazonMessageFlow() throws Exception {
+		TextMessage isbnMessage = session.createTextMessage();
+		isbnMessage.setText("1010101010");
+		producer.send(isbnMessage);
+		ObjectMessage quoteObject = (ObjectMessage) consumer.receive(2000);
+		assertNotNull(quoteObject);
+		BookQuote bookQuote = (BookQuote) quoteObject.getObject();
+		assertNotNull(bookQuote);
+		assertEquals("Amazon", bookQuote.getCompanyName());
+		logger.info("received cheapest quote from " + bookQuote.getCompanyName() + ", " + bookQuote.getPrice());
+	}
 
 }
