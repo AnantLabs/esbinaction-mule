@@ -10,6 +10,7 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.MessageInfoMapping;
 import org.mule.routing.EventCorrelatorCallback;
+import org.mule.routing.MuleMessageInfoMapping;
 import org.mule.routing.inbound.AbstractEventAggregator;
 import org.mule.routing.inbound.EventGroup;
 
@@ -23,8 +24,6 @@ public class BookQuoteAggregator extends AbstractEventAggregator {
 	protected EventCorrelatorCallback getCorrelatorCallback() {
 		return new EventCorrelatorCallback()
 		{
-
-			@Override
 			public MuleMessage aggregateEvents(EventGroup events) {
 				Iterator itEvent = events.iterator();
 				Collection<BookQuote> quoteList = new ArrayList<BookQuote>();
@@ -36,12 +35,11 @@ public class BookQuoteAggregator extends AbstractEventAggregator {
 				return new DefaultMuleMessage(quoteList);
 			}
 
-			@Override
-			public EventGroup createEventGroup(MuleEvent event, Object id) {
-				return new EventGroup(id, 2 );
+			public EventGroup createEventGroup(MuleEvent event, Object correlationID) {
+				// create event group with correlation id ISBN and expected size 2
+				return new EventGroup(correlationID, 2);
 			}
 
-			@Override
 			public boolean shouldAggregateEvents(EventGroup events) {
 				Iterator itEvent = events.iterator();
 				boolean isAmazonPresent = false;
@@ -64,16 +62,9 @@ public class BookQuoteAggregator extends AbstractEventAggregator {
 	
 	@Override
 	public MessageInfoMapping getMessageInfoMapping() {
-		return new MessageInfoMapping()
+		return new MuleMessageInfoMapping()
 		{
-			@Override
 			public String getCorrelationId(MuleMessage message) {
-				BookQuote quote = (BookQuote) message.getPayload();
-				return quote.getIsbn();
-			}
-
-			@Override
-			public String getMessageId(MuleMessage message) {
 				BookQuote quote = (BookQuote) message.getPayload();
 				return quote.getIsbn();
 			}
