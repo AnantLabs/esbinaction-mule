@@ -51,8 +51,8 @@ public class MessageFlowTest {
 		assertNotNull(quoteObject);
 		BookQuote bookQuote = (BookQuote) quoteObject.getObject();
 		assertNotNull(bookQuote);
-		assertEquals("BarnesAndNoble", bookQuote.getCompanyName());
 		logger.info("received cheapest quote from " + bookQuote.getCompanyName() + ", " + bookQuote.getPrice());
+		assertEquals("BarnesAndNoble", bookQuote.getCompanyName());
 	}
 	
 	@Test
@@ -64,8 +64,8 @@ public class MessageFlowTest {
 		assertNotNull(quoteObject);
 		BookQuote bookQuote = (BookQuote) quoteObject.getObject();
 		assertNotNull(bookQuote);
-		assertEquals("Amazon", bookQuote.getCompanyName());
 		logger.info("received cheapest quote from " + bookQuote.getCompanyName() + ", " + bookQuote.getPrice());
+		assertEquals("Amazon", bookQuote.getCompanyName());
 	}
 
 }
