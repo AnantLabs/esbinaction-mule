@@ -1,10 +1,10 @@
 <person>
 	<customer-number>1</customer-number>
-	<first-name>Gijs</first-name>
-	<last-name>van Dongen</last-name>
-	<street>Kerkstraat</street>
-	<city>Sprang-Capelle</city>
-	<state>NB</state>
-	<zip>5658</zip>
-	<phone>0416-1234456</phone>
+	<first-name>John</first-name>
+	<last-name>Doe</last-name>
+	<street>Second street</street>
+	<city>New York</city>
+	<state>NY</state>
+	<zip>32434</zip>
+	<phone>394040949</phone>
 </person>
