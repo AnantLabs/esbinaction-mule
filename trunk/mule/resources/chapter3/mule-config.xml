@@ -68,6 +68,9 @@
 			<inbound>
 				<jms:inbound-endpoint queue="log.queue" />
 			</inbound>
+            <component>
+              <spring-object bean="loggerComponent" /> 
+            </component>
 			<outbound>
 				<outbound-pass-through-router>
 					<jms:outbound-endpoint topic="listener" />

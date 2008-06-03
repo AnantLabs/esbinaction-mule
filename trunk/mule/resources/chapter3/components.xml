@@ -11,7 +11,15 @@
                http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd">
 
     <bean id="component1" class="esb.chapter3.Component1"/>
-    <bean name="component2" class="esb.chapter3.Component2"/>      
+    
+    <bean name="loggerComponent" class="esb.chapter3.LoggerComponent">
+      <property name="customerNumberMap">
+        <map>
+          <entry key="1" value="12345"/>
+          <entry key="2" value="67890"/>
+        </map>
+      </property>
+    </bean>      
 
 </beans>
         
