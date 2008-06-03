@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
-
-  <bean name="fileFilter"
-    class="org.mule.transport.file.filters.FilenameWildcardFilter">
-    <property name="pattern" value="*.txt"></property>
-  </bean>
+  
+  <wildcard-filter name="fileFilter" pattern="*.txt"/>
 
   <file:connector name="fileConnector" autoDelete="true" />
 
-  <mule:model name="file-model">
-    <mule:service name="file-reader-writer">
-      <mule:inbound>
+  <model name="file-model">
+    <service name="file-reader-writer">
+      <inbound>
         <file:inbound-endpoint 
             path="work-mule/chapter6/1a/in"
             pollingFrequency="3000">
-          <mule:filter ref="fileFilter" />
+          <filter ref="fileFilter" />
         </file:inbound-endpoint>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
           <file:outbound-endpoint 
             path="work-mule/chapter6/1a/out"
             outputPattern="${DATE:HH-mm-ss.SSS}-${UUID}-${SYSTIME}-${COUNT}.dat" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-  </mule:model>
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+  </model>
 
-</mule:mule>
+</mule>

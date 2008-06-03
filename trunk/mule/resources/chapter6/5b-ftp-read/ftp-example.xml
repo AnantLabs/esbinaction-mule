@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:ftp="http://www.mulesource.org/schema/mule/ftp/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
@@ -12,21 +12,19 @@
 
   <ftp:connector name="ftpConnector" validateConnections="true" />
 
-  <mule:model name="ftp-model">
-    <mule:service name="ftp-reader">
-      <mule:inbound>
+  <model name="ftp-model">
+    <service name="ftp-reader">
+      <inbound>
         <ftp:inbound-endpoint user="bob" password="123password"
           host="localhost" port="2121" pollingFrequency="10000"
           passive="false" path="data" />
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
           <file:outbound-endpoint path="work-mule/chapter6/5b/out" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-  </mule:model>
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+  </model>
 
-
-</mule:mule>
+</mule>
