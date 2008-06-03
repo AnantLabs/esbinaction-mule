@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:ejb="http://www.mulesource.org/schema/mule/ejb/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
@@ -16,23 +16,25 @@
     securityPolicy="../../workspace/workspace-mule/mule/resources/chapter6/6a-ejb/wideopen.policy" />
 
   <file:file-to-string-transformer name="fileToString" />
-  <mule:custom-transformer name="StringToQuery" class="esb.chapter6.QueryTransformer" />
+  <custom-transformer name="StringToQuery" class="esb.chapter6.QueryTransformer" />
 
-  <mule:model name="file-model">
-    <mule:service name="file-reader-writer">
-      <mule:inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/6a/in" transformer-refs="fileToString StringToQuery"/>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:chaining-router>
+  <model name="file-model">
+    <service name="file-reader-writer">
+      <inbound>
+        <file:inbound-endpoint path="work-mule/chapter6/6a/in">
+          <transformer ref="fileToString" />
+          <transformer ref="StringToQuery" />
+        </file:inbound-endpoint>
+      </inbound>
+      <outbound>
+        <chaining-router>
           <ejb:outbound-endpoint host="localhost" port="4201"
             method="searchPersons"
             object="PersonServiceImplRemoteHome" />
           <file:outbound-endpoint path="work-mule/chapter6/6a/out" />
-        </mule:chaining-router>
-      </mule:outbound>
-    </mule:service>
-  </mule:model>
+        </chaining-router>
+      </outbound>
+    </service>
+  </model>
 
-</mule:mule>
+</mule>

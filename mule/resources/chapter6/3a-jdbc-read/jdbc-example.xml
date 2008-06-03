@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:jdbc="http://www.mulesource.org/schema/mule/jdbc/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
-
-
-  <beans>
-    <bean name="datasource"
+  
+  <spring:bean name="datasource"
       class="org.enhydra.jdbc.standard.StandardDataSource">
-      <property name="driverName" value="org.hsqldb.jdbcDriver" />
-      <property name="url" value="jdbc:hsqldb:hsql://localhost/xdb" />
-      <property name="user" value="sa" />
-    </bean>
-  </beans>
+    <spring:property name="driverName" value="org.hsqldb.jdbcDriver" />
+    <spring:property name="url" value="jdbc:hsqldb:hsql://localhost/xdb" />
+    <spring:property name="user" value="sa" />
+  </spring:bean>
 
   <jdbc:connector name="hsqldb-connector"
     dataSource-ref="datasource">
@@ -28,24 +26,19 @@
       value="UPDATE testtable SET processed = true WHERE id = ${jxpath:id}" />
   </jdbc:connector>
 
-  <mule:model name="jdbc-model">
-    <mule:service name="jdbc-reader">
-      <mule:inbound>
+  <model name="jdbc-model">
+    <service name="jdbc-reader">
+      <inbound>
         <jdbc:inbound-endpoint queryKey="get" pollingFrequency="3000" />
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint
-            address="file://work-mule/chapter6/3a/out">
-            <mule:properties>
-              <entry key="outputPattern"
-                value="${UUID}-${SYSTIME}-${COUNT}.dat" />
-            </mule:properties>
-          </mule:outbound-endpoint>
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-  </mule:model>
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <file:outbound-endpoint
+              path="work-mule/chapter6/3a/out"
+              outputPattern="${UUID}-${SYSTIME}-${COUNT}.dat" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+  </model>
 
-</mule:mule>
+</mule>

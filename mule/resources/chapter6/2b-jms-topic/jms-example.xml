@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
@@ -12,70 +12,59 @@
 
   <!--  the JMS configuration, tell mule where we want to connect to for JMS -->
   <jms:activemq-connector name="jmsConnection"
-    brokerURL="tcp://localhost:61616" />
+      brokerURL="tcp://localhost:61616" />
 
-    <file:connector name="fileConnector" streaming="false" />
+  <file:connector name="fileConnector" streaming="false" />
 
-  <mule:model name="jms-model">
-    <mule:service name="file-to-topic">
-      <mule:inbound>
-        <mule:inbound-endpoint
-          address="file://work-mule/chapter6/2b/in">
-          <mule:properties>
-            <entry key="pollingFrequencey" value="3000" />
-          </mule:properties>
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="jms://topic:topic1" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
+  <model name="jms-model">
+    <service name="file-to-topic">
+      <inbound>
+        <file:inbound-endpoint
+            path="work-mule/chapter6/2b/in"
+            pollingFrequency="3000" />
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <jms:outbound-endpoint topic="topic1" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
 
-    <mule:service name="topic-to-file-1">
-      <mule:inbound>
-        <mule:inbound-endpoint address="jms://topic:topic1">
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint
-            address="file://work-mule/chapter6/2b/out-1" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
+    <service name="topic-to-file-1">
+      <inbound>
+        <jms:inbound-endpoint topic="topic1" />
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <file:outbound-endpoint
+              path="work-mule/chapter6/2b/out-1" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
 
-    <mule:service name="topic-to-file-2">
-      <mule:inbound>
-        <mule:inbound-endpoint address="jms://topic:topic1">
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint
-            address="file://work-mule/chapter6/2b/out-2" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
+    <service name="topic-to-file-2">
+      <inbound>
+        <jms:inbound-endpoint topic="topic1" />
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <file:outbound-endpoint
+              path="work-mule/chapter6/2b/out-2" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
 
-    <mule:service name="topic-to-file-3">
-      <mule:inbound>
-        <mule:inbound-endpoint address="jms://topic:topic1">
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint
-            address="file://work-mule/chapter6/2b/out-3" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
+    <service name="topic-to-file-3">
+      <inbound>
+        <jms:inbound-endpoint topic="topic1" />
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <file:outbound-endpoint
+              path="work-mule/chapter6/2b/out-3" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+  </model>
 
-  </mule:model>
-
-</mule:mule>
+</mule>

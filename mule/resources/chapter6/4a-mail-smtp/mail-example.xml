@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
   xmlns:smtp="http://www.mulesource.org/schema/mule/smtp/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/smtp/2.0 http://www.mulesource.org/schema/mule/smtp/2.0/mule-smtp.xsd">
 
-  <file:file-to-string-transformer name="fileToString" />
-
-  <mule:model name="mail-model">
-    <mule:service name="file-to-mail">
-      <mule:inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/4a/in"
-          transformer-refs="fileToString">
+  <model name="mail-model">
+    <service name="file-to-mail">
+      <inbound>
+        <file:inbound-endpoint path="work-mule/chapter6/4a/in">
+          <file:file-to-string-transformer/>
         </file:inbound-endpoint>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
           <smtp:outbound-endpoint to="tijs@localhost"
             cc="jos@localhost" from="mule@localhost"
             replyTo="piet@localhost"
             subject="You've got mail from Mule!" host="localhost"
             port="10025" user="jos" password="jos" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-  </mule:model>
-
-</mule:mule>
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+  </model>
+  
+</mule>

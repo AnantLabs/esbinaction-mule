@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
@@ -14,43 +14,33 @@
   <jms:activemq-connector name="jmsConnection"
     brokerURL="tcp://localhost:61616" />
 
-    <file:connector name="fileConnector" streaming="false" />
+  <file:connector name="fileConnector" streaming="false" />
 
-  <mule:model name="jms-model">
-    <mule:service name="file-to-queue">
-      <mule:inbound>
-        <mule:inbound-endpoint
-          address="file://work-mule/chapter6/2a/in">
-          <mule:properties>
-            <entry key="pollingFrequencey" value="3000" />
-          </mule:properties>
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="jms://queue1" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
+  <model name="jms-model">
+    <service name="file-to-queue">
+      <inbound>
+        <file:inbound-endpoint
+            path="work-mule/chapter6/2a/in"
+            pollingFrequency="3000"/>
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <jms:outbound-endpoint queue="queue1" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
 
-    <mule:service name="queue-to-file">
-      <mule:inbound>
-        <mule:inbound-endpoint address="jms://queue1">
-          <mule:properties>
-            <entry key="pollingFrequencey" value="3000" />
-          </mule:properties>
-        </mule:inbound-endpoint>
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint
-            address="file://work-mule/chapter6/2a/out" />
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
+    <service name="queue-to-file">
+      <inbound>
+        <jms:inbound-endpoint queue="queue1" />
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <file:outbound-endpoint
+            path="work-mule/chapter6/2a/out" />
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+  </model>
 
-  </mule:model>
-
-</mule:mule>
+</mule>

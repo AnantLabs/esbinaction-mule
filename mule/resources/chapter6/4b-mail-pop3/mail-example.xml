@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
   xmlns:pop3="http://www.mulesource.org/schema/mule/pop3/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
+               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/pop3/2.0 http://www.mulesource.org/schema/mule/pop3/2.0/mule-pop3.xsd"> 
 
   <pop3:connector name="pop3Connector" checkFrequency="5000" deleteReadMessages="false"/>
 
-  <mule:model name="mail-model">
-    <mule:service name="mail-sender">
-      <mule:inbound>
+  <model name="mail-model">
+    <service name="mail-sender">
+      <inbound>
         <pop3:inbound-endpoint host="localhost" user="tijs" password="tijs" port="10110" />
-      </mule:inbound>
-      <mule:bridge-component />
-      <mule:outbound>
-        <mule:outbound-pass-through-router>
-          <mule:outbound-endpoint address="file://work-mule/chapter6/4b/out"/>
-        </mule:outbound-pass-through-router>
-      </mule:outbound>
-    </mule:service>
-  </mule:model>
+      </inbound>
+      <outbound>
+        <outbound-pass-through-router>
+          <file:outbound-endpoint path="work-mule/chapter6/4b/out"/>
+        </outbound-pass-through-router>
+      </outbound>
+    </service>
+  </model>
 
-</mule:mule>
+</mule>
