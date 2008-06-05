@@ -1,71 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:cxf-wsdl="http://www.mulesource.org/schema/mule/cxf-wsdl/2.0"
-  xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
-  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-                      http://www.mulesource.org/schema/mule/wssecurity/2.0 http://www.mulesource.org/schema/mule/wssecurity/2.0/mule-wssecurity.xsd
-                      http://www.mulesource.org/schema/mule/cxf-wsdl/2.0 http://www.mulesource.org/schema/mule/cxf-wsdl/2.0/mule-cxf-wsdl.xsd
-                      http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd">
-  <mule:mule>
+                      http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd
+                      http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
-    <cxf-wsdl:connector name="wsdlCxfConnector">
-      <property name="configurationLocation" value="esb/chapter7/wss-cxf-config-client.xml" />
-    </cxf-wsdl:connector>
+  <cxf:connector name="clientCxfConnector">
+    <spring:property name="configurationLocation" value="esb/chapter7/wss-cxf-config-client.xml" />
+  </cxf:connector>
   
-    <cxf:connector name="cxfConnector">
-            <property name="configurationLocation" value="esb/chapter7/wss-cxf-config.xml" />
-     </cxf:connector>
+  <cxf:connector name="cxfConnector">
+    <spring:property name="configurationLocation" value="esb/chapter7/wss-cxf-config.xml" />
+  </cxf:connector>
     
-    <beans>
-      <bean name="ChamberOfCommerceServiceImpl" class="esb.chapter7.ChamberOfCommerceServiceImpl" init-method="init"/>
-    </beans>
+  <spring:bean name="ChamberOfCommerceServiceImpl" 
+      class="esb.chapter7.ChamberOfCommerceServiceImpl" 
+      init-method="init"/>
 
-    <mule:model name="consume-wsdl">
+  <model name="consume-wsdl">
+    <service name="cocServiceConsumeToJava">
+      <inbound>
+        <file:inbound-endpoint path="work-mule/chapter7/consume-wss/in">
+          <byte-array-to-string-transformer />
+        </file:inbound-endpoint>
+      </inbound>
+      <outbound>
+        <chaining-router>
+          <outbound-endpoint
+              address="wsdl-cxf:http://localhost:8081/services/CoCservice?wsdl&amp;method=getCompany"
+              connector-ref="clientCxfConnector">
+            <properties>
+              <spring:entry key="service" 
+                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplService" />
+              <spring:entry key="port" 
+                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort" />
+            </properties>
+          </outbound-endpoint>               
+          <file:outbound-endpoint path="work-mule/chapter7/consume-wss/out">
+            <custom-transformer class="esb.chapter7.SimpleTransfomer" />
+          </file:outbound-endpoint>
+        </chaining-router>
+      </outbound>
+    </service>
 
-      <!-- Calls directly to the service -->
-      <mule:service name="cocServiceConsumeToJava">
-        <mule:inbound>
-          <mule:inbound-endpoint
-            address="file://work-mule/chapter7/consume-wss/in">
-            <mule:byte-array-to-string-transformer />
-          </mule:inbound-endpoint>
-        </mule:inbound>
-        <mule:outbound>
-          <mule:chaining-router>
-          <!-- &amp;method=getCompany -->
-            <mule:outbound-endpoint
-              address="wsdl-cxf:http://localhost:8081/services/CoCservice?wsdl&amp;method=getCompany" connector-ref="wsdlCxfConnector">
-              	<mule:properties>
-              		<entry key="service" value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplService"></entry>
-              		<entry key="port" value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort"></entry>
-              	</mule:properties>
-              </mule:outbound-endpoint>               
-            <mule:outbound-endpoint
-              address="file://work-mule/chapter7/consume-wss/out">
-              <mule:custom-transformer
-                class="esb.chapter7.SimpleTransfomer" />
-            </mule:outbound-endpoint>
-          </mule:chaining-router>
-        </mule:outbound>
-      </mule:service>
-
-	<!--  security enabled service to call -->
-      <mule:service name="cocService">
-        <mule:inbound>
-          <mule:inbound-endpoint address="cxf:http://localhost:8081/services/">
-          </mule:inbound-endpoint>
-        </mule:inbound>
-        <mule:component>
-          <mule:spring-object bean="ChamberOfCommerceServiceImpl"/>
-        </mule:component>
-      </mule:service>
-
-    </mule:model>
-
-  </mule:mule>
-</beans>
+    <service name="cocService">
+      <inbound>
+        <cxf:inbound-endpoint address="http://localhost:8081/services/" 
+            connector-ref="cxfConnector"/>
+      </inbound>
+      <component>
+        <spring-object bean="ChamberOfCommerceServiceImpl"/>
+      </component>
+    </service>
+  </model>
+</mule>

@@ -1,51 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
-  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:wsdl-cxf="http://www.mulesource.org/schema/mule/wsdl-xfire/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+    xmlns:wsdl-cxf="http://www.mulesource.org/schema/mule/wsdl-xfire/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                       http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                       http://www.mulesource.org/schema/mule/cxf-wsdl/2.0 http://www.mulesource.org/schema/mule/cxf-wsdl/2.0/mule-cxf-wsdl.xsd">
 
-  <mule:custom-transformer name="toStringTransformer"
+  <custom-transformer name="toStringTransformer"
     class="esb.chapter7.SimpleTransfomer" />
   <file:file-to-string-transformer name="fileToString" />
 
   <file:connector streaming="false" name="fileConnector" />
 
-  <mule:model name="consume-wsdl">
+  <model name="consume-wsdl">
 
     <!-- Calls directly to the service -->
-    <mule:service name="cocServiceConsumeToJava">
-      <mule:inbound>
+    <service name="cocServiceConsumeToJava">
+      <inbound>
         <file:inbound-endpoint
           path="work-mule/chapter7/consume-wsdl/in-to-java"
           transformer-refs="fileToString" />
-      </mule:inbound>
-      <mule:outbound>
-        <mule:chaining-router>
-          <mule:outbound-endpoint
-            address="wsdl-cxf:http://localhost:8080/services/cocService?wsdl&amp;method=getCompany">
-            <mule:properties>
-              <entry key="service"
-                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplService">
-              </entry>
-              <entry key="port"
-                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort">
-              </entry>
-            </mule:properties>
-          </mule:outbound-endpoint>
-          <mule:outbound-endpoint
-            address="file://work-mule/chapter7/consume-wsdl/out">
-            <mule:custom-transformer
-              class="esb.chapter7.SimpleTransfomer" />
-          </mule:outbound-endpoint>
-        </mule:chaining-router>
-      </mule:outbound>
-    </mule:service>
-  </mule:model>
-
-</mule:mule>
+      </inbound>
+      <outbound>
+        <chaining-router>
+          <outbound-endpoint
+              address="wsdl-cxf:http://localhost:8080/services/cocService?wsdl&amp;method=getCompany">
+            <properties>
+              <spring:entry key="service"
+                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplService" />
+              <spring:entry key="port"
+                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort" />
+            </properties>
+          </outbound-endpoint>
+          <file:outbound-endpoint
+              path="work-mule/chapter7/consume-wsdl/out">
+            <custom-transformer class="esb.chapter7.SimpleTransfomer" />
+          </file:outbound-endpoint>
+        </chaining-router>
+      </outbound>
+    </service>
+  </model>
+</mule>

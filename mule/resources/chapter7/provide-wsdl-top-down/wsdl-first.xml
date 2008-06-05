@@ -1,41 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                       http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd">
-  <mule:mule>
-
-    <beans>
-      <bean name="ChamberOfCommerceServiceWebService"
+    
+  <spring:bean name="ChamberOfCommerceServiceWebService"
         class="org.esb.opensource.coc.CoCPortTypeImpl">
-        <property name="delegate"
-          ref="JavaChamberOfCommerceServiceImpl" />
-      </bean>
+    <spring:property name="delegate" ref="JavaChamberOfCommerceServiceImpl" />
+  </spring:bean>
 
-      <bean name="JavaChamberOfCommerceServiceImpl"
+  <spring:bean name="JavaChamberOfCommerceServiceImpl"
         class="esb.chapter7.ChamberOfCommerceServiceImpl"
         init-method="init" />
-    </beans>
 
-    <mule:model name="wsdl-model">
-      <!-- Calls directly to the service -->
-      <mule:service name="cocService">
-        <mule:inbound>
-          <cxf:inbound-endpoint
+  <model name="wsdl-model">
+    <service name="cocService">
+      <inbound>
+        <cxf:inbound-endpoint
             address="http://localhost:8081/services/cocService" 
-            wsdlLocation="../../workspace/workspace-mule/mule/resources/chapter7/provide-wsdl-top-down/CoC.wsdl"/>
-        </mule:inbound>
-        <mule:component>
-          <mule:spring-object
-            bean="ChamberOfCommerceServiceWebService" />
-        </mule:component>
-      </mule:service>
-    </mule:model>
-
-  </mule:mule>
-</beans>
+            wsdlLocation="CoC.wsdl"/>
+      </inbound>
+      <component>
+        <spring-object bean="ChamberOfCommerceServiceWebService" />
+      </component>
+    </service>
+  </model>
+</mule>

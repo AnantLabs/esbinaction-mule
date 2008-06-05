@@ -1,61 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule:mule xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
-  xsi:schemaLocation="
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
+    xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
 
-
-    <beans>
-      <bean name="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616"/>
-      </bean>
-    </beans>
-
-    <jms:activemq-connector name="test">
-      <property name="connectionFactory" ref="activeMQConnectionFactory"/>
-    </jms:activemq-connector>
-  
-  <mule:byte-array-to-string-transformer name="ObjectToString"/>
+  <jms:activemq-connector name="jmsConnectionFactory" brokerURL="tcp://localhost:61616" />
+      
+  <byte-array-to-string-transformer name="ObjectToString"/>
 
   <!--
     The Mule model initialises and manages your UMO components
   -->
-  <mule:model name="mule-example">
+  <model name="mule-example">
 
     <!--
       This component receives messages from a directory and 
       publishes the messages it receives on a JMS Queue.
     -->
-    <mule:service name="sample-service">      
-      <mule:inbound>
-        <mule:forwarding-catch-all-strategy>
-          <mule:outbound-endpoint address="jms://failure.queue" />
-        </mule:forwarding-catch-all-strategy>
-        <mule:inbound-endpoint address="jms://list.in" />
-      </mule:inbound>
-      
-      <mule:bridge-component/>
-      
-      <mule:outbound>
-        <mule:list-message-splitter-router>
-          <mule:outbound-endpoint address="jms://order.queue">
-            <mule:payload-type-filter expectedType="esb.chapter2.Order" />
-          </mule:outbound-endpoint>
-          <mule:outbound-endpoint address="jms://item.queue">
-            <mule:payload-type-filter expectedType="esb.chapter2.Item" />
-          </mule:outbound-endpoint>
-          <mule:outbound-endpoint address="jms://customer.queue">
-            <mule:payload-type-filter expectedType="esb.chapter2.Customer" />
-          </mule:outbound-endpoint>
-          <mule:payload-type-filter expectedType="java.util.List" />
-        </mule:list-message-splitter-router>
-      </mule:outbound>
-    </mule:service>
-
-  </mule:model>
-
-</mule:mule>
+    <service name="sample-service">      
+      <inbound>
+        <forwarding-catch-all-strategy>
+          <jms:outbound-endpoint queue="failure.queue" />
+        </forwarding-catch-all-strategy>
+        <jms:inbound-endpoint address="list.in" />
+      </inbound>
+      <outbound>
+        <list-message-splitter-router>
+          <jms:outbound-endpoint address="order.queue">
+            <payload-type-filter expectedType="esb.chapter2.Order" />
+          </jms:outbound-endpoint>
+          <jms:outbound-endpoint address="item.queue">
+            <payload-type-filter expectedType="esb.chapter2.Item" />
+          </jms:outbound-endpoint>
+          <jms:outbound-endpoint address="customer.queue">
+            <payload-type-filter expectedType="esb.chapter2.Customer" />
+          </jms:outbound-endpoint>
+          <payload-type-filter expectedType="java.util.List" />
+        </list-message-splitter-router>
+      </outbound>
+    </service>
+  </model>
+</mule>
