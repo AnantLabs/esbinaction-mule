@@ -12,12 +12,8 @@
 	xmlns:sm="urn:servicemix"
 	xmlns:cxf="antlib:org.apache.cxf.ant.extensions">
 
-	<!-- read in the system's environment -->
-	<property environment="env" />
-
 	<property name="script" value="../../scripts/ant" />
 
-	<!-- import the servicemix tasks into the sm namespace -->
 	<import file="${script}/mule-general.xml" />
 	<import file="${script}/osesb-general.xml" />
 
@@ -32,13 +28,22 @@
 
 	<target name="chapter7-top-down-provide" depends="gn:init"
 		description="Chapter 7 - top down">
+		<antcall target="gn:compile-classes">
+			<param name="classes-filter" value="esb/chapter7/**/*"/>
+		</antcall>
+		
+		<jar destfile="${mule.deploy}/chapter7-topdown.jar">
+			<fileset dir="${workspace.home}/mule/classes">
+				<include name="esb/chapter7/**/*"/>
+			</fileset>
+			<fileset dir="provide-wsdl-top-down">
+				<include name="wsdl-first.xml"/>
+				<include name="CoC.wsdl"/>
+			</fileset>
+		</jar>
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file"
-				value="${chapter.home}/provide-wsdl-top-down/wsdl-first.xml" />
-			<param name="target-jar" value="chapter7-topdown.jar" />
-			<param name="classes-filter" value="esb/chapter7/**/*" />
-			<param name="generated-classes-filter"
-				value="org/esb/opensource/coc/**/*" />
+			<param name="file" value="wsdl-first.xml" />
+			<param name="generated-classes-filter" value="org/esb/opensource/coc/**/*" />
 		</antcall>
 	</target>
 

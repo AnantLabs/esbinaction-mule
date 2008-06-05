@@ -64,6 +64,9 @@
 		<fileset dir="${lib.home}/jibx/lib">
 			<include name="*.jar" />
 		</fileset>
+        <fileset dir="${lib.home}/apache-cxf-2.0.5-incubator/lib">
+            <include name="*.jar" />
+        </fileset>
 		<fileset dir="${lib.home}/javamail">
 			<include name="*.jar" />
 		</fileset>		

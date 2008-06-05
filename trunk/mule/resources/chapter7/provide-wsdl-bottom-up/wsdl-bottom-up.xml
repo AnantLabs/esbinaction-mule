@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
-  xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
+    xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                       http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd">
-<mule:mule>
-     
-    <beans>
-      <bean name="ChamberOfCommerceServiceImpl" class="esb.chapter7.ChamberOfCommerceServiceImpl" init-method="init"/>
-    </beans>
+                         
+  <spring:bean name="ChamberOfCommerceServiceImpl" 
+        class="esb.chapter7.ChamberOfCommerceServiceImpl" 
+        init-method="init" />
   
-  <mule:model name="wsdl-bottom-up">
-    <!-- Calls directly to the service -->
-    <mule:service name="cocService">
-      <mule:inbound>
+  <model name="wsdl-bottom-up">
+    <service name="cocService">
+      <inbound>
         <cxf:inbound-endpoint address="http://localhost:8080/services/cocService"/>
-      </mule:inbound>
-      <mule:component>
-          <mule:spring-object bean="ChamberOfCommerceServiceImpl"/>
-      </mule:component>      
-    </mule:service>
-  </mule:model>
+      </inbound>
+      <component>
+        <spring-object bean="ChamberOfCommerceServiceImpl"/>
+      </component>      
+    </service>
+  </model>
 
-</mule:mule>
-</beans>
+</mule>
