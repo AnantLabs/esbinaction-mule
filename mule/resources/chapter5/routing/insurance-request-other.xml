@@ -1,5 +1,5 @@
 <insurance-request xmlns="http://insurance.com">
-	<insurance-type>Car</insurance-type>
+	<insurance-type>Other</insurance-type>
 	<name>John Doe</name>
 	<address>Church Street 299 Boston</address>
 	<telephone>940-203980983</telephone>
