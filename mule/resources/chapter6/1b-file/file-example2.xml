@@ -13,16 +13,16 @@
   <model name="file-model">
     <service name="file-reader-writer">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/1b/in"
+        <file:inbound-endpoint path="work-mule/chapter6/1b-file/in"
           pollingFrequency="3000" fileAge="10000"
-          moveToDirectory="work-mule/chapter6/1b/bak"
+          moveToDirectory="work-mule/chapter6/1b-file/bak"
           moveToPattern="${UUID}.bak" />
       </inbound>
       <outbound>
         <outbound-pass-through-router>
           <file:outbound-endpoint 
-            path="work-mule/chapter6/1b/out"
-            outputPattern="${COUNT}.dat" />
+            path="work-mule/chapter6/1b-file/out"
+            outputPattern="${DATE:yyyy-MM-dd}.dat" />
         </outbound-pass-through-router>
       </outbound>
     </service>
