@@ -9,23 +9,22 @@
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
   
-  <wildcard-filter name="fileFilter" pattern="*.txt"/>
-
+                                                      
   <file:connector name="fileConnector" autoDelete="true" />
 
   <model name="file-model">
     <service name="file-reader-writer">
       <inbound>
         <file:inbound-endpoint 
-            path="work-mule/chapter6/1a/in"
+            path="work-mule/chapter6/1a-file/in"
             pollingFrequency="3000">
-          <filter ref="fileFilter" />
+          <file:filename-wildcard-filter pattern="*.txt"/>
         </file:inbound-endpoint>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
           <file:outbound-endpoint 
-            path="work-mule/chapter6/1a/out"
+            path="work-mule/chapter6/1a-file/out"
             outputPattern="${DATE:HH-mm-ss.SSS}-${UUID}-${SYSTIME}-${COUNT}.dat" />
         </outbound-pass-through-router>
       </outbound>
