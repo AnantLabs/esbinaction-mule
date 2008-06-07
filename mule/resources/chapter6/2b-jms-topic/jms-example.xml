@@ -1,70 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
-  xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.0"
-  xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
-               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-               http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/jms/2.0 http://www.mulesource.org/schema/mule/jms/2.0/mule-jms.xsd">
 
   <!--  the JMS configuration, tell mule where we want to connect to for JMS -->
   <jms:activemq-connector name="jmsConnection"
-      brokerURL="tcp://localhost:61616" />
+      brokerURL="tcp://localhost:61616"
+      acknowledgementMode="DUPS_OK_ACKNOWLEDGE"
+      specification="1.1"
+      maxRedelivery="1" />   
 
-  <file:connector name="fileConnector" streaming="false" />
-
-  <model name="jms-model">
-    <service name="file-to-topic">
+  <jms:activemq-connector name="topicConnection"
+      brokerURL="tcp://localhost:61616"
+      durable="false" />
+      
+  <model name="TopicModel">
+    <service name="queue-to-topic">
       <inbound>
-        <file:inbound-endpoint
-            path="work-mule/chapter6/2b/in"
-            pollingFrequency="3000" />
+        <jms:inbound-endpoint queue="in.queue" connector-ref="jmsConnection"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <jms:outbound-endpoint topic="topic1" />
+          <jms:outbound-endpoint topic="topic1" connector-ref="topicConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
 
-    <service name="topic-to-file-1">
+    <service name="topic-to-queue1">
       <inbound>
-        <jms:inbound-endpoint topic="topic1" />
+        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <file:outbound-endpoint
-              path="work-mule/chapter6/2b/out-1" />
+          <jms:outbound-endpoint queue="out1.queue" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
-
-    <service name="topic-to-file-2">
+    
+    <service name="topic-to-queue2">
       <inbound>
-        <jms:inbound-endpoint topic="topic1" />
+        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <file:outbound-endpoint
-              path="work-mule/chapter6/2b/out-2" />
+          <jms:outbound-endpoint queue="out2.queue" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
-
-    <service name="topic-to-file-3">
+    
+    <service name="topic-to-queue3">
       <inbound>
-        <jms:inbound-endpoint topic="topic1" />
+        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <file:outbound-endpoint
-              path="work-mule/chapter6/2b/out-3" />
+          <jms:outbound-endpoint queue="out3.queue" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
   </model>
-
 </mule>
