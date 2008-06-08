@@ -20,7 +20,7 @@
   <model name="TopicModel">
     <service name="queue-to-topic">
       <inbound>
-        <jms:inbound-endpoint queue="in.queue" connector-ref="jmsConnection"/>
+        <jms:inbound-endpoint queue="2b-jms-topic.in.queue" connector-ref="jmsConnection"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
@@ -35,7 +35,7 @@
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <jms:outbound-endpoint queue="out1.queue" connector-ref="jmsConnection"/>
+          <jms:outbound-endpoint queue="2b-jms-topic.out1.queue" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
@@ -46,7 +46,7 @@
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <jms:outbound-endpoint queue="out2.queue" connector-ref="jmsConnection"/>
+          <jms:outbound-endpoint queue="2b-jms-topic.out2.queue" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
@@ -57,7 +57,7 @@
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <jms:outbound-endpoint queue="out3.queue" connector-ref="jmsConnection"/>
+          <jms:outbound-endpoint queue="2b-jms-topic.out3.queue" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
