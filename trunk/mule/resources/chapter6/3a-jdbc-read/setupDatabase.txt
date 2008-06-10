@@ -1,14 +1,14 @@
-drop table PUBLIC.testtable if exists;
-create table testtable (
+drop table PUBLIC.person if exists;
+create table person (
     id              IDENTITY,
-    name            varchar(256)      not null,
-    processed       boolean              not null
+    name            varchar(255)      not null,
+    processed       boolean           not null
   );
   
-insert into PUBLIC.testtable(id, name, processed) values (NULL, 'Jos', false);
-insert into PUBLIC.testtable(id, name, processed) values (NULL, 'Tijs', false);
-insert into PUBLIC.testtable(id, name, processed) values (NULL, 'Gijs', false);
-insert into PUBLIC.testtable(id, name, processed) values (NULL, 'Teun', false);
-insert into PUBLIC.testtable(id, name, processed) values (NULL, 'Siem', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'Jos', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'Tijs', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'Andy', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'Teun', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'Siem', false);
 
 commit;

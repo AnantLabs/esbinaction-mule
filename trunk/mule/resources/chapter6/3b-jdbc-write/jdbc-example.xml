@@ -3,7 +3,6 @@
   xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:jdbc="http://www.mulesource.org/schema/mule/jdbc/2.0"
-  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
@@ -12,19 +11,17 @@
                http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
 
 
-  <spring:bean name="datasource"
-      class="org.enhydra.jdbc.standard.StandardDataSource">
+  <file:connector name="fileConnector" streaming="false"/>
+
+  <spring:bean name="datasource" class="org.enhydra.jdbc.standard.StandardDataSource">
     <spring:property name="driverName" value="org.hsqldb.jdbcDriver" />
     <spring:property name="url" value="jdbc:hsqldb:hsql://localhost/xdb" />
     <spring:property name="user" value="sa" />
   </spring:bean>
   
-  <file:connector name="fileConnector" streaming="false"/>
-
-  <jdbc:connector name="hsqldb-connector" pollingFrequency="5000"
-    dataSource-ref="datasource">
+  <jdbc:connector name="hsqldb-connector" dataSource-ref="datasource">
     <jdbc:query key="write"
-      value="INSERT into testtable (id, name, processed) VALUES(NULL, ${payload}, false)" />
+      value="INSERT into person (id, name, processed) VALUES(NULL, ${payload}, false)" />
   </jdbc:connector>
 
   <file:file-to-string-transformer name="fileToString"/>
@@ -32,7 +29,7 @@
   <model name="jdbc-model">
     <service name="jdbc-writer">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/3b/in" pollingFrequency="3000">
+        <file:inbound-endpoint path="work-mule/chapter6/3b-jdbc-write/in" pollingFrequency="3000">
           <file:file-to-string-transformer/>
         </file:inbound-endpoint>
       </inbound>
