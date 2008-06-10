@@ -54,7 +54,7 @@ files.
 
 	<target name="chapter6-jdbc-read-3a-jdbc-setup-database" depends="init" description="setup the database">
 		<antcall target="ext:jdbc-setup-database">
-			<param name="sql-file" value="${chapter.home}/3b-jdbc-write/setupDatabase.txt" />
+			<param name="sql-file" value="${chapter.home}/3a-jdbc-read/setupDatabase.txt" />
 			<param name="rc-file" value="${chapter.home}/3a-jdbc-read/auth.rc" />
 			<param name="urlID" value="chapter6" />
 		</antcall>
@@ -84,14 +84,6 @@ files.
 	<target name="chapter6-jdbc-write-3b" depends="gn:init" description="Chapter 6 - JDBC Example 2">
 		<antcall target="gn:run-mule-with-xmlconfig">
 			<param name="file" value="${chapter.home}/3b-jdbc-write/jdbc-example.xml" />
-		</antcall>
-	</target>
-
-	<target name="chapter6-jdbc-write-3b-setup-database" depends="init" description="setup the database">
-		<antcall target="ext:jdbc-setup-database">
-			<param name="sql-file" value="${chapter.home}/3a-jdbc-read/setupDatabase.txt" />
-			<param name="rc-file" value="${chapter.home}/3a-jdbc-read/auth.rc" />
-			<param name="urlID" value="chapter6" />
 		</antcall>
 	</target>
 

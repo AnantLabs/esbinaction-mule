@@ -4,26 +4,21 @@
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:jdbc="http://www.mulesource.org/schema/mule/jdbc/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:simple="http://www.mulesource.org/schema/mule/simple/2.0"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/jdbc/2.0 http://www.mulesource.org/schema/mule/jdbc/2.0/mule-jdbc.xsd">
   
-  <spring:bean name="datasource"
-      class="org.enhydra.jdbc.standard.StandardDataSource">
+  <spring:bean name="datasource" class="org.enhydra.jdbc.standard.StandardDataSource">
     <spring:property name="driverName" value="org.hsqldb.jdbcDriver" />
     <spring:property name="url" value="jdbc:hsqldb:hsql://localhost/xdb" />
     <spring:property name="user" value="sa" />
   </spring:bean>
 
-  <jdbc:connector name="hsqldb-connector"
-    dataSource-ref="datasource">
-    <jdbc:query key="get"
-      value="SELECT * FROM testtable where processed = false" />
-    <jdbc:query key="get.ack"
-      value="UPDATE testtable SET processed = true WHERE id = ${jxpath:id}" />
+  <jdbc:connector name="hsqldb-connector" dataSource-ref="datasource">
+    <jdbc:query key="get" value="SELECT * FROM person where processed=false" />
+    <jdbc:query key="get.ack" value="UPDATE person SET processed=true WHERE id=${jxpath:id}" />
   </jdbc:connector>
 
   <model name="jdbc-model">
@@ -34,7 +29,7 @@
       <outbound>
         <outbound-pass-through-router>
           <file:outbound-endpoint
-              path="work-mule/chapter6/3a/out"
+              path="work-mule/chapter6/3a-jdbc-read/out"
               outputPattern="${UUID}-${SYSTIME}-${COUNT}.dat" />
         </outbound-pass-through-router>
       </outbound>
