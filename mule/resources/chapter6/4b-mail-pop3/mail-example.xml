@@ -13,13 +13,13 @@
   <pop3:connector name="pop3Connector" checkFrequency="5000" deleteReadMessages="false"/>
 
   <model name="mail-model">
-    <service name="mail-sender">
+    <service name="mail-to-file">
       <inbound>
-        <pop3:inbound-endpoint host="localhost" user="tijs" password="tijs" port="10110" />
+        <pop3:inbound-endpoint host="localhost" user="mule" password="mule" port="110" />
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <file:outbound-endpoint path="work-mule/chapter6/4b/out"/>
+          <file:outbound-endpoint path="work-mule/chapter6/4b-mail-pop3/out"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
