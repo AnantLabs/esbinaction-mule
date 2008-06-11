@@ -13,16 +13,16 @@ the various services and tools that are used in the examples.
 
 	<!--
 	  Starts mailserver with the following settings:
-	  	- Pop server running on: 10110
-	  	- SMTP server running on: 10025
+	  	- Pop server running on: 110
+	  	- SMTP server running on: 25
 	-->
 	<target name="ext:start-james" description="start the james mail server with default settings">
 		<property name="james.home" value="${tools.home}/james-2.3.1"/>
 		<java jar="${james.home}/bin/phoenix-loader.jar" fork="true">
 			<jvmarg value="-Djava.io.tmpdir=${james.home}/temp"/>
-			<jvmarg value="-Djava.ext.dirs=${james.home}/lib:${james.home}/tools/lib"/>
+			<jvmarg value="-Djava.ext.dirs=${james.home}/lib;${james.home}/tools/lib"/>
 			<jvmarg value="-Dphoenix.home=${james.home}"/>
-			<jvmarg value="-Dnetworkaddress.cache.ttl=300"/>			
+			<jvmarg value="-Dnetworkaddress.cache.ttl=300"/>		
 		</java>
 	</target>
 	
