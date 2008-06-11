@@ -13,20 +13,24 @@
   <model name="mail-model">
     <service name="file-to-mail">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/4a/in">
+        <file:inbound-endpoint path="work-mule/chapter6/4a-mail-smtp/in">
           <file:file-to-string-transformer/>
         </file:inbound-endpoint>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <smtp:outbound-endpoint to="tijs@localhost"
-            cc="jos@localhost" from="mule@localhost"
-            replyTo="piet@localhost"
-            subject="You've got mail from Mule!" host="localhost"
-            port="10025" user="jos" password="jos" />
+          <smtp:outbound-endpoint
+            to="johndoe@localhost"
+            cc="info@localhost"
+            from="mule@localhost"
+            replyTo="sales@localhost"
+            subject="You've got mail from Mule!"
+            host="localhost"
+            port="25"
+            user="mule"
+            password="mule" />   
         </outbound-pass-through-router>
       </outbound>
     </service>
   </model>
-  
 </mule>
