@@ -114,7 +114,7 @@ files.
 	<target name="chapter6-ejb" depends="gn:init" description="Chapter 6 - connect to an ejb">
 		
 		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/6a-ejb/ejb-example.xml" />
+			<param name="file" value="${chapter.home}/6-ejb/ejb-example.xml" />
 			<param name="classes-filter" value="esb/chapter6/**/*"/>
 			<param name="target-jar" value="mule-chapter6.jar"/>
 		</antcall>
@@ -137,14 +137,14 @@ files.
 		
 		<antcall target="ext:openejb-deploy">
 			<param name="include-classes" value="esb/chapter6/ejb/**.*" />
-			<param name="ejb-dest-file" value="6a-ejb.jar" />
+			<param name="ejb-dest-file" value="6-ejb.jar" />
 			<param name="classes-dir" value="${workspace.home}/mule/classes" />
 		</antcall>
 	</target>
 
 	<target name="chapter6-ejb-undeploy-ejb" description="undeploy the ejb example">
 		<antcall target="ext:openejb-undeploy">
-			<param name="ejbID" value="6a-ejb.jar" />
+			<param name="ejbID" value="6-ejb.jar" />
 		</antcall>
 	</target>
 
