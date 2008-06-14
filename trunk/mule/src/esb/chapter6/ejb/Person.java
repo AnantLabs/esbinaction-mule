@@ -7,8 +7,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 public class Person implements Serializable  {
 
-    String firstName;
-    String lastName;
+	private static final long serialVersionUID = 1L;
+	
+	private String firstName;
+    private String lastName;
     
     public Person(String firstName, String lastName) {
         this.firstName = firstName;

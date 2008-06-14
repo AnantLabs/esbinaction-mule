@@ -20,7 +20,7 @@ public class QueryTransformer extends AbstractTransformer {
         
         if (!(splitContent.length == 2)) {
             throw new TransformerException(MessageFactory.createStaticMessage(
-                    "Expected two values found: " + splitContent.length));
+                    "Expected two values, found: " + splitContent.length));
         }
         
         return new SearchQuery(splitContent[0],splitContent[1]);
