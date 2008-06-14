@@ -13,25 +13,24 @@
   <ejb:connector name="open-ejb"
     jndiInitialFactory="org.openejb.client.RemoteInitialContextFactory"
     jndiProviderUrl="ejbd://localhost:4201"
-    securityPolicy="../../workspace/workspace-mule/mule/resources/chapter6/6a-ejb/wideopen.policy" />
+    securityPolicy="../../workspace/workspace-mule/mule/resources/chapter6/6-ejb/wideopen.policy" />
 
-  <file:file-to-string-transformer name="fileToString" />
-  <custom-transformer name="StringToQuery" class="esb.chapter6.QueryTransformer" />
-
-  <model name="file-model">
-    <service name="file-reader-writer">
+  <model name="ejb-model">
+    <service name="ejb-reader-writer">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/6a/in">
-          <transformer ref="fileToString" />
-          <transformer ref="StringToQuery" />
+        <file:inbound-endpoint path="work-mule/chapter6/6-ejb/in">
+          <file:file-to-string-transformer />
+          <custom-transformer class="esb.chapter6.QueryTransformer" />
         </file:inbound-endpoint>
       </inbound>
       <outbound>
         <chaining-router>
-          <ejb:outbound-endpoint host="localhost" port="4201"
+          <ejb:outbound-endpoint 
+          	host="localhost" 
+          	port="4201"
             method="searchPersons"
-            object="PersonServiceImplRemoteHome" />
-          <file:outbound-endpoint path="work-mule/chapter6/6a/out" />
+            object="PersonServiceImplRemote" />
+          <file:outbound-endpoint path="work-mule/chapter6/6-ejb/out" />
         </chaining-router>
       </outbound>
     </service>
