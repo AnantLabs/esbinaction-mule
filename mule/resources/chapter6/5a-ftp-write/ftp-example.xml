@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xxmlns="http://www.mulesource.org/schema/mule/core/2.0"
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
   xmlns:spring="http://www.springframework.org/schema/beans"
   xmlns:file="http://www.mulesource.org/schema/mule/file/2.0"
   xmlns:ftp="http://www.mulesource.org/schema/mule/ftp/2.0"
@@ -12,10 +12,10 @@
 
   <ftp:connector name="ftpConnector" validateConnections="true" />
 
-  <model name="file-model">
+  <model name="ftp-model">
     <service name="file-reader-ftp-writer">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/5a/in" />
+        <file:inbound-endpoint path="work-mule/chapter6/5a-ftp-write/in" />
       </inbound>
       <outbound>
         <outbound-pass-through-router>
@@ -26,7 +26,7 @@
             port="2121"
             outputPattern="Copy-Of-${ORIGINALNAME}-${SYSTIME}.dat"
             passive="false" 
-            path="data"/>
+            path="/" />
         </outbound-pass-through-router>
       </outbound>
     </service>

@@ -99,18 +99,18 @@ files.
 		</antcall>
 	</target>
 
-	<target name="chapter6-ftp-read-5b" depends="gn:init" description="Chapter 6 - ftp read">
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="${chapter.home}/5b-ftp-read/ftp-example.xml" />
-		</antcall>
-	</target>
-
 	<target name="chapter6-ftp-write-5a" depends="gn:init" description="Chapter 6 - ftp write">
 		<antcall target="gn:run-mule-with-xmlconfig">
 			<param name="file" value="${chapter.home}/5a-ftp-write/ftp-example.xml" />
 		</antcall>
 	</target>
 
+	<target name="chapter6-ftp-read-5b" depends="gn:init" description="Chapter 6 - ftp read">
+		<antcall target="gn:run-mule-with-xmlconfig">
+			<param name="file" value="${chapter.home}/5b-ftp-read/ftp-example.xml" />
+		</antcall>
+	</target>
+	
 	<target name="chapter6-ejb" depends="gn:init" description="Chapter 6 - connect to an ejb">
 		
 		<antcall target="gn:run-mule-with-xmlconfig">
