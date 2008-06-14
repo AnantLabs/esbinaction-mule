@@ -22,7 +22,7 @@ public class QueryTransformer extends AbstractTransformer {
             throw new TransformerException(MessageFactory.createStaticMessage(
                     "Expected two values, found: " + splitContent.length));
         }
-        
+        System.out.println("creating SearchQuery with " + splitContent);
         return new SearchQuery(splitContent[0],splitContent[1]);
     }
 }

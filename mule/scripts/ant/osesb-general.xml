@@ -38,7 +38,7 @@ the various services and tools that are used in the examples.
 	<target name="ext:openejb-deploy">
 	
 	 	<delete file="${openejb.home}/apps/${ejb-dest-file}"/>
-	
+		<mkdir dir="${work}"/>
 		<jar destfile="${work}/${ejb-dest-file}">
 			<fileset dir="${classes-dir}">
 				<include name="${include-classes}"/>

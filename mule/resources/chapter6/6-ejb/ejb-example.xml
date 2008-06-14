@@ -10,15 +10,17 @@
                http://www.mulesource.org/schema/mule/ejb/2.0 http://www.mulesource.org/schema/mule/ejb/2.0/mule-ejb.xsd
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
-  <ejb:connector name="open-ejb"
-    jndiInitialFactory="org.openejb.client.RemoteInitialContextFactory"
-    jndiProviderUrl="ejbd://localhost:4201"
-    securityPolicy="../../workspace/workspace-mule/mule/resources/chapter6/6-ejb/wideopen.policy" />
+  <ejb:connector name="ejbConnector"
+        jndiInitialFactory="org.apache.openejb.client.RemoteInitialContextFactory"
+        jndiProviderUrl="ejbd://localhost:4201"
+        securityPolicy="wideopen.policy" />
 
   <model name="ejb-model">
     <service name="ejb-reader-writer">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/6-ejb/in">
+        <file:inbound-endpoint path="work-mule/chapter6/6-ejb/in" 
+            pollingFrequency="3000" 
+            moveToDirectory="work-mule/backlog">
           <file:file-to-string-transformer />
           <custom-transformer class="esb.chapter6.QueryTransformer" />
         </file:inbound-endpoint>
@@ -29,7 +31,7 @@
           	host="localhost" 
           	port="4201"
             method="searchPersons"
-            object="PersonServiceImplRemote" />
+            object="PersonServiceImplRemoteHome" />
           <file:outbound-endpoint path="work-mule/chapter6/6-ejb/out" />
         </chaining-router>
       </outbound>
