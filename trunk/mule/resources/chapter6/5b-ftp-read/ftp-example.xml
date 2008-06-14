@@ -17,11 +17,11 @@
       <inbound>
         <ftp:inbound-endpoint user="bob" password="123password"
           host="localhost" port="2121" pollingFrequency="10000"
-          passive="false" path="data" />
+          passive="false" path="/" />
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <file:outbound-endpoint path="work-mule/chapter6/5b/out" />
+          <file:outbound-endpoint path="work-mule/chapter6/5b-ftp-read/out" />
         </outbound-pass-through-router>
       </outbound>
     </service>
