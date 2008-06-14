@@ -4,11 +4,6 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
-/**
- * Remote interface
- * 
- * @author nl24167
- */
 @Remote
 public interface PersonService {
     

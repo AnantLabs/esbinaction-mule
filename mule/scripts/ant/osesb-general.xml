@@ -27,9 +27,9 @@ the various services and tools that are used in the examples.
 	</target>
 	
 	<target name="ext:start-openejb" description="start the open-ejb ejb container">
-		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-2/"/>
-		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-2.jar">
-			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-2.jar"/>
+		<property name="openejb.home" value="${tools.home}/openejb-3.0/"/>
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0.jar">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0.jar"/>
 			<arg value="start"/>
 		</java>
 	</target>
@@ -45,9 +45,9 @@ the various services and tools that are used in the examples.
 			</fileset>
 		</jar>
 		
-		<property name="openejb.home" value="${tools.home}/openejb-3.0-beta-2/"/>
-		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0-beta-2.jar">
-			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0-beta-2.jar"/>
+		<property name="openejb.home" value="${tools.home}/openejb-3.0/"/>
+		<java fork="true" jar="${openejb.home}/lib/openejb-core-3.0.jar">
+			<jvmarg value="-javaagent:${openejb.home}/lib/openejb-javaagent-3.0.jar"/>
 			<arg value="deploy"/>
 			<arg value="${work}/${ejb-dest-file}"/>					
 		</java>		
