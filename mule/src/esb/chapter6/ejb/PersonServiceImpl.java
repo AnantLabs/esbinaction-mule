@@ -26,8 +26,6 @@ public class PersonServiceImpl implements PersonService {
         
         ArrayList<Person> result = new ArrayList<Person>();
         
-        String searchFirst = query.getFirstName();
-        String searchLast = query.getLastName();
         for (Person person : personList) {
                result.add(person);
         }
