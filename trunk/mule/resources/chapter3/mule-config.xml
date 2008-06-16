@@ -16,16 +16,16 @@
 		<spring:import resource="components.xml"/>
 	</spring:beans>
 
-	<jms:activemq-connector name="example" brokerURL="tcp://localhost:61616"/>
+	<jms:activemq-connector name="jmsConnector" brokerURL="tcp://localhost:61616"/>
 
 	<!--  the transformers used in this example -->
-	<custom-transformer class="esb.chapter3.ObjectToXMLTransformer" name="ObjectToXML" />
+	<custom-transformer class="esb.chapter3.ObjectToXMLTransformer" name="PersonToXML" />
 	
-    <custom-transformer class="esb.chapter3.XMLToObjectTransformer" name="XMLPersonToObject">
+    <custom-transformer class="esb.chapter3.XMLToObjectTransformer" name="XMLToPerson">
 		<spring:property name="targetClassName" value="esb.chapter3.Person" />
 	</custom-transformer>
 
-	<byte-array-to-string-transformer name="ObjectToString" />
+	<byte-array-to-string-transformer name="BytesToString" />
 
 	<model name="muleExample">
 
@@ -46,11 +46,11 @@
 			This component receives messages from a directory and 
 			publishes the messages it receives on a JMS Queue.
 		-->
-		<service name="JMSBridge">
+		<service name="FileInboxService">
 			<inbound>
-				<file:inbound-endpoint path="work-mule/chapter3/inbox">
-					<transformer ref="ObjectToString"/>
-                    <transformer ref="XMLPersonToObject"/>
+				<file:inbound-endpoint path="chapter3/inbox">
+					<transformer ref="BytesToString"/>
+                    <transformer ref="XMLToPerson"/>
                 </file:inbound-endpoint>
 			</inbound>
 			<outbound>
@@ -64,7 +64,7 @@
 			This component receives the messages from the queue, logs them and sends them
 			to a topic.
 		-->
-		<service name="Logger">
+		<service name="LoggerService">
 			<inbound>
 				<jms:inbound-endpoint queue="log.queue" />
 			</inbound>
@@ -81,27 +81,27 @@
 		<!-- 
 			This is the first component that listens to a topic
 		-->
-		<service name="topicListener1">
+		<service name="FileOutboxService1">
 			<inbound>
 				<jms:inbound-endpoint topic="listener" />
 			</inbound>
 			<outbound>
 				<outbound-pass-through-router>
-					<file:outbound-endpoint path="work-mule/chapter3/outbox-1">
-						<transformer ref="ObjectToXML" />
+					<file:outbound-endpoint path="chapter3/outbox-1">
+						<transformer ref="PersonToXML" />
                     </file:outbound-endpoint>
 				</outbound-pass-through-router>
 			</outbound>
 		</service>
 
 		<!--  and the second component that listens to the topic -->
-		<service name="topicListener2">
+		<service name="FileOutboxService2">
 			<inbound>
 				<jms:inbound-endpoint topic="listener" />
 			</inbound>
 			<outbound>
 				<outbound-pass-through-router>
-					<file:outbound-endpoint path="work-mule/chapter3/outbox-2" />
+					<file:outbound-endpoint path="chapter3/outbox-2" />
 				</outbound-pass-through-router>
 			</outbound>
 		</service>
