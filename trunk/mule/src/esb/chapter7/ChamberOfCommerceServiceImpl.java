@@ -1,6 +1,5 @@
 package esb.chapter7;
 
-import java.util.Hashtable;
 import java.util.List;
 
 import javax.jws.WebMethod;
