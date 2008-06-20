@@ -14,7 +14,7 @@
   <model name="wsdl-bottom-up">
     <service name="cocService">
       <inbound>
-        <cxf:inbound-endpoint address="http://localhost:8081/services/coc"/>
+        <cxf:inbound-endpoint address="http://localhost:8080/services/coc"/>
       </inbound>
       <component>
         <spring-object bean="ChamberOfCommerceServiceImpl"/>
