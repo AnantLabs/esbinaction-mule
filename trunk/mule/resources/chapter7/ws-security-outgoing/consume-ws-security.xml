@@ -13,7 +13,7 @@
     <spring:property name="configurationLocation" value="esb/chapter7/wss-cxf-config-client.xml" />
   </cxf:connector>
   
-  <cxf:connector name="cxfConnector">
+  <cxf:connector name="serverCxfConnector">
     <spring:property name="configurationLocation" value="esb/chapter7/wss-cxf-config.xml" />
   </cxf:connector>
     
@@ -30,16 +30,12 @@
       </inbound>
       <outbound>
         <chaining-router>
-          <outbound-endpoint
-              address="wsdl-cxf:http://localhost:8081/services/CoCservice?wsdl&amp;method=getCompany"
-              connector-ref="clientCxfConnector">
-            <properties>
-              <spring:entry key="service" 
-                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplService" />
-              <spring:entry key="port" 
-                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort" />
-            </properties>
-          </outbound-endpoint>               
+          <cxf:outbound-endpoint
+            connector-ref="clientCxfConnector"
+            address="http://localhost:8080/services/coc"
+            wsdlLocation="http://localhost:8080/services/coc?wsdl"
+            wsdlPort="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort"
+            operation="getCompany" />
           <file:outbound-endpoint path="work-mule/chapter7/consume-wss/out">
             <custom-transformer class="esb.chapter7.SimpleTransfomer" />
           </file:outbound-endpoint>
@@ -49,8 +45,8 @@
 
     <service name="cocService">
       <inbound>
-        <cxf:inbound-endpoint address="http://localhost:8081/services/" 
-            connector-ref="cxfConnector"/>
+        <cxf:inbound-endpoint address="http://localhost:8080/services/coc" 
+            connector-ref="serverCxfConnector"/>
       </inbound>
       <component>
         <spring-object bean="ChamberOfCommerceServiceImpl"/>
