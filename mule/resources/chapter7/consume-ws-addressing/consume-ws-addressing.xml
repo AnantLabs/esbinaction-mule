@@ -18,7 +18,7 @@
 		<!-- Calls directly to the service -->
 		<service name="cocService">
 			<inbound>
-				<cxf:inbound-endpoint address="http://localhost:8081/services/cocService">
+				<cxf:inbound-endpoint address="http://localhost:8080/services/coc">
 					<custom-transformer
 						class="esb.chapter7.WSAddressingTransformer" />				
 				</cxf:inbound-endpoint>
