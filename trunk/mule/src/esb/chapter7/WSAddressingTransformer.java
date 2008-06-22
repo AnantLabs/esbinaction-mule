@@ -38,7 +38,6 @@ public class WSAddressingTransformer extends AbstractMessageAwareTransformer{
     		// first get all the data, and copy it to a bytearray
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
             System.out.println(message.getPayload());
-            Object obj = message.getPayload();
             try {
                 IOUtils.copyLarge((InputStream) message.getPayload(), bOut);
             } catch (IOException e) {
@@ -48,14 +47,14 @@ public class WSAddressingTransformer extends AbstractMessageAwareTransformer{
             // create a new message that we can parse based on the bytes
             MessageImpl m = new MessageImpl();
             m.setContent(InputStream.class, new ByteArrayInputStream(bOut.toByteArray()));
-            SoapMessage soapMEssage = new SoapMessage(m);
+            SoapMessage soapMessage = new SoapMessage(m);
             
             // use the readheaders interceptor from CXF to parse all the headers
             ReadHeadersInterceptor interceptor = new ReadHeadersInterceptor(BusFactory.getDefaultBus());
-            interceptor.handleMessage(soapMEssage);
+            interceptor.handleMessage(soapMessage);
             
             // just check whether the namespace ends with addressing, if so add the header to our mulemessage
-            List<Header> headers = soapMEssage.getHeaders();
+            List<Header> headers = soapMessage.getHeaders();
             for (Header header : headers) {
                 String namespace = header.getName().getNamespaceURI();
                 if (namespace.endsWith("addressing")) {
