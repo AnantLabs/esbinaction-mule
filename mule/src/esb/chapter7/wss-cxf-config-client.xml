@@ -1,11 +1,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:c="http://cxf.apache.org/core"
-  xmlns:jaxws="http://cxf.apache.org/jaxws"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
-http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
   <!-- <jaxws:client name="{http://opensource.esb.org/CoC/}CocServiceImplPort" createdFromAPI="true"> -->
@@ -24,7 +20,7 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
         <entry key="user" value="clientkey" /> 
         <!-- The encryptionUser points to the alias/public key used for encryption -->
         <entry key="encryptionUser" value="serverkey" />
-        <!-- The property file uses for de/encryption -->
+        <!-- The property file used for de/encryption -->
         <entry key="decryptionPropFile" value="esb/chapter7/client.crypto.properties" />
         <!--  The property file used for signing/validation -->
         <entry key="signaturePropFile" value="esb/chapter7/client.crypto.properties" />
