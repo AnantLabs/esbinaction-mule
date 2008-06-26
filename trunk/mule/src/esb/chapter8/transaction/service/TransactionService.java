@@ -1,7 +1,5 @@
 package esb.chapter8.transaction.service;
 
-import javax.jms.JMSException;
-
 import org.mule.RequestContext;
 import org.mule.api.MuleEventContext;
 import org.mule.api.transaction.Transaction;
@@ -20,7 +18,7 @@ public class TransactionService {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		throw new JMSException("The transaction has failed");
+		throw new Exception("The transaction has failed");
 	}
 
 }
