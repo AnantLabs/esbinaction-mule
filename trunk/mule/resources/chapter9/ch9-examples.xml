@@ -20,6 +20,9 @@ the second chapter.
 			<fileset dir="${workspace.home}/mule/classes">
 				<include name="esb/chapter9/**/*"/>
 			</fileset>
+			<fileset dir="${workspace.home}/mule/src">
+				<include name="esb/chapter9/**/*.xml"/>
+			</fileset>
 			<fileset dir="mule">
 				<include name="restaurant-config.xml"/>
 			</fileset>
