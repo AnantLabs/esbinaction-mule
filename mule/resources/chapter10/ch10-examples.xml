@@ -42,7 +42,7 @@ the tenth chapter.
 			<param name="classes-filter" value="esb/chapter10/**/*" />
 		</antcall>
 
-		<jar destfile="${mule.deploy}/chapter9-restaurant.jar">
+		<jar destfile="${mule.deploy}/chapter10-restaurant.jar">
 			<fileset dir="${workspace.home}/mule/classes">
 				<include name="esb/chapter9/**/*" />
 				<include name="esb/chapter10/**/*" />
