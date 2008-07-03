@@ -6,7 +6,7 @@ import org.mule.api.routing.filter.Filter;
 
 public class DetourFilter implements Filter {
 
-    private static boolean enabled = false;
+    private static boolean enabled = true;
     
     public static boolean getEnabled() {
         return enabled;
