@@ -15,7 +15,7 @@ public class DivingResponseHandler implements ActionHandler {
 	private static final Log log = LogFactory.getLog(DivingResponseHandler.class);
 
 	public void execute(ExecutionContext execContext) throws Exception {
-		log.error("DivingResponseHandler!!!!!!!!!!!!!!!!!!!!!!!");
+		log.info("DivingResponseHandler in action.");
 		DivingBooking divingBooking = (DivingBooking) JiBXUtil.unmarshall(
 			(String) execContext.getContextInstance().getVariable("divingResponse"), DivingBooking.class);
 		ScubaDivingBooking booking = new ScubaDivingBooking();
