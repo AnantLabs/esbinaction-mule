@@ -15,7 +15,7 @@ public class DivingAgencyHandler implements ActionHandler {
 	private static final Log log = LogFactory.getLog(DivingAgencyHandler.class);
 
 	public void execute(ExecutionContext execContext) throws Exception {
-		log.error("DivingAgencyHandler!!!!!!!!!!!!!!!!!!!!!!!");
+		log.info("DivingAgencyHandler in action.");
 		ScubaDivingRequest bookingRequest = (ScubaDivingRequest) 
 			execContext.getContextInstance().getVariable("booking");
 		DivingRequest divingRequest = new DivingRequest();
