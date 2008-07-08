@@ -13,12 +13,9 @@ import javax.ejb.Stateless;
 public class PersonServiceImpl implements PersonService {
 
     private static List<Person> personList = new ArrayList<Person>();
-    
     {
-        personList.add(new Person("Jos","Dirksen"));
-        personList.add(new Person("Tijs","Rademakers"));
-        personList.add(new Person("Jos","de Vries"));
-        personList.add(new Person("Gijs","van Dongen"));
+        personList.add(new Person("John","Doe"));
+        personList.add(new Person("Jan","Janssen"));
     }
     
     

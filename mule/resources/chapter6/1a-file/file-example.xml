@@ -7,8 +7,6 @@
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
-
-  
                                                       
   <file:connector name="fileConnector" autoDelete="true" />
 
@@ -16,7 +14,7 @@
     <service name="file-reader-writer">
       <inbound>
         <file:inbound-endpoint 
-            path="work-mule/chapter6/1a-file/in"
+            path="chapter6/1a-file/in"
             pollingFrequency="3000">
           <file:filename-wildcard-filter pattern="*.txt"/>
         </file:inbound-endpoint>
@@ -24,8 +22,8 @@
       <outbound>
         <outbound-pass-through-router>
           <file:outbound-endpoint 
-            path="work-mule/chapter6/1a-file/out"
-            outputPattern="${DATE:HH-mm-ss.SSS}-${UUID}-${SYSTIME}-${COUNT}.dat" />
+            path="chapter6/1a-file/out"
+            outputPattern="${DATE:HH-mm-ss.SSS}-${COUNT}.dat" />
         </outbound-pass-through-router>
       </outbound>
     </service>

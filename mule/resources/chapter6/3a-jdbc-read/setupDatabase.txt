@@ -5,10 +5,10 @@ create table person (
     processed       boolean           not null
   );
   
-insert into PUBLIC.person(id, name, processed) values (NULL, 'Jos', false);
-insert into PUBLIC.person(id, name, processed) values (NULL, 'Tijs', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'John', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'Ross', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'Guillaume', false);
+insert into PUBLIC.person(id, name, processed) values (NULL, 'Bruce', false);
 insert into PUBLIC.person(id, name, processed) values (NULL, 'Andy', false);
-insert into PUBLIC.person(id, name, processed) values (NULL, 'Teun', false);
-insert into PUBLIC.person(id, name, processed) values (NULL, 'Siem', false);
 
 commit;

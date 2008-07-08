@@ -10,12 +10,14 @@
                http://www.mulesource.org/schema/mule/ftp/2.0 http://www.mulesource.org/schema/mule/ftp/2.0/mule-ftp.xsd
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
+  <file:connector name="fileConnector" streaming="false" />
+
   <ftp:connector name="ftpConnector" validateConnections="true" />
 
   <model name="ftp-model">
     <service name="file-reader-ftp-writer">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/5a-ftp-write/in" />
+        <file:inbound-endpoint path="chapter6/5a-ftp-write/in" />
       </inbound>
       <outbound>
         <outbound-pass-through-router>
@@ -24,7 +26,7 @@
             password="123password"
             host="localhost" 
             port="2121"
-            outputPattern="Copy-Of-${ORIGINALNAME}-${SYSTIME}.dat"
+            outputPattern="${ORIGINALNAME}-${SYSTIME}.dat"
             passive="false" 
             path="/" />
         </outbound-pass-through-router>
