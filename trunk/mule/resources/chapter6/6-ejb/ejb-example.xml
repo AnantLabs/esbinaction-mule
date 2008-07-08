@@ -10,6 +10,8 @@
                http://www.mulesource.org/schema/mule/ejb/2.0 http://www.mulesource.org/schema/mule/ejb/2.0/mule-ejb.xsd
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd">
 
+  <file:connector name="fileConnector" streaming="false" />
+
   <ejb:connector name="ejbConnector"
         jndiInitialFactory="org.apache.openejb.client.RemoteInitialContextFactory"
         jndiProviderUrl="ejbd://localhost:4201"
@@ -18,9 +20,9 @@
   <model name="ejb-model">
     <service name="ejb-reader-writer">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/6-ejb/in" 
+        <file:inbound-endpoint path="chapter6/6-ejb/in" 
             pollingFrequency="3000" 
-            moveToDirectory="work-mule/backlog">
+            moveToDirectory="chapter6/backlog">
           <file:file-to-string-transformer />
           <custom-transformer class="esb.chapter6.QueryTransformer" />
         </file:inbound-endpoint>
@@ -32,7 +34,7 @@
           	port="4201"
             method="searchPersons"
             object="PersonServiceImplRemoteHome" />
-          <file:outbound-endpoint path="work-mule/chapter6/6-ejb/out" />
+          <file:outbound-endpoint path="chapter6/6-ejb/out" />
         </chaining-router>
       </outbound>
     </service>

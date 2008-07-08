@@ -24,12 +24,10 @@
       value="INSERT into person (id, name, processed) VALUES(NULL, ${payload}, false)" />
   </jdbc:connector>
 
-  <file:file-to-string-transformer name="fileToString"/>
-
   <model name="jdbc-model">
     <service name="jdbc-writer">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/3b-jdbc-write/in" pollingFrequency="3000">
+        <file:inbound-endpoint path="chapter6/3b-jdbc-write/in" pollingFrequency="3000">
           <file:file-to-string-transformer/>
         </file:inbound-endpoint>
       </inbound>

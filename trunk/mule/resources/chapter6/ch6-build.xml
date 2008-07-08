@@ -52,7 +52,7 @@ files.
 		</antcall>
 	</target>
 
-	<target name="chapter6-jdbc-read-3a-jdbc-setup-database" depends="init" description="setup the database">
+	<target name="chapter6-jdbc-setup-database" depends="init" description="setup the database">
 		<antcall target="ext:jdbc-setup-database">
 			<param name="sql-file" value="${chapter.home}/3a-jdbc-read/setupDatabase.txt" />
 			<param name="rc-file" value="${chapter.home}/3a-jdbc-read/auth.rc" />

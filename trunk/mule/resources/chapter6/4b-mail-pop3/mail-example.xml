@@ -10,7 +10,7 @@
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/pop3/2.0 http://www.mulesource.org/schema/mule/pop3/2.0/mule-pop3.xsd"> 
 
-  <pop3:connector name="pop3Connector" checkFrequency="5000" deleteReadMessages="false"/>
+  <pop3:connector name="pop3Connector" checkFrequency="5000" deleteReadMessages="true"/>
 
   <model name="mail-model">
     <service name="mail-to-file">
@@ -19,7 +19,7 @@
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <file:outbound-endpoint path="work-mule/chapter6/4b-mail-pop3/out"/>
+          <file:outbound-endpoint path="chapter6/4b-mail-pop3/out"/>
         </outbound-pass-through-router>
       </outbound>
     </service>

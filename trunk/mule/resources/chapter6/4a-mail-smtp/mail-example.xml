@@ -10,20 +10,22 @@
                http://www.mulesource.org/schema/mule/file/2.0 http://www.mulesource.org/schema/mule/file/2.0/mule-file.xsd
                http://www.mulesource.org/schema/mule/smtp/2.0 http://www.mulesource.org/schema/mule/smtp/2.0/mule-smtp.xsd">
 
+  <file:connector name="fileConnector" streaming="false" />
+
   <model name="mail-model">
     <service name="file-to-mail">
       <inbound>
-        <file:inbound-endpoint path="work-mule/chapter6/4a-mail-smtp/in">
+        <file:inbound-endpoint path="chapter6/4a-mail-smtp/in">
           <file:file-to-string-transformer/>
         </file:inbound-endpoint>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
           <smtp:outbound-endpoint
-            to="johndoe@localhost"
-            cc="info@localhost"
-            from="mule@localhost"
-            replyTo="sales@localhost"
+            to="mule@localhost"
+            cc="authors@localhost"
+            from="authors@localhost"
+            replyTo="authors@localhost"
             subject="You've got mail from Mule!"
             host="localhost"
             port="25"

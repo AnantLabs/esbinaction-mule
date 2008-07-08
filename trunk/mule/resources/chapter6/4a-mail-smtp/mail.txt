@@ -1,0 +1,7 @@
+Hello,
+
+This is a nice e-mail from Mule.
+
+Best regards,
+
+Mule

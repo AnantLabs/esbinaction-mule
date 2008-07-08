@@ -14,13 +14,27 @@
       maxRedelivery="1" />   
 
   <jms:activemq-connector name="topicConnection"
+      brokerURL="tcp://localhost:61616"/>
+
+  <jms:activemq-connector name="topicConnection1"
       brokerURL="tcp://localhost:61616"
-      durable="false" />
+      clientId="client1"
+      durable="true" />
+  
+  <jms:activemq-connector name="topicConnection2"
+      brokerURL="tcp://localhost:61616"
+      clientId="client2"
+      durable="true" />
+  
+  <jms:activemq-connector name="topicConnection3"
+      brokerURL="tcp://localhost:61616"
+      clientId="client3"
+      durable="true" />
       
   <model name="TopicModel">
     <service name="queue-to-topic">
       <inbound>
-        <jms:inbound-endpoint queue="2b-jms-topic.in.queue" connector-ref="jmsConnection"/>
+        <jms:inbound-endpoint queue="topic.in.queue" connector-ref="jmsConnection"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
@@ -31,33 +45,33 @@
 
     <service name="topic-to-queue1">
       <inbound>
-        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection"/>
+        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection1"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <jms:outbound-endpoint queue="2b-jms-topic.out1.queue" connector-ref="jmsConnection"/>
+          <jms:outbound-endpoint queue="topic.out.queue1" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
     
     <service name="topic-to-queue2">
       <inbound>
-        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection"/>
+        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection2"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <jms:outbound-endpoint queue="2b-jms-topic.out2.queue" connector-ref="jmsConnection"/>
+          <jms:outbound-endpoint queue="topic.out.queue2" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
     
     <service name="topic-to-queue3">
       <inbound>
-        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection"/>
+        <jms:inbound-endpoint topic="topic1" connector-ref="topicConnection3"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <jms:outbound-endpoint queue="2b-jms-topic.out3.queue" connector-ref="jmsConnection"/>
+          <jms:outbound-endpoint queue="topic.out.queue3" connector-ref="jmsConnection"/>
         </outbound-pass-through-router>
       </outbound>
     </service>
