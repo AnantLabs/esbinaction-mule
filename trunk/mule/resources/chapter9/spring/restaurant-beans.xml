@@ -7,7 +7,7 @@
   	<bean id="lakeviewRestaurant" 
   			class="esb.chapter9.restaurant.bean.RestaurantServiceBean">
 		<property name="restaurantName" value="Lakeview"/>
-		<property name="acceptedResponse" value="We have a table available with lake view"/>
+		<property name="acceptedResponse" value="The Lakeview haa a table available with lake view"/>
 		<property name="deniedResponse" value="The Lakeview is fully booked, but please try again tomorrow"/>
 		<property name="maximumPersons" value="100"/>
 		<property name="numberPersonsReservation" value="50"/>
@@ -15,8 +15,8 @@
   	
   	<bean id="duckRestaurant" 
   			class="esb.chapter9.restaurant.bean.RestaurantServiceBean">
-		<property name="restaurantName" value="The royal duck"/>
-		<property name="acceptedResponse" value="We have a table with duck available for you"/>
+		<property name="restaurantName" value="The Royal Duck"/>
+		<property name="acceptedResponse" value="The Royal Duck has a table with duck available for you"/>
 		<property name="deniedResponse" value="There are no tables available"/>
 		<property name="maximumPersons" value="150"/>
 		<property name="numberPersonsReservation" value="10"/>
