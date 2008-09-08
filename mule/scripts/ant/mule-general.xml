@@ -9,7 +9,7 @@
 	<property name="tools.home" value="${book.home}/tools" />
 	<property name="lib.home" value="${book.home}/libraries" />
 	<property name="patches.home" value="${book.home}/esb/patches" />
-	<property name="mule.home" location="${book.home}/esb/mule-2.0.1" />
+	<property name="mule.home" location="${book.home}/esb/mule-2.0.2" />
 	<property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
@@ -58,13 +58,13 @@
 		<fileset dir="${mule.home}/lib/opt">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${tools.home}/apache-activemq-4.1.1">
+		<fileset dir="${tools.home}/apache-activemq-4.1.2">
 			<include name="*.jar" />
 		</fileset>
 		<fileset dir="${lib.home}/jibx/lib">
 			<include name="*.jar" />
 		</fileset>
-        <fileset dir="${lib.home}/apache-cxf-2.0.5-incubator/lib">
+        <fileset dir="${lib.home}/apache-cxf-2.0.7/lib">
             <include name="*.jar" />
         </fileset>
 		<fileset dir="${lib.home}/javamail">
