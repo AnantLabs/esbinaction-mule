@@ -21,7 +21,7 @@ create table RESTAURANT (
 ); 
  
 insert into PUBLIC.RESTAURANT(id, name, timeout) values (NULL, 'Lakeview', 60000); 
-insert into PUBLIC.RESTAURANT(id, name, timeout) values (NULL, 'The royal duck', 180000);
+insert into PUBLIC.RESTAURANT(id, name, timeout) values (NULL, 'The Royal Duck', 180000);
 insert into PUBLIC.RESTAURANT(id, name, timeout) values (NULL, 'Yokohama', 10000);
  
  create table PUBLIC.MSGSTORE ( 
