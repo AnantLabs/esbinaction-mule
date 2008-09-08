@@ -79,7 +79,7 @@ the various services and tools that are used in the examples.
   </target>
 	
 	<target name="ext:start-activeMQ" description="start activeMQ JMS broker">
-		<property name="jms.home" value="${tools.home}/apache-activemq-4.1.1"/>
+		<property name="jms.home" value="${tools.home}/apache-activemq-4.1.2"/>
 		
 		<java fork="true" jar="${jms.home}/bin/run.jar">
 			<jvmarg value="-Djavax.net.ssl.keyStorePassword=password"/>
@@ -120,6 +120,14 @@ the various services and tools that are used in the examples.
 		     configure all the libraries -->
 		<java fork="true" jar="${wildfire.home}/lib/startup.jar" dir="${wildfire.home}/lib">
 		</java>
+	</target>
+	
+	<target name="ext:start-exist" description="start the eXist xml database">
+		<property name="exist.home" value="${tools.home}/eXist"/>
+		<java fork="true" jar="${tools.home}/eXist/start.jar" dir="${exist.home}">
+			<arg line="standalone"/>
+		</java>
+		
 	</target>
 	
 	<target name="ext:test-client" description="start the Swing test client">
