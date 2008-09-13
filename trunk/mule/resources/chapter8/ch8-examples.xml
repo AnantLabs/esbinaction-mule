@@ -85,30 +85,4 @@ the second chapter.
 		</antcall>
 	</target>
 	
-	<target name="xatransaction" depends="gn:init" description="Run the xatransaction example">	
-		<antcall target="gn:compile-classes">
-			<param name="classes-filter" value="esb/chapter8/transaction/**/*"/>
-		</antcall>
-		
-		<jar destfile="${mule.deploy}/chapter8-xatransaction.jar">
-			<fileset dir="${workspace.home}/mule/classes">
-				<include name="esb/chapter8/transaction/**/*"/>
-			</fileset>
-			<fileset dir="xatransaction/mule">
-				<include name="xatransaction-config.xml"/>
-			</fileset>
-		</jar>
-		<antcall target="gn:run-mule-with-xmlconfig">
-			<param name="file" value="xatransaction-config.xml"/>
-		</antcall>
-	</target>
-	
-	<target name="jdbc-setup-database" description="setup the database">
-		<antcall target="ext:jdbc-setup-database">
-			<param name="sql-file" value="xatransaction/database/setupDatabase.txt"/>
-			<param name="rc-file" value="xatransaction/database/auth.rc"/>
-			<param name="urlID" value="esbinaction"/>
-		</antcall>
-	</target>
-	
 </project>
