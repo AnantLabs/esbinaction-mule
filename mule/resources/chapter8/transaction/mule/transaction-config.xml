@@ -23,7 +23,7 @@
        		<outbound>
        			<outbound-pass-through-router>
        				<jms:outbound-endpoint queue="transaction.out">
-                        <jms:transaction action="ALWAYS_JOIN"/>
+                        <jms:transaction action="ALWAYS_BEGIN"/>
                     </jms:outbound-endpoint>
        			</outbound-pass-through-router>
        		</outbound>
