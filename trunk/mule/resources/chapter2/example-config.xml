@@ -26,17 +26,17 @@
         <forwarding-catch-all-strategy>
           <jms:outbound-endpoint queue="failure.queue" />
         </forwarding-catch-all-strategy>
-        <jms:inbound-endpoint address="list.in" />
+        <jms:inbound-endpoint queue="list.in" />
       </inbound>
       <outbound>
         <list-message-splitter-router>
-          <jms:outbound-endpoint address="order.queue">
+          <jms:outbound-endpoint queue="order.queue">
             <payload-type-filter expectedType="esb.chapter2.Order" />
           </jms:outbound-endpoint>
-          <jms:outbound-endpoint address="item.queue">
+          <jms:outbound-endpoint queue="item.queue">
             <payload-type-filter expectedType="esb.chapter2.Item" />
           </jms:outbound-endpoint>
-          <jms:outbound-endpoint address="customer.queue">
+          <jms:outbound-endpoint queue="customer.queue">
             <payload-type-filter expectedType="esb.chapter2.Customer" />
           </jms:outbound-endpoint>
           <payload-type-filter expectedType="java.util.List" />
