@@ -40,6 +40,8 @@ public class BarnesBookStore implements MessageListener {
 			Float priceQuote = null;
 			if(bookMap.containsKey(isbn)) {
 				priceQuote = bookMap.get(isbn);
+			} else {
+				logger.error("isbn " + isbn + " not found, not returning a response message");
 			}
 			ActiveMQConnection connection = ActiveMQConnection.makeConnection(connectionURL);
 		    connection.start();
