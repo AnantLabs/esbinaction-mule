@@ -5,21 +5,21 @@
        xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
        xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
        xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.0"
-       xmlns:xm="http://www.mulesource.org/schema/mule/xml/2.0"
+       xmlns:scripting="http://www.mulesource.org/schema/mule/scripting/2.0"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/stdio/2.0 http://www.mulesource.org/schema/mule/stdio/2.0/mule-stdio.xsd
        http://www.mulesource.org/schema/mule/vm/2.0 http://www.mulesource.org/schema/mule/vm/2.0/mule-vm.xsd
        http://www.mulesource.org/schema/mule/cxf/2.0 http://www.mulesource.org/schema/mule/cxf/2.0/mule-cxf.xsd
-       http://www.mulesource.org/schema/mule/xml/2.0 http://www.mulesource.org/schema/mule/xml/2.0/mule-xml.xsd">
+       http://www.mulesource.org/schema/mule/xml/2.0 http://www.mulesource.org/schema/mule/xml/2.0/mule-xml.xsd
+       http://www.mulesource.org/schema/mule/scripting/2.0 http://www.mulesource.org/schema/mule/scripting/2.0/mule-scripting.xsd">
 	
     <stdio:connector name="inConnector" promptMessage="Enter city,country"/>
   
-	<custom-transformer name="StringToList" class="org.mule.module.scripting.transformer.ScriptTransformer">
-        <spring:property name="scriptEngineName" value="groovy"/>
-        <spring:property name="scriptFile" value="tokenizer.groovy"/>
-	</custom-transformer>
+	<scripting:transformer name="StringToList">
+      <scripting:script engine="groovy" file="tokenizer.groovy"/>
+    </scripting:transformer>
 	
 	<custom-transformer name="ObjectToArray" class="esb.chapter5.transformation.mule.CollectionToArray"/>
 	
