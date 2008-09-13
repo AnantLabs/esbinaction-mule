@@ -13,7 +13,7 @@
 	<property name="mule.deploy" location="${mule.home}/lib/user" />
 	<property name="workspace.home" location="../../../" />
 	<property name="work" location="../../work" />
-	<property name="cxf.home" location="${lib.home}/apache-cxf-2.0.5-incubator" />
+	<property name="cxf.home" location="${lib.home}/apache-cxf-2.0.7" />
 
 	<path id="cxf.classpath">
 		<fileset dir="${cxf.home}/lib">
@@ -84,7 +84,7 @@
 
 	<!-- define the classpath to use for spring -->
 	<path id="spring.path">
-		<fileset dir="${tools.home}/apache-activemq-4.1.1">
+		<fileset dir="${tools.home}/apache-activemq-4.1.2">
 			<include name="*.jar" />
 		</fileset>
 		<fileset dir="${lib.home}/jibx/lib">
