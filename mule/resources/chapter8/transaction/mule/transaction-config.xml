@@ -22,7 +22,9 @@
            	<component class="esb.chapter8.transaction.service.TransactionService"/>
        		<outbound>
        			<outbound-pass-through-router>
-       				<jms:outbound-endpoint queue="transaction.out"/>
+       				<jms:outbound-endpoint queue="transaction.out">
+                        <jms:transaction action="ALWAYS_JOIN"/>
+                    </jms:outbound-endpoint>
        			</outbound-pass-through-router>
        		</outbound>
 		</service>
