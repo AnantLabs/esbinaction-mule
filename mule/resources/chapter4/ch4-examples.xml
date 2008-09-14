@@ -29,6 +29,9 @@ the second chapter.
 		<echo message="setup to work with the sources from this example. To run this example go to the"/>
 		<echo message="resources/chapter4/component run the component.bat or the component.sh file."/>
 		
+		<chmod perm="+x" file="component/component.sh"/>
+		<chmod perm="+x" file="component/intcomponent.sh"/>
+		<chmod perm="+x" file="component/springcomponent.sh"/>
 	</target>
 
 	<target name="component-transformer" depends="gn:init" description="Run the simple component example with a transformer">	
@@ -49,6 +52,9 @@ the second chapter.
 		<echo message="setup to work with the sources from this example. To run this example go to the"/>
 		<echo message="resources/chapter4/component run the intcomponent.bat or the intcomponent.sh file."/>
 		
+		<chmod perm="+x" file="component/component.sh"/>
+		<chmod perm="+x" file="component/intcomponent.sh"/>
+		<chmod perm="+x" file="component/springcomponent.sh"/>
 	</target>
 	
 	<target name="component-spring" depends="gn:init" description="Run the simple component example with spring">	
@@ -70,6 +76,9 @@ the second chapter.
 		<echo message="setup to work with the sources from this example. To run this example go to the"/>
 		<echo message="resources/chapter4/component run the springcomponent.bat or the springcomponent.sh file."/>
 		
+		<chmod perm="+x" file="component/component.sh"/>
+		<chmod perm="+x" file="component/intcomponent.sh"/>
+		<chmod perm="+x" file="component/springcomponent.sh"/>
 	</target>	
 	
 	<target name="messageflow-mule" depends="gn:init" description="messageflow-mule">
