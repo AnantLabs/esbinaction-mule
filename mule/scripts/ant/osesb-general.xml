@@ -16,7 +16,8 @@ the various services and tools that are used in the examples.
 	  	- Pop server running on: 110
 	  	- SMTP server running on: 25
 	-->
-	<target name="ext:start-james" description="start the james mail server with default settings">
+
+	<target name="ext:start-james-windows" description="start the james mail server with default settings">
 		<property name="james.home" value="${tools.home}/james-2.3.1"/>
 		<java jar="${james.home}/bin/phoenix-loader.jar" fork="true">
 			<jvmarg value="-Djava.io.tmpdir=${james.home}/temp"/>
@@ -25,6 +26,17 @@ the various services and tools that are used in the examples.
 			<jvmarg value="-Dnetworkaddress.cache.ttl=300"/>		
 		</java>
 	</target>
+	
+	<target name="ext:start-james-linux" description="start the james mail server with default settings">
+		<echo message="You should run this taks as root, since we start on port 25 and 110"/>
+		<property name="james.home" value="${tools.home}/james-2.3.1"/>
+		<java jar="${james.home}/bin/phoenix-loader.jar" fork="true">
+			<jvmarg value="-Djava.io.tmpdir=${james.home}/temp"/>
+			<jvmarg value="-Djava.ext.dirs=${james.home}/lib:${james.home}/tools/lib"/>
+			<jvmarg value="-Dphoenix.home=${james.home}"/>
+			<jvmarg value="-Dnetworkaddress.cache.ttl=300"/>			
+		</java>
+	</target>	
 	
 	<target name="ext:start-openejb" description="start the open-ejb ejb container">
 		<property name="openejb.home" value="${tools.home}/openejb-3.0/"/>
