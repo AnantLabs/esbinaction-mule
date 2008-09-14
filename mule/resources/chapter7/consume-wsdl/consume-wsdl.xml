@@ -21,7 +21,7 @@
     <service name="cocServiceConsumeToJava">
       <inbound>
         <file:inbound-endpoint
-          path="work-mule/chapter7/consume-wsdl/in-to-java"
+          path="chapter7/consume-wsdl/in-to-java"
           transformer-refs="fileToString" />
       </inbound>
       <outbound>
