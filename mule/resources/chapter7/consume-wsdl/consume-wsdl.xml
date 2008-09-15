@@ -36,7 +36,7 @@
             </properties>
           </outbound-endpoint>
           <file:outbound-endpoint
-              path="work-mule/chapter7/consume-wsdl/out">
+              path="chapter7/consume-wsdl/out">
             <custom-transformer class="esb.chapter7.SimpleTransfomer" />
           </file:outbound-endpoint>
         </chaining-router>
