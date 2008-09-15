@@ -47,6 +47,7 @@ the second chapter.
 	
 	<target name="transformation-mule" depends="gn:init" description="transformation-mule">
 		<echo message="Starting mule with transformation example of chapter 5"/>
+		<chmod perm="+x" file="transformation/transformation.sh"/>
 
 		<antcall target="gn:cxfWSDLToJava"/>
 		
