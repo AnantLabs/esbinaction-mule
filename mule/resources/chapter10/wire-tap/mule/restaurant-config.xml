@@ -28,10 +28,9 @@
 
     <service name="LakeviewRestaurantService">
       <inbound>
-        <inbound-endpoint ref="inquiry-topic"    
-                          remoteSync="true" />   
+        <inbound-endpoint ref="inquiry-topic" remoteSync="true" />   
         <wire-tap-router>                        
-          <file:outbound-endpoint path="work-mule/chapter10/wireTap" transformer-refs="jmsToObject"/>     
+          <file:outbound-endpoint path="chapter10/wireTap" transformer-refs="jmsToObject"/>     
         </wire-tap-router>                       
       </inbound>
       <component>
