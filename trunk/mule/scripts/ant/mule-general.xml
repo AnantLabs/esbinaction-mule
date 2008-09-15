@@ -79,6 +79,10 @@
         <fileset dir="${lib.home}/bsh">
           <include name="*.jar"/>
         </fileset>
+		<fileset dir="${book.home}/esb/apache-servicemix-3.2.1/lib/">
+			<include name="bcp*.jar"/>
+		</fileset>
+		
 		<pathelement path="${workspace.home}/mule/classes" />
 	</path>
 
