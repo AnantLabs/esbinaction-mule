@@ -12,11 +12,11 @@
   <model name="JMSModel">
     <service name="queue-to-queue">
       <inbound>
-        <jms:inbound-endpoint queue="1a-jms-queue.in.queue"/>
+        <jms:inbound-endpoint queue="2a-jms-queue.in.queue"/>
       </inbound>
       <outbound>
         <outbound-pass-through-router>
-          <jms:outbound-endpoint queue="1a-jms-queue.out.queue" />
+          <jms:outbound-endpoint queue="2a-jms-queue.out.queue" />
         </outbound-pass-through-router>
       </outbound>
     </service>
