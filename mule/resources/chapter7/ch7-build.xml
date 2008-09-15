@@ -105,6 +105,22 @@
 
 	<target name="chapter7-wsa-consume" depends="gn:init"
 		description="Chapter 6 - File example 2">
+		
+		<javac classpathref="mule.path" debug="true"
+			destdir="${workspace.home}/mule/classes"
+			srcdir="${workspace.home}/mule/src-override">
+			<include name="org/mule/transport/cxf/**/*.java" />
+		</javac>
+		
+			<jar destfile="${mule.deploy}/cxf-wsdl-connector-fix.jar">
+				<fileset dir="${workspace.home}/mule/classes">
+					<include name="org/mule/transport/cxf/**/*" />
+				</fileset>
+				<fileset dir="${workspace.home}/mule/src-override">
+					<include name="META-INF/**/*" />
+				</fileset>
+			</jar>		
+				
 		<antcall target="gn:run-mule-with-xmlconfig">
 			<param name="file"
 				value="${chapter.home}/consume-ws-addressing/consume-ws-addressing.xml" />
