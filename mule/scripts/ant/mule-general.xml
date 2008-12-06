@@ -43,6 +43,8 @@
 	<!-- define the classpath to use for mule -->
 	<path id="mule.path">
 		<pathelement path="${mule.home}/conf" />
+		<pathelement path="${workspace.home}/mule/classes-override" />
+		<pathelement path="${workspace.home}/mule/classes-generated" />
 		<fileset dir="${mule.home}/lib/boot">
 			<include name="*.jar" />
 		</fileset>
@@ -167,6 +169,64 @@
 			<arg line="-config ${file}" />
             <jvmarg value="-Xdebug" />
 			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" />
+		</java>
+	</target>
+	
+	<target name="gn:run-mule-with-xmlconfig-client" depends="gn:init">
+
+		<c:if>
+			<isset property="classes-filter" />
+			<c:then>
+				<echo message="Compiling classes" />
+				<antcall target="gn:compile-classes">
+					<param name="classes-filter" value="${classes-filter}" />
+				</antcall>
+			</c:then>
+		</c:if>
+		
+		<c:if>
+			<isset property="generated-classes-filter" />
+			<c:then>
+				<echo message="Compiling classes" />
+				<antcall target="gn:compile-generated-classes">
+					<param name="classes-filter" value="${generated-classes-filter}" />
+				</antcall>
+			</c:then>
+		</c:if>		
+
+		<c:if>
+			<isset property="jibx-mapping" />
+			<c:then>
+				<echo message="Running jibx" />
+				<antcall target="gn:jibx-classes">
+					<param name="jibx-mapping" value="${jibx-mapping}" />
+				</antcall>
+			</c:then>
+		</c:if>
+
+		<c:if>
+			<isset property="target-jar" />
+			<c:then>
+				
+				<delete dir="${mule.deploy}/${target-jar}" failOnError="false"/>
+				<echo message="Compiling classes" />
+				<jar destfile="${mule.deploy}/${target-jar}">
+					<fileset dir="${workspace.home}/mule/classes">
+						<include name="${classes-filter}" />
+						<include name="${generated-classes-filter}" />
+					</fileset>
+					<fileset dir="${workspace.home}/mule/src">
+						<include name="${resource-filter}"/>
+						<exclude name="**/*.java"/>
+					</fileset>
+				</jar>
+			</c:then>
+		</c:if>
+
+		<java fork="true" classpathref="mule.path" dir="${mule.home}" classname="org.mule.MuleServer">
+			<arg line="-config ${file}" />
+            <jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=6000,server=y,suspend=n" />
 		</java>
 	</target>
 

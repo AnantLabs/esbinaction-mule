@@ -30,9 +30,9 @@
               address="wsdl-cxf:http://localhost:8080/services/cocService?wsdl&amp;method=getCompany">
             <properties>
               <spring:entry key="service"
-                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplService" />
+                value="{http://opensource.esb.org/CoC/}CoCService" />
               <spring:entry key="port"
-                value="{http://opensource.esb.org/CoC/}ChamberOfCommerceServiceImplPort" />
+                value="{http://opensource.esb.org/CoC/}CoCSoap" />
             </properties>
           </outbound-endpoint>
           <file:outbound-endpoint

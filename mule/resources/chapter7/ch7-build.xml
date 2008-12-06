@@ -59,7 +59,7 @@
 
 	<target name="chapter7-consume-ws" depends="gn:init"
 		description="Chapter 7 - wss provide">
-		<antcall target="gn:run-mule-with-xmlconfig">
+		<antcall target="gn:run-mule-with-xmlconfig-client">
 			<param name="file"
 				value="${chapter.home}/consume-wsdl/consume-wsdl.xml" />
 		</antcall>
@@ -135,10 +135,10 @@
 
 		<path id="cxf.path">
 			<fileset
-				dir="${lib.home}/apache-cxf-2.0.5-incubator/modules">
+				dir="${lib.home}/apache-cxf-2.0.7/modules">
 				<include name="*.jar" />
 			</fileset>
-			<fileset dir="${lib.home}/apache-cxf-2.0.5-incubator/lib">
+			<fileset dir="${lib.home}/apache-cxf-2.0.7/lib">
 				<include name="*.jar" />
 			</fileset>
 		</path>
